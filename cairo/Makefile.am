@@ -14,7 +14,7 @@ GUILE_SNARF_CFLAGS = $(DEFS) $(AM_CFLAGS) $(GUILE_CFLAGS)
 	(guile-snarf-docs $(GUILE_SNARF_CFLAGS) $< | \
 	guile_filter_doc_snarfage --filter-snarfage) > $@ || { rm $@; false; }
 
-C_FILES = guile-cairo.c
+C_FILES = guile-cairo.c guile-cairo-types.c
 H_FILES = $(C_FILES:.c=.h)
 
 libguile_cairo_1_0_la_SOURCES = $(C_FILES) $(H_FILES)

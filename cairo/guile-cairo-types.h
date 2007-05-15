@@ -1,7 +1,7 @@
 /* guile-cairo
  * Copyright (C) 2007 Andy Wingo <wingo at pobox dot com>
  *
- * guile-cairo.c: Cairo for Guile
+ * guile-cairo-types.h:
  *
  * This program is free software; you can redistribute it and/or    
  * modify it under the terms of the GNU General Public License as   
@@ -21,28 +21,11 @@
  * Boston, MA  02111-1307,  USA       gnu@gnu.org
  */
 
-#include <libguile.h>
-
-#include <cairo.h>
-#include "guile-cairo-types.h"
-
-SCM_DEFINE (scm_cairo_version, "cairo-version", 0, 0, 0,
-	    (void),
-	    "Retrieves the version of the cairo library.")
-#define FUNC_NAME s_scm_cairo_version
-{
-    return scm_from_int (cairo_version ());
-}
-#undef FUNC_NAME
+#ifndef __GUILE_CAIRO_TYPES_H__
+#define __GUILE_CAIRO_TYPES_H__ 1
 
 
 
-void
-scm_init_cairo (void)
-{
-#ifndef SCM_MAGIC_SNARFER
-#include "guile-cairo.x"
+void scm_init_cairo_types (void);
+
 #endif
-    scm_init_cairo_types ();
-    scm_c_export (NULL);
-}
