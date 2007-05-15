@@ -27,28 +27,18 @@
 
 scm_t_bits scm_tc16_cairo_t;
 scm_t_bits scm_tc16_cairo_surface_t;
+scm_t_bits scm_tc16_cairo_pattern_t;
+scm_t_bits scm_tc16_cairo_scaled_font_t;
+scm_t_bits scm_tc16_cairo_font_face_t;
 
 SCM_SYMBOL (sym_f64, "f64");
 
 
-#if 0
 typedef struct {
-    gint value;
-    const gchar *name;
+    int value;
+    const char *name;
 } EnumPair;
 
-static EnumPair [] = {
-  {G_BOOKMARK_FILE_ERROR_INVALID_URI, "invalid-uri"},
-  {G_BOOKMARK_FILE_ERROR_INVALID_VALUE, "invalid-value"},
-  {G_BOOKMARK_FILE_ERROR_APP_NOT_REGISTERED, "app-not-registered"},
-  {G_BOOKMARK_FILE_ERROR_URI_NOT_FOUND, "uri-not-found"},
-  {G_BOOKMARK_FILE_ERROR_READ, "read"},
-  {G_BOOKMARK_FILE_ERROR_UNKNOWN_ENCODING, "unknown-encoding"},
-  {G_BOOKMARK_FILE_ERROR_WRITE, "write"},
-  {G_BOOKMARK_FILE_ERROR_FILE_NOT_FOUND, "file-not-found"},
-  {0, NULL}
-};
-#endif
 
 /**********************************************************************
  * cairo_t
@@ -205,294 +195,333 @@ scm_fill_cairo_matrix_t (SCM scm, cairo_matrix_t *matrix)
     scm_array_handle_release (&handle);
 }
 
-#if 0
-/**
- * cairo_pattern_t:
- *
- * A #cairo_pattern_t represents a source when drawing onto a
- * surface. There are different subtypes of #cairo_pattern_t,
- * for different types of sources; for example,
- * cairo_pattern_create_rgb() creates a pattern for a solid
- * opaque color.
- *
- * Other than various cairo_pattern_create_<emphasis>type</emphasis>
- * functions, some of the pattern types can be implicitly created
- * using vairous cairo_set_source_<emphasis>type</emphasis> functions;
- * for example cairo_set_source_rgb().
- *
- * The type of a pattern can be queried with cairo_pattern_get_type().
- *
- * Memory management of #cairo_pattern_t is done with
- * cairo_pattern_reference() and cairo_pattern_destroy().
- **/
-typedef struct _cairo_pattern cairo_pattern_t;
+/**********************************************************************
+ * cairo_pattern_t
+ **********************************************************************/
 
-/**
+SCM
+scm_from_cairo_pattern_t (cairo_pattern_t *pat)
+{
+    SCM spat;
+
+    cairo_pattern_reference (pat);
+    SCM_NEWSMOB (spat, scm_tc16_cairo_pattern_t, pat);
+
+    return spat;
+}
+
+cairo_pattern_t*
+scm_to_cairo_pattern_t (SCM scm)
+{
+    return (cairo_pattern_t*)SCM_SMOB_DATA (scm);
+}
+
+static size_t
+scm_cairo_pattern_free (SCM smob)
+{
+    cairo_pattern_t *pat = (cairo_pattern_t*)SCM_SMOB_DATA (smob);
+
+    SCM_SET_SMOB_DATA (smob, NULL);
+    cairo_pattern_destroy (pat);
+
+    return 0;
+}
+
+static int
+scm_cairo_pattern_print (SCM smob, SCM port, scm_print_state *pstate)
+{
+    cairo_pattern_t *pat = (cairo_pattern_t*)SCM_SMOB_DATA (smob);
+
+    scm_puts ("#<cairo-pattern 0x", port);
+    scm_display (scm_number_to_string (scm_from_ulong ((unsigned long)pat),
+                                       scm_from_int (16)),
+                 port);
+    scm_puts (">", port);
+
+    return 1;
+}
+
+/**********************************************************************
  * cairo_status_t
- * @CAIRO_STATUS_SUCCESS: no error has occurred
- * @CAIRO_STATUS_NO_MEMORY: out of memory
- * @CAIRO_STATUS_INVALID_RESTORE: cairo_restore without matching cairo_save
- * @CAIRO_STATUS_INVALID_POP_GROUP: no saved group to pop
- * @CAIRO_STATUS_NO_CURRENT_POINT: no current point defined
- * @CAIRO_STATUS_INVALID_MATRIX: invalid matrix (not invertible)
- * @CAIRO_STATUS_INVALID_STATUS: invalid value for an input cairo_status_t
- * @CAIRO_STATUS_NULL_POINTER: NULL pointer
- * @CAIRO_STATUS_INVALID_STRING: input string not valid UTF-8
- * @CAIRO_STATUS_INVALID_PATH_DATA: input path data not valid
- * @CAIRO_STATUS_READ_ERROR: error while reading from input stream
- * @CAIRO_STATUS_WRITE_ERROR: error while writing to output stream
- * @CAIRO_STATUS_SURFACE_FINISHED: target surface has been finished
- * @CAIRO_STATUS_SURFACE_TYPE_MISMATCH: the surface type is not appropriate for the operation
- * @CAIRO_STATUS_PATTERN_TYPE_MISMATCH: the pattern type is not appropriate for the operation
- * @CAIRO_STATUS_INVALID_CONTENT: invalid value for an input cairo_content_t
- * @CAIRO_STATUS_INVALID_FORMAT: invalid value for an input cairo_format_t
- * @CAIRO_STATUS_INVALID_VISUAL: invalid value for an input Visual*
- * @CAIRO_STATUS_FILE_NOT_FOUND: file not found
- * @CAIRO_STATUS_INVALID_DASH: invalid value for a dash setting
- * @CAIRO_STATUS_INVALID_DSC_COMMENT: invalid value for a DSC comment (Since 1.2)
- * @CAIRO_STATUS_INVALID_INDEX: invalid index passed to getter (Since 1.4)
- * @CAIRO_STATUS_CLIP_NOT_REPRESENTABLE: clip region not representable in desired format (Since 1.4)
- *
- * #cairo_status_t is used to indicate errors that can occur when
- * using Cairo. In some cases it is returned directly by functions.
- * but when using #cairo_t, the last error, if any, is stored in
- * the context and can be retrieved with cairo_status().
- *
- * New entries may be added in future versions.  Use cairo_status_to_string()
- * to get a human-readable representation of an error message.
- **/
-typedef enum _cairo_status {
-    CAIRO_STATUS_SUCCESS = 0,
-    CAIRO_STATUS_NO_MEMORY,
-    CAIRO_STATUS_INVALID_RESTORE,
-    CAIRO_STATUS_INVALID_POP_GROUP,
-    CAIRO_STATUS_NO_CURRENT_POINT,
-    CAIRO_STATUS_INVALID_MATRIX,
-    CAIRO_STATUS_INVALID_STATUS,
-    CAIRO_STATUS_NULL_POINTER,
-    CAIRO_STATUS_INVALID_STRING,
-    CAIRO_STATUS_INVALID_PATH_DATA,
-    CAIRO_STATUS_READ_ERROR,
-    CAIRO_STATUS_WRITE_ERROR,
-    CAIRO_STATUS_SURFACE_FINISHED,
-    CAIRO_STATUS_SURFACE_TYPE_MISMATCH,
-    CAIRO_STATUS_PATTERN_TYPE_MISMATCH,
-    CAIRO_STATUS_INVALID_CONTENT,
-    CAIRO_STATUS_INVALID_FORMAT,
-    CAIRO_STATUS_INVALID_VISUAL,
-    CAIRO_STATUS_FILE_NOT_FOUND,
-    CAIRO_STATUS_INVALID_DASH,
-    CAIRO_STATUS_INVALID_DSC_COMMENT,
-    CAIRO_STATUS_INVALID_INDEX,
-    CAIRO_STATUS_CLIP_NOT_REPRESENTABLE
-} cairo_status_t;
+ **********************************************************************/
 
-/**
+void
+scm_c_check_cairo_status (cairo_status_t status, const char *subr)
+{
+    if (status == CAIRO_STATUS_SUCCESS)
+        return;
+
+    {
+        const char *str = NULL;
+        int i;
+        const EnumPair values[] = {
+            {CAIRO_STATUS_NO_MEMORY, "no-memory"},
+            {CAIRO_STATUS_INVALID_RESTORE, "invalid-restore"},
+            {CAIRO_STATUS_INVALID_POP_GROUP, "invalid-pop-group"},
+            {CAIRO_STATUS_NO_CURRENT_POINT, "no-current-point"},
+            {CAIRO_STATUS_INVALID_MATRIX, "invalid-matrix"},
+            {CAIRO_STATUS_INVALID_STATUS, "invalid-status"},
+            {CAIRO_STATUS_NULL_POINTER, "null-pointer"},
+            {CAIRO_STATUS_INVALID_STRING, "invalid-string"},
+            {CAIRO_STATUS_INVALID_PATH_DATA, "invalid-path-data"},
+            {CAIRO_STATUS_READ_ERROR, "read-error"},
+            {CAIRO_STATUS_WRITE_ERROR, "write-error"},
+            {CAIRO_STATUS_SURFACE_FINISHED, "surface-finished"},
+            {CAIRO_STATUS_SURFACE_TYPE_MISMATCH, "surface-type-mismatch"},
+            {CAIRO_STATUS_PATTERN_TYPE_MISMATCH, "pattern-type-mismatch"},
+            {CAIRO_STATUS_INVALID_CONTENT, "invalid-content"},
+            {CAIRO_STATUS_INVALID_FORMAT, "invalid-format"},
+            {CAIRO_STATUS_INVALID_VISUAL, "invalid-visual"},
+            {CAIRO_STATUS_FILE_NOT_FOUND, "file-not-found"},
+            {CAIRO_STATUS_INVALID_DASH, "invalid-dash"},
+            {CAIRO_STATUS_INVALID_DSC_COMMENT, "invalid-dsc-comment"},
+            {CAIRO_STATUS_INVALID_INDEX, "invalid-index"},
+            {CAIRO_STATUS_CLIP_NOT_REPRESENTABLE, "clip-not-representable"},
+            {0, NULL}
+        };
+
+        for (i=0; values[i].name; i++) {
+            if (values[i].value == status)
+                str = values[i].name;
+        }
+        if (!str)
+            str = "unknown";
+            
+        scm_error (scm_from_locale_symbol ("cairo-error"),
+                   subr,
+                   cairo_status_to_string (status),
+                   scm_list_1 (scm_from_locale_symbol (str)),
+                   scm_list_1 (scm_from_int (status)));
+    }
+}
+
+/**********************************************************************
  * cairo_content_t
- * @CAIRO_CONTENT_COLOR: The surface will hold color content only.
- * @CAIRO_CONTENT_ALPHA: The surface will hold alpha content only.
- * @CAIRO_CONTENT_COLOR_ALPHA: The surface will hold color and alpha content.
- *
- * #cairo_content_t is used to describe the content that a surface will
- * contain, whether color information, alpha information (translucence
- * vs. opacity), or both.
- *
- * Note: The large values here are designed to keep cairo_content_t
- * values distinct from cairo_format_t values so that the
- * implementation can detect the error if users confuse the two types.
- **/
-typedef enum _cairo_content {
-    CAIRO_CONTENT_COLOR		= 0x1000,
-    CAIRO_CONTENT_ALPHA		= 0x2000,
-    CAIRO_CONTENT_COLOR_ALPHA	= 0x3000
-} cairo_content_t;
+ **********************************************************************/
 
-typedef enum _cairo_operator {
-    CAIRO_OPERATOR_CLEAR,
+static EnumPair _content[] = {
+    {CAIRO_CONTENT_COLOR, "color"},
+    {CAIRO_CONTENT_ALPHA, "alpha"},
+    {CAIRO_CONTENT_COLOR_ALPHA, "color-alpha"},
+    {0, NULL}
+};
 
-    CAIRO_OPERATOR_SOURCE,
-    CAIRO_OPERATOR_OVER,
-    CAIRO_OPERATOR_IN,
-    CAIRO_OPERATOR_OUT,
-    CAIRO_OPERATOR_ATOP,
+/**********************************************************************
+ * cairo_operator_t
+ **********************************************************************/
 
-    CAIRO_OPERATOR_DEST,
-    CAIRO_OPERATOR_DEST_OVER,
-    CAIRO_OPERATOR_DEST_IN,
-    CAIRO_OPERATOR_DEST_OUT,
-    CAIRO_OPERATOR_DEST_ATOP,
+static EnumPair _operator[] = {
+    {CAIRO_OPERATOR_CLEAR, "clear"},
+    {CAIRO_OPERATOR_SOURCE, "source"},
+    {CAIRO_OPERATOR_OVER, "over"},
+    {CAIRO_OPERATOR_IN, "in"},
+    {CAIRO_OPERATOR_OUT, "out"},
+    {CAIRO_OPERATOR_ATOP, "atop"},
+    {CAIRO_OPERATOR_DEST, "dest"},
+    {CAIRO_OPERATOR_DEST_OVER, "dest-over"},
+    {CAIRO_OPERATOR_DEST_IN, "dest-in"},
+    {CAIRO_OPERATOR_DEST_OUT, "dest-out"},
+    {CAIRO_OPERATOR_DEST_ATOP, "dest-atop"},
+    {CAIRO_OPERATOR_XOR, "xor"},
+    {CAIRO_OPERATOR_ADD, "add"},
+    {CAIRO_OPERATOR_SATURATE, "saturate"},
+    {0, NULL}
+};
 
-    CAIRO_OPERATOR_XOR,
-    CAIRO_OPERATOR_ADD,
-    CAIRO_OPERATOR_SATURATE
-} cairo_operator_t;
+/**********************************************************************
+ * cairo_antialias_t
+ **********************************************************************/
 
-/**
- * cairo_antialias_t:
- * @CAIRO_ANTIALIAS_DEFAULT: Use the default antialiasing for
- *   the subsystem and target device
- * @CAIRO_ANTIALIAS_NONE: Use a bilevel alpha mask
- * @CAIRO_ANTIALIAS_GRAY: Perform single-color antialiasing (using
- *  shades of gray for black text on a white background, for example).
- * @CAIRO_ANTIALIAS_SUBPIXEL: Perform antialiasing by taking
- *  advantage of the order of subpixel elements on devices
- *  such as LCD panels
- *
- * Specifies the type of antialiasing to do when rendering text or shapes.
- **/
-typedef enum _cairo_antialias {
-    CAIRO_ANTIALIAS_DEFAULT,
-    CAIRO_ANTIALIAS_NONE,
-    CAIRO_ANTIALIAS_GRAY,
-    CAIRO_ANTIALIAS_SUBPIXEL
-} cairo_antialias_t;
+static EnumPair _antialias[] = {
+    {CAIRO_ANTIALIAS_DEFAULT, "default"},
+    {CAIRO_ANTIALIAS_NONE, "none"},
+    {CAIRO_ANTIALIAS_GRAY, "gray"},
+    {CAIRO_ANTIALIAS_SUBPIXEL, "subpixel"},
+    {0, NULL}
+};
 
-/**
+/**********************************************************************
  * cairo_fill_rule_t
- * @CAIRO_FILL_RULE_WINDING: If the path crosses the ray from
- * left-to-right, counts +1. If the path crosses the ray
- * from right to left, counts -1. (Left and right are determined
- * from the perspective of looking along the ray from the starting
- * point.) If the total count is non-zero, the point will be filled.
- * @CAIRO_FILL_RULE_EVEN_ODD: Counts the total number of
- * intersections, without regard to the orientation of the contour. If
- * the total number of intersections is odd, the point will be
- * filled.
- *
- * #cairo_fill_rule_t is used to select how paths are filled. For both
- * fill rules, whether or not a point is included in the fill is
- * determined by taking a ray from that point to infinity and looking
- * at intersections with the path. The ray can be in any direction,
- * as long as it doesn't pass through the end point of a segment
- * or have a tricky intersection such as intersecting tangent to the path.
- * (Note that filling is not actually implemented in this way. This
- * is just a description of the rule that is applied.)
- *
- * New entries may be added in future versions.
- **/
-typedef enum _cairo_fill_rule {
-    CAIRO_FILL_RULE_WINDING,
-    CAIRO_FILL_RULE_EVEN_ODD
-} cairo_fill_rule_t;
+ **********************************************************************/
 
-/**
+static EnumPair _fill_rule[] = {
+    {CAIRO_FILL_RULE_WINDING, "winding"},
+    {CAIRO_FILL_RULE_EVEN_ODD, "even-odd"},
+    {0, NULL}
+};
+
+/**********************************************************************
  * cairo_line_cap_t
- * @CAIRO_LINE_CAP_BUTT: start(stop) the line exactly at the start(end) point
- * @CAIRO_LINE_CAP_ROUND: use a round ending, the center of the circle is the end point
- * @CAIRO_LINE_CAP_SQUARE: use squared ending, the center of the square is the end point
- *
- * Specifies how to render the endpoint of a line when stroking.
- **/
-typedef enum _cairo_line_cap {
-    CAIRO_LINE_CAP_BUTT,
-    CAIRO_LINE_CAP_ROUND,
-    CAIRO_LINE_CAP_SQUARE
-} cairo_line_cap_t;
+ **********************************************************************/
 
-typedef enum _cairo_line_join {
-    CAIRO_LINE_JOIN_MITER,
-    CAIRO_LINE_JOIN_ROUND,
-    CAIRO_LINE_JOIN_BEVEL
-} cairo_line_join_t;
+static EnumPair _line_cap[] = {
+    {CAIRO_LINE_CAP_BUTT, "butt"},
+    {CAIRO_LINE_CAP_ROUND, "round"},
+    {CAIRO_LINE_CAP_SQUARE, "square"},
+    {0, NULL}
+};
 
-/**
- * cairo_rectangle_t:
- * @x: X coordinate of the left side of the rectangle
- * @y: Y coordinate of the the top side of the rectangle
- * @width: width of the rectangle
- * @height: height of the rectangle
- *
- * A data structure for holding a rectangle.
- *
- * Since: 1.4
- **/
-typedef struct _cairo_rectangle {
-    double x, y, width, height;
-} cairo_rectangle_t;
+/**********************************************************************
+ * cairo_line_join_t
+ **********************************************************************/
 
-/**
- * cairo_rectangle_list_t:
- * @status: Error status of the rectangle list
- * @rectangles: Array containing the rectangles
- * @num_rectangles: Number of rectangles in this list
- * 
- * A data structure for holding a dynamically allocated
- * array of rectangles.
- *
- * Since: 1.4
- **/
-typedef struct _cairo_rectangle_list {
-    cairo_status_t     status;
-    cairo_rectangle_t *rectangles;
-    int                num_rectangles;
-} cairo_rectangle_list_t;
+static EnumPair _line_join[] = {
+    {CAIRO_LINE_JOIN_MITER, "miter"},
+    {CAIRO_LINE_JOIN_ROUND, "round"},
+    {CAIRO_LINE_JOIN_BEVEL, "bevel"},
+    {0, NULL}
+};
 
-/**
- * cairo_scaled_font_t:
- *
- * A #cairo_scaled_font_t is a font scaled to a particular size and device
- * resolution. A cairo_scaled_font_t is most useful for low-level font
- * usage where a library or application wants to cache a reference
- * to a scaled font to speed up the computation of metrics.
- *
- * There are various types of scaled fonts, depending on the
- * <firstterm>font backend</firstterm> they use. The type of a
- * scaled font can be queried using cairo_scaled_font_get_type().
- *
- * Memory management of #cairo_scaled_font_t is done with
- * cairo_scaled_font_reference() and cairo_scaled_font_destroy().
- **/
-typedef struct _cairo_scaled_font cairo_scaled_font_t;
+/**********************************************************************
+ * cairo_rectangle_t
+ **********************************************************************/
 
-/**
- * cairo_font_face_t:
- *
- * A #cairo_font_face_t specifies all aspects of a font other
- * than the size or font matrix (a font matrix is used to distort
- * a font by sheering it or scaling it unequally in the two
- * directions) . A font face can be set on a #cairo_t by using
- * cairo_set_font_face(); the size and font matrix are set with
- * cairo_set_font_size() and cairo_set_font_matrix().
- *
- * There are various types of font faces, depending on the
- * <firstterm>font backend</firstterm> they use. The type of a
- * font face can be queried using cairo_font_face_get_type().
- *
- * Memory management of #cairo_font_face_t is done with
- * cairo_font_face_reference() and cairo_font_face_destroy().
- **/
-typedef struct _cairo_font_face cairo_font_face_t;
+SCM
+scm_from_cairo_rectangle (cairo_rectangle_t *rect)
+{
+    SCM ret = scm_make_f64vector (scm_from_int (4), scm_from_double (0.0));
 
-/**
- * cairo_glyph_t:
- * @index: glyph index in the font. The exact interpretation of the
- *      glyph index depends on the font technology being used.
- * @x: the offset in the X direction between the origin used for
- *     drawing or measuring the string and the origin of this glyph.
- * @y: the offset in the Y direction between the origin used for
- *     drawing or measuring the string and the origin of this glyph.
- *
- * The #cairo_glyph_t structure holds information about a single glyph
- * when drawing or measuring text. A font is (in simple terms) a
- * collection of shapes used to draw text. A glyph is one of these
- * shapes. There can be multiple glyphs for a single character
- * (alternates to be used in different contexts, for example), or a
- * glyph can be a <firstterm>ligature</firstterm> of multiple
- * characters. Cairo doesn't expose any way of converting input text
- * into glyphs, so in order to use the Cairo interfaces that take
- * arrays of glyphs, you must directly access the appropriate
- * underlying font system.
- *
- * Note that the offsets given by @x and @y are not cumulative. When
- * drawing or measuring text, each glyph is individually positioned
- * with respect to the overall origin
- **/
-typedef struct {
-  unsigned long        index;
-  double               x;
-  double               y;
-} cairo_glyph_t;
+    scm_f64vector_set_x (ret, scm_from_int (0), scm_from_double (rect->x));
+    scm_f64vector_set_x (ret, scm_from_int (1), scm_from_double (rect->y));
+    scm_f64vector_set_x (ret, scm_from_int (2), scm_from_double (rect->width));
+    scm_f64vector_set_x (ret, scm_from_int (3), scm_from_double (rect->height));
 
+    return ret;
+}
+
+void
+scm_fill_cairo_rectangle (SCM scm, cairo_rectangle_t *rect)
+{
+#define GET(v,i) \
+    scm_to_double (scm_vector_ref (v, scm_from_int (i)))
+
+    rect->x = GET (scm, 0);
+    rect->y = GET (scm, 1);
+    rect->width = GET (scm, 2);
+    rect->height = GET (scm, 3);
+#undef GET
+}
+
+/**********************************************************************
+ * cairo_font_face_t
+ **********************************************************************/
+
+SCM
+scm_from_cairo_font_face_t (cairo_font_face_t *pat)
+{
+    SCM spat;
+
+    cairo_font_face_reference (pat);
+    SCM_NEWSMOB (spat, scm_tc16_cairo_font_face_t, pat);
+
+    return spat;
+}
+
+cairo_font_face_t*
+scm_to_cairo_font_face_t (SCM scm)
+{
+    return (cairo_font_face_t*)SCM_SMOB_DATA (scm);
+}
+
+static size_t
+scm_cairo_font_face_free (SCM smob)
+{
+    cairo_font_face_t *pat = (cairo_font_face_t*)SCM_SMOB_DATA (smob);
+
+    SCM_SET_SMOB_DATA (smob, NULL);
+    cairo_font_face_destroy (pat);
+
+    return 0;
+}
+
+static int
+scm_cairo_font_face_print (SCM smob, SCM port, scm_print_state *pstate)
+{
+    cairo_font_face_t *pat = (cairo_font_face_t*)SCM_SMOB_DATA (smob);
+
+    scm_puts ("#<cairo-font-face 0x", port);
+    scm_display (scm_number_to_string (scm_from_ulong ((unsigned long)pat),
+                                       scm_from_int (16)),
+                 port);
+    scm_puts (">", port);
+
+    return 1;
+}
+
+/**********************************************************************
+ * cairo_scaled_font_t
+ **********************************************************************/
+
+SCM
+scm_from_cairo_scaled_font_t (cairo_scaled_font_t *pat)
+{
+    SCM spat;
+
+    cairo_scaled_font_reference (pat);
+    SCM_NEWSMOB (spat, scm_tc16_cairo_scaled_font_t, pat);
+
+    return spat;
+}
+
+cairo_scaled_font_t*
+scm_to_cairo_scaled_font_t (SCM scm)
+{
+    return (cairo_scaled_font_t*)SCM_SMOB_DATA (scm);
+}
+
+static size_t
+scm_cairo_scaled_font_free (SCM smob)
+{
+    cairo_scaled_font_t *pat = (cairo_scaled_font_t*)SCM_SMOB_DATA (smob);
+
+    SCM_SET_SMOB_DATA (smob, NULL);
+    cairo_scaled_font_destroy (pat);
+
+    return 0;
+}
+
+static int
+scm_cairo_scaled_font_print (SCM smob, SCM port, scm_print_state *pstate)
+{
+    cairo_scaled_font_t *pat = (cairo_scaled_font_t*)SCM_SMOB_DATA (smob);
+
+    scm_puts ("#<cairo-scaled-font 0x", port);
+    scm_display (scm_number_to_string (scm_from_ulong ((unsigned long)pat),
+                                       scm_from_int (16)),
+                 port);
+    scm_puts (">", port);
+
+    return 1;
+}
+
+/**********************************************************************
+ * cairo_glyph_t
+ **********************************************************************/
+
+SCM
+scm_from_cairo_glyph (cairo_glyph_t *glyph)
+{
+    SCM ret = scm_make_vector (scm_from_int (4), SCM_BOOL_F);
+
+    scm_vector_set_x (ret, scm_from_int (0), scm_from_int (glyph->index));
+    scm_vector_set_x (ret, scm_from_int (1), scm_from_double (glyph->x));
+    scm_vector_set_x (ret, scm_from_int (2), scm_from_double (glyph->y));
+
+    return ret;
+}
+
+void
+scm_fill_cairo_glyph (SCM scm, cairo_glyph_t *glyph)
+{
+#define GET(func,v,i) \
+    func (scm_vector_ref (v, scm_from_int (i)))
+
+    glyph->index = GET (scm_to_int, scm, 0);
+    glyph->x = GET (scm_to_double, scm, 1);
+    glyph->y = GET (scm_to_double, scm, 2);
+}
+
+#if 0
 /**
  * cairo_text_extents_t:
  * @x_bearing: the horizontal distance from the origin to the
@@ -812,4 +841,16 @@ scm_init_cairo_types (void)
     scm_tc16_cairo_surface_t = scm_make_smob_type ("cairo-surface", 0);
     scm_set_smob_free (scm_tc16_cairo_surface_t, scm_cairo_surface_free);
     scm_set_smob_print (scm_tc16_cairo_surface_t, scm_cairo_surface_print);
+
+    scm_tc16_cairo_pattern_t = scm_make_smob_type ("cairo-pattern", 0);
+    scm_set_smob_free (scm_tc16_cairo_pattern_t, scm_cairo_pattern_free);
+    scm_set_smob_print (scm_tc16_cairo_pattern_t, scm_cairo_pattern_print);
+
+    scm_tc16_cairo_scaled_font_t = scm_make_smob_type ("cairo-scaled-font", 0);
+    scm_set_smob_free (scm_tc16_cairo_scaled_font_t, scm_cairo_scaled_font_free);
+    scm_set_smob_print (scm_tc16_cairo_scaled_font_t, scm_cairo_scaled_font_print);
+
+    scm_tc16_cairo_font_face_t = scm_make_smob_type ("cairo-font-face", 0);
+    scm_set_smob_free (scm_tc16_cairo_font_face_t, scm_cairo_font_face_free);
+    scm_set_smob_print (scm_tc16_cairo_font_face_t, scm_cairo_font_face_print);
 }
