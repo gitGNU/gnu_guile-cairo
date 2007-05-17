@@ -60,6 +60,7 @@ scm_from_cairo (cairo_t *ctx)
 cairo_t*
 scm_to_cairo (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_t, scm);
     return (cairo_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -97,6 +98,7 @@ scm_from_cairo_surface (cairo_surface_t *surf)
 cairo_surface_t*
 scm_to_cairo_surface (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_surface_t, scm);
     return (cairo_surface_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -134,6 +136,7 @@ scm_from_cairo_pattern (cairo_pattern_t *pat)
 cairo_pattern_t*
 scm_to_cairo_pattern (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_pattern_t, scm);
     return (cairo_pattern_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -171,6 +174,7 @@ scm_from_cairo_font_face (cairo_font_face_t *pat)
 cairo_font_face_t*
 scm_to_cairo_font_face (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_font_face_t, scm);
     return (cairo_font_face_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -209,6 +213,7 @@ scm_from_cairo_scaled_font (cairo_scaled_font_t *pat)
 cairo_scaled_font_t*
 scm_to_cairo_scaled_font (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_scaled_font_t, scm);
     return (cairo_scaled_font_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -240,6 +245,7 @@ scm_take_cairo_font_options (cairo_font_options_t *fopt)
 cairo_font_options_t*
 scm_to_cairo_font_options (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_font_options_t, scm);
     return (cairo_font_options_t*)SCM_SMOB_DATA (scm);
 }
 
@@ -281,6 +287,7 @@ scm_take_cairo_path (cairo_path_t *path)
 cairo_path_t*
 scm_to_cairo_path (SCM scm)
 {
+    scm_assert_smob_type (scm_tc16_cairo_path_t, scm);
     return (cairo_path_t*)SCM_SMOB_DATA (scm);
 }
 

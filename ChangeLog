@@ -1,5 +1,11 @@
 2007-05-17  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo-smob-types.c (scm_to_cairo)
+	(scm_to_cairo_surface, scm_to_cairo_pattern)
+	(scm_to_cairo_font_face, scm_to_cairo_scaled_font)
+	(scm_to_cairo_font_options, scm_to_cairo_path): Check that the scm
+	values are of the right type.
+
 	* guile-cairo/guile-cairo.h: Expose scm_c_check_cairo_status.
 
 	* guile-cairo/guile-cairo.c: Update constructors and other
