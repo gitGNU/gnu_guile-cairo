@@ -27,6 +27,8 @@
 
 #include "guile-cairo.h"
 
+/* TODO: make sure that constructors have the right refcounting; checking of cairo_status */
+
 void
 scm_c_check_cairo_status (cairo_status_t status, const char *subr)
 {
@@ -46,45 +48,6 @@ SCM_DEFINE_PUBLIC (scm_cairo_version, "cairo-version", 0, 0, 0,
 #define FUNC_NAME s_scm_cairo_version
 {
     return scm_from_int (cairo_version ());
-}
-#undef FUNC_NAME
-
-static SCM make_point (double x, double y) 
-{
-    return scm_f64vector (scm_list_2 (scm_from_double (x),
-                                      scm_from_double (y)));
-}
-
-SCM_DEFINE_PUBLIC (scm_cairo_path_fold, "cairo-path-fold", 3, 0, 0,
-	    (SCM spath, SCM proc, SCM init),
-	    "Fold over a cairo path.")
-#define FUNC_NAME s_scm_cairo_path_fold
-{
-    cairo_path_t *path;
-    int i, j, len;
-    SCM ret = init;
-    cairo_path_data_t *data;
-    cairo_path_data_type_t type;
-    SCM args, tail;
-
-    path = scm_to_cairo_path (spath);
-
-    for (i = 0; i < path->num_data; /* i incremented below */) {
-        type = path->data[i].header.type;
-        len = path->data[i].header.length;
-        args = scm_cons (scm_from_cairo_path_data_type (type), SCM_EOL);
-
-        for (j = 0, i++, tail = args; j < len; j++, i++, tail = scm_cdr (tail)) {
-            data = &path->data[i];
-            scm_set_cdr_x (tail, scm_cons (make_point (data->point.x,
-                                                       data->point.y),
-                                           SCM_EOL));
-        }
-            
-        ret = scm_call_2 (proc, args, ret);
-    }
-    
-    return ret;
 }
 #undef FUNC_NAME
 
@@ -889,7 +852,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_font_matrix, "cairo-get-font-matrix", 1, 0, 0,
 
     return scm_from_cairo_matrix (&matrix);
 }
-
+ 
 SCM_DEFINE_PUBLIC (scm_cairo_set_font_options, "cairo-set-font-options", 2, 0, 0,
 	    (SCM ctx, SCM fopts),
 	    "")
@@ -959,449 +922,532 @@ SCM_DEFINE_PUBLIC (scm_cairo_show_text, "cairo-show-text", 2, 0, 0,
 }
 
 
-#if 0
-cairo_public void
-cairo_show_text (cairo_t *cr, const char *utf8);
+SCM_DEFINE_PUBLIC (scm_cairo_show_glyphs, "cairo-show-glyphs", 2, 0, 0,
+	    (SCM ctx, SCM sglyphs),
+	    "")
+{
+    cairo_glyph_t *glyphs;
+    int nglyphs, i;
 
-cairo_public void
-cairo_show_glyphs (cairo_t *cr, const cairo_glyph_t *glyphs, int num_glyphs);
+    scm_dynwind_begin (0);
 
-cairo_public void
-cairo_text_path  (cairo_t *cr, const char *utf8);
+    nglyphs = scm_to_signed_integer (scm_vector_length (sglyphs),
+                                     0, (1<<31) / sizeof (cairo_glyph_t));
+    glyphs = scm_malloc (nglyphs * sizeof(cairo_glyph_t));
+    scm_dynwind_free (glyphs);
+    
+    for (i = 0; i < nglyphs; i++)
+        scm_fill_cairo_glyph (scm_c_vector_ref (sglyphs, i), &glyphs[i]);
 
-cairo_public void
-cairo_glyph_path (cairo_t *cr, const cairo_glyph_t *glyphs, int num_glyphs);
+    cairo_show_glyphs (scm_to_cairo (ctx), glyphs, nglyphs);
 
-cairo_public void
-cairo_text_extents (cairo_t              *cr,
-		    const char    	 *utf8,
-		    cairo_text_extents_t *extents);
+    scm_dynwind_end ();
+    
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public void
-cairo_glyph_extents (cairo_t               *cr,
-		     const cairo_glyph_t   *glyphs,
-		     int                   num_glyphs,
-		     cairo_text_extents_t  *extents);
+SCM_DEFINE_PUBLIC (scm_cairo_text_path, "cairo-text-path", 2, 0, 0,
+	    (SCM ctx, SCM val),
+	    "")
+{
+    char *text;
 
-cairo_public void
-cairo_font_extents (cairo_t              *cr,
-		    cairo_font_extents_t *extents);
+    scm_dynwind_begin (0); 
+    text = scm_to_locale_string (val);
+    scm_dynwind_free (text);
 
-/* Generic identifier for a font style */
+    cairo_text_path (scm_to_cairo (ctx), text);
 
-cairo_public cairo_font_face_t *
-cairo_font_face_reference (cairo_font_face_t *font_face);
+    scm_dynwind_end ();
 
-cairo_public void
-cairo_font_face_destroy (cairo_font_face_t *font_face);
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public unsigned int
-cairo_font_face_get_reference_count (cairo_font_face_t *font_face);
 
-cairo_public cairo_status_t
-cairo_font_face_status (cairo_font_face_t *font_face);
+SCM_DEFINE_PUBLIC (scm_cairo_glyph_path, "cairo-glyph-path", 2, 0, 0,
+	    (SCM ctx, SCM sglyphs),
+	    "")
+{
+    cairo_glyph_t *glyphs;
+    int nglyphs, i;
 
-/**
- * cairo_font_type_t
- * @CAIRO_FONT_TYPE_TOY: The font was created using cairo's toy font api
- * @CAIRO_FONT_TYPE_FT: The font is of type FreeType
- * @CAIRO_FONT_TYPE_WIN32: The font is of type Win32
- * @CAIRO_FONT_TYPE_ATSUI: The font is of type ATSUI
- *
- * #cairo_font_type_t is used to describe the type of a given font
- * face or scaled font. The font types are also known as "font
- * backends" within cairo.
- *
- * The type of a font face is determined by the function used to
- * create it, which will generally be of the form
- * cairo_<emphasis>type</emphasis>_font_face_create. The font face type can be queried
- * with cairo_font_face_get_type()
- *
- * The various cairo_font_face functions can be used with a font face
- * of any type.
- *
- * The type of a scaled font is determined by the type of the font
- * face passed to cairo_scaled_font_create. The scaled font type can
- * be queried with cairo_scaled_font_get_type()
- *
- * The various cairo_scaled_font functions can be used with scaled
- * fonts of any type, but some font backends also provide
- * type-specific functions that must only be called with a scaled font
- * of the appropriate type. These functions have names that begin with
- * cairo_<emphasis>type</emphasis>_scaled_font such as cairo_ft_scaled_font_lock_face.
- *
- * The behavior of calling a type-specific function with a scaled font
- * of the wrong type is undefined.
- *
- * New entries may be added in future versions.
- *
- * Since: 1.2
- **/
-typedef enum _cairo_font_type {
-    CAIRO_FONT_TYPE_TOY,
-    CAIRO_FONT_TYPE_FT,
-    CAIRO_FONT_TYPE_WIN32,
-    CAIRO_FONT_TYPE_ATSUI
-} cairo_font_type_t;
+    scm_dynwind_begin (0);
 
-cairo_public cairo_font_type_t
-cairo_font_face_get_type (cairo_font_face_t *font_face);
+    nglyphs = scm_to_signed_integer (scm_vector_length (sglyphs),
+                                     0, (1<<31) / sizeof (cairo_glyph_t));
+    glyphs = scm_malloc (nglyphs * sizeof(cairo_glyph_t));
+    scm_dynwind_free (glyphs);
+    
+    for (i = 0; i < nglyphs; i++)
+        scm_fill_cairo_glyph (scm_c_vector_ref (sglyphs, i), &glyphs[i]);
 
-cairo_public void *
-cairo_font_face_get_user_data (cairo_font_face_t	   *font_face,
-			       const cairo_user_data_key_t *key);
+    cairo_glyph_path (scm_to_cairo (ctx), glyphs, nglyphs);
 
-cairo_public cairo_status_t
-cairo_font_face_set_user_data (cairo_font_face_t	   *font_face,
-			       const cairo_user_data_key_t *key,
-			       void			   *user_data,
-			       cairo_destroy_func_t	    destroy);
+    scm_dynwind_end ();
+    
+    return SCM_UNSPECIFIED;
+}
 
-/* Portable interface to general font features. */
+SCM_DEFINE_PUBLIC (scm_cairo_text_extents, "cairo-text-extents", 2, 0, 0,
+	    (SCM ctx, SCM val),
+	    "")
+{
+    SCM ret;
+    char *text;
+    cairo_text_extents_t extents;
 
-cairo_public cairo_scaled_font_t *
-cairo_scaled_font_create (cairo_font_face_t          *font_face,
-			  const cairo_matrix_t       *font_matrix,
-			  const cairo_matrix_t       *ctm,
-			  const cairo_font_options_t *options);
+    scm_dynwind_begin (0); 
+    text = scm_to_locale_string (val);
+    scm_dynwind_free (text);
 
-cairo_public cairo_scaled_font_t *
-cairo_scaled_font_reference (cairo_scaled_font_t *scaled_font);
+    cairo_text_extents (scm_to_cairo (ctx), text, &extents);
+    ret = scm_from_cairo_text_extents (&extents);
 
-cairo_public void
-cairo_scaled_font_destroy (cairo_scaled_font_t *scaled_font);
+    scm_dynwind_end ();
 
-cairo_public unsigned int
-cairo_scaled_font_get_reference_count (cairo_scaled_font_t *scaled_font);
+    return ret;
+}
 
-cairo_public cairo_status_t
-cairo_scaled_font_status (cairo_scaled_font_t *scaled_font);
+SCM_DEFINE_PUBLIC (scm_cairo_glyph_extents, "cairo-glyph-extents", 2, 0, 0,
+	    (SCM ctx, SCM sglyphs),
+	    "")
+{
+    cairo_glyph_t *glyphs;
+    int nglyphs, i;
+    SCM ret;
+    cairo_text_extents_t extents;
 
-cairo_public cairo_font_type_t
-cairo_scaled_font_get_type (cairo_scaled_font_t *scaled_font);
+    scm_dynwind_begin (0);
 
-cairo_public void *
-cairo_scaled_font_get_user_data (cairo_scaled_font_t         *scaled_font,
-				 const cairo_user_data_key_t *key);
+    nglyphs = scm_to_signed_integer (scm_vector_length (sglyphs),
+                                     0, (1<<31) / sizeof (cairo_glyph_t));
+    glyphs = scm_malloc (nglyphs * sizeof(cairo_glyph_t));
+    scm_dynwind_free (glyphs);
+    
+    for (i = 0; i < nglyphs; i++)
+        scm_fill_cairo_glyph (scm_c_vector_ref (sglyphs, i), &glyphs[i]);
 
-cairo_public cairo_status_t
-cairo_scaled_font_set_user_data (cairo_scaled_font_t         *scaled_font,
-				 const cairo_user_data_key_t *key,
-				 void                        *user_data,
-				 cairo_destroy_func_t	      destroy);
+    cairo_glyph_extents (scm_to_cairo (ctx), glyphs, nglyphs, &extents);
+    ret = scm_from_cairo_text_extents (&extents);
 
-cairo_public void
-cairo_scaled_font_extents (cairo_scaled_font_t  *scaled_font,
-			   cairo_font_extents_t *extents);
+    scm_dynwind_end ();
+    
+    return ret;
+}
 
-cairo_public void
-cairo_scaled_font_text_extents (cairo_scaled_font_t  *scaled_font,
-				const char  	     *utf8,
-				cairo_text_extents_t *extents);
+SCM_DEFINE_PUBLIC (scm_cairo_font_extents, "cairo-font-extents", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    SCM ret;
+    cairo_font_extents_t extents;
 
-cairo_public void
-cairo_scaled_font_glyph_extents (cairo_scaled_font_t   *scaled_font,
-				 const cairo_glyph_t   *glyphs,
-				 int                   num_glyphs,
-				 cairo_text_extents_t  *extents);
+    cairo_font_extents (scm_to_cairo (ctx), &extents);
+    ret = scm_from_cairo_font_extents (&extents);
 
-cairo_public cairo_font_face_t *
-cairo_scaled_font_get_font_face (cairo_scaled_font_t *scaled_font);
+    return ret;
+}
 
-cairo_public void
-cairo_scaled_font_get_font_matrix (cairo_scaled_font_t	*scaled_font,
-				   cairo_matrix_t	*font_matrix);
+#ifdef DEBUG_GUILE_CAIRO
+SCM_DEFINE_PUBLIC (scm_cairo_font_face_get_reference_count, "cairo-font-face-get-reference-count", 1, 0, 0,
+	    (SCM face),
+	    "")
+{
+    return scm_from_uint (cairo_font_face_get_reference_count (scm_to_cairo_font_face (face)));
+}
+#endif
 
-cairo_public void
-cairo_scaled_font_get_ctm (cairo_scaled_font_t	*scaled_font,
-			   cairo_matrix_t	*ctm);
+SCM_DEFINE_PUBLIC (scm_cairo_font_face_get_type, "cairo-font-face-get-type", 1, 0, 0,
+	    (SCM face),
+	    "")
+{
+    return scm_from_cairo_font_type (cairo_font_face_get_type (scm_to_cairo_font_face (face)));
+}
 
-cairo_public void
-cairo_scaled_font_get_font_options (cairo_scaled_font_t		*scaled_font,
-				    cairo_font_options_t	*options);
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_create, "cairo-scaled-font-create", 3, 0, 0,
+                   (SCM face, SCM smatrix, SCM sctm, SCM options),
+	    "")
+{
+    cairo_matrix_t matrix, ctm;
 
-/* Query functions */
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    scm_fill_cairo_matrix (sctm, &ctm);
+    
+    return scm_from_cairo_scaled_font (cairo_scaled_font_create (scm_to_cairo_font_face (face),
+                                                                 &matrix, &ctm,
+                                                                 scm_to_cairo_font_options (options)));
+}
 
-cairo_public cairo_operator_t
-cairo_get_operator (cairo_t *cr);
+#ifdef DEBUG_GUILE_CAIRO
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_reference_count, "cairo-scaled-font-get-reference-count", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+p    return scm_from_uint (cairo_scaled_font_get_reference_count (scm_to_cairo_scaled_font (font)));
+}
+#endif
 
-cairo_public cairo_pattern_t *
-cairo_get_source (cairo_t *cr);
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_type, "cairo-scaled-font-get-type", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    return scm_from_cairo_font_type (cairo_scaled_font_get_type (scm_to_cairo_scaled_font (font)));
+}
 
-cairo_public double
-cairo_get_tolerance (cairo_t *cr);
 
-cairo_public cairo_antialias_t
-cairo_get_antialias (cairo_t *cr);
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_extents, "cairo-scaled-font-extents", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    SCM ret;
+    cairo_font_extents_t extents;
 
-cairo_public void
-cairo_get_current_point (cairo_t *cr, double *x, double *y);
+    cairo_scaled_font_extents (scm_to_cairo_scaled_font (font), &extents);
+    ret = scm_from_cairo_font_extents (&extents);
 
-cairo_public cairo_fill_rule_t
-cairo_get_fill_rule (cairo_t *cr);
+    return ret;
+}
 
-cairo_public double
-cairo_get_line_width (cairo_t *cr);
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_text_extents, "cairo-scaled-font-text-extents", 2, 0, 0,
+                   (SCM font, SCM val),
+	    "")
+{
+    SCM ret;
+    char *text;
+    cairo_text_extents_t extents;
 
-cairo_public cairo_line_cap_t
-cairo_get_line_cap (cairo_t *cr);
+    scm_dynwind_begin (0); 
+    text = scm_to_locale_string (val);
+    scm_dynwind_free (text);
 
-cairo_public cairo_line_join_t
-cairo_get_line_join (cairo_t *cr);
+    cairo_scaled_font_text_extents (scm_to_cairo_scaled_font (font), text, &extents);
+    ret = scm_from_cairo_text_extents (&extents);
 
-cairo_public double
-cairo_get_miter_limit (cairo_t *cr);
+    scm_dynwind_end ();
 
-cairo_public int
-cairo_get_dash_count (cairo_t *cr);
+    return ret;
+}
 
-cairo_public void
-cairo_get_dash (cairo_t *cr, double *dashes, double *offset);
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_glyph_extents, "cairo-scaled-font-glyph-extents", 2, 0, 0,
+	    (SCM font, SCM sglyphs),
+	    "")
+{
+    cairo_glyph_t *glyphs;
+    int nglyphs, i;
+    SCM ret;
+    cairo_text_extents_t extents;
 
-cairo_public void
-cairo_get_matrix (cairo_t *cr, cairo_matrix_t *matrix);
+    scm_dynwind_begin (0);
 
-cairo_public cairo_surface_t *
-cairo_get_target (cairo_t *cr);
+    nglyphs = scm_to_signed_integer (scm_vector_length (sglyphs),
+                                     0, (1<<31) / sizeof (cairo_glyph_t));
+    glyphs = scm_malloc (nglyphs * sizeof(cairo_glyph_t));
+    scm_dynwind_free (glyphs);
+    
+    for (i = 0; i < nglyphs; i++)
+        scm_fill_cairo_glyph (scm_c_vector_ref (sglyphs, i), &glyphs[i]);
 
-cairo_public cairo_surface_t *
-cairo_get_group_target (cairo_t *cr);
+    cairo_scaled_font_glyph_extents (scm_to_cairo_scaled_font (font), glyphs, nglyphs, &extents);
+    ret = scm_from_cairo_text_extents (&extents);
 
-/**
- * cairo_path_data_type_t:
- * @CAIRO_PATH_MOVE_TO: A move-to operation
- * @CAIRO_PATH_LINE_TO: A line-to operation
- * @CAIRO_PATH_CURVE_TO: A curve-to operation
- * @CAIRO_PATH_CLOSE_PATH: A close-path operation
- *
- * #cairo_path_data_t is used to describe the type of one portion
- * of a path when represented as a #cairo_path_t.
- * See #cairo_path_data_t for details.
- **/
-typedef enum _cairo_path_data_type {
-    CAIRO_PATH_MOVE_TO,
-    CAIRO_PATH_LINE_TO,
-    CAIRO_PATH_CURVE_TO,
-    CAIRO_PATH_CLOSE_PATH
-} cairo_path_data_type_t;
+    scm_dynwind_end ();
+    
+    return ret;
+}
 
-/**
- * cairo_path_data_t:
- *
- * #cairo_path_data_t is used to represent the path data inside a
- * #cairo_path_t.
- *
- * The data structure is designed to try to balance the demands of
- * efficiency and ease-of-use. A path is represented as an array of
- * #cairo_path_data_t, which is a union of headers and points.
- *
- * Each portion of the path is represented by one or more elements in
- * the array, (one header followed by 0 or more points). The length
- * value of the header is the number of array elements for the current
- * portion including the header, (ie. length == 1 + # of points), and
- * where the number of points for each element type is as follows:
- *
- * <programlisting>
- *     %CAIRO_PATH_MOVE_TO:     1 point
- *     %CAIRO_PATH_LINE_TO:     1 point
- *     %CAIRO_PATH_CURVE_TO:    3 points
- *     %CAIRO_PATH_CLOSE_PATH:  0 points
- * </programlisting>
- *
- * The semantics and ordering of the coordinate values are consistent
- * with cairo_move_to(), cairo_line_to(), cairo_curve_to(), and
- * cairo_close_path().
- *
- * Here is sample code for iterating through a #cairo_path_t:
- *
- * <informalexample><programlisting>
- *      int i;
- *      cairo_path_t *path;
- *      cairo_path_data_t *data;
- * &nbsp;
- *      path = cairo_copy_path (cr);
- * &nbsp;
- *      for (i=0; i < path->num_data; i += path->data[i].header.length) {
- *          data = &amp;path->data[i];
- *          switch (data->header.type) {
- *          case CAIRO_PATH_MOVE_TO:
- *              do_move_to_things (data[1].point.x, data[1].point.y);
- *              break;
- *          case CAIRO_PATH_LINE_TO:
- *              do_line_to_things (data[1].point.x, data[1].point.y);
- *              break;
- *          case CAIRO_PATH_CURVE_TO:
- *              do_curve_to_things (data[1].point.x, data[1].point.y,
- *                                  data[2].point.x, data[2].point.y,
- *                                  data[3].point.x, data[3].point.y);
- *              break;
- *          case CAIRO_PATH_CLOSE_PATH:
- *              do_close_path_things ();
- *              break;
- *          }
- *      }
- *      cairo_path_destroy (path);
- * </programlisting></informalexample>
- *
- * As of cairo 1.4, cairo does not mind if there are more elements in
- * a portion of the path than needed.  Such elements can be used by
- * users of the cairo API to hold extra values in the path data
- * structure.  For this reason, it is recommended that applications
- * always use <literal>data->header.length</literal> to
- * iterate over the path data, instead of hardcoding the number of
- * elements for each element type.
- **/
-typedef union _cairo_path_data_t cairo_path_data_t;
-union _cairo_path_data_t {
-    struct {
-	cairo_path_data_type_t type;
-	int length;
-    } header;
-    struct {
-	double x, y;
-    } point;
-};
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_face, "cairo-scaled-font-get-font-face", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    return scm_from_cairo_font_face (cairo_scaled_font_get_font_face (scm_to_cairo_scaled_font (font)));
+}
 
-/**
- * cairo_path_t:
- * @status: the current error status
- * @data: the elements in the path
- * @num_data: the number of elements in the data array
- *
- * A data structure for holding a path. This data structure serves as
- * the return value for cairo_copy_path() and
- * cairo_copy_path_flat() as well the input value for
- * cairo_append_path().
- *
- * See #cairo_path_data_t for hints on how to iterate over the
- * actual data within the path.
- *
- * The num_data member gives the number of elements in the data
- * array. This number is larger than the number of independent path
- * portions (defined in #cairo_path_data_type_t), since the data
- * includes both headers and coordinates for each portion.
- **/
-typedef struct cairo_path {
-    cairo_status_t status;
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_matrix, "cairo-scaled-font-get-font-matrix", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    cairo_matrix_t matrix;
+
+    cairo_scaled_font_get_font_matrix (scm_to_cairo_scaled_font (font), &matrix);
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_ctm, "cairo-scaled-font-get-ctm", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    cairo_matrix_t matrix;
+
+    cairo_scaled_font_get_ctm (scm_to_cairo_scaled_font (font), &matrix);
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_options, "cairo-scaled-font-get-font-options", 1, 0, 0,
+	    (SCM font),
+	    "")
+{
+    cairo_font_options_t *opts = cairo_font_options_create ();
+
+    cairo_scaled_font_get_font_options (scm_to_cairo_scaled_font (font), opts);
+
+    return scm_from_cairo_font_options (opts);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_operator, "cairo-get-operator", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_operator (cairo_get_operator (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_source, "cairo-get-source", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_get_source (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_tolerance, "cairo-get-tolerance", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_double (cairo_get_tolerance (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_antialias, "cairo-get-antialias", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_antialias (cairo_get_antialias (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_current_point, "cairo-get-current-point", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    double x, y;
+    cairo_get_current_point (scm_to_cairo (ctx), &x, &y);
+    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_fill_rule, "cairo-get-fill-rule", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_fill_rule (cairo_get_fill_rule (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_line_width, "cairo-get-line-width", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_double (cairo_get_line_width (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_line_cap, "cairo-get-line-cap", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_line_cap (cairo_get_line_cap (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_line_join, "cairo-get-line-join", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_line_join (cairo_get_line_join (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_miter_limit, "cairo-get-miter-limit", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_double (cairo_get_miter_limit (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_dash_count, "cairo-get-dash-count", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_int (cairo_get_dash_count (scm_to_cairo (ctx)));
+}
+SCM_DEFINE_PUBLIC (scm_cairo_get_dash, "cairo-get-line-join", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    double *data = NULL;
+    int ndoubles;
+    cairo_t *cr;
+    double offset;
+    
+    cr = scm_to_cairo (ctx);
+    ndoubles = cairo_get_dash_count (cr);
+    if (ndoubles)
+        data = scm_malloc (ndoubles * sizeof (double));
+    
+    cairo_get_dash (cr, data, &offset);
+    
+    return scm_values (scm_list_2 (data ? scm_take_f64vector(data, ndoubles) : SCM_BOOL_F,
+                                   scm_from_double (offset)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_matrix, "cairo-get-matrix", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    cairo_matrix_t matrix;
+
+    cairo_get_matrix (scm_to_cairo (ctx), &matrix);
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_target, "cairo-get-target", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_surface (cairo_get_target (scm_to_cairo (ctx)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_get_group_target, "cairo-get-group-target", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_surface (cairo_get_group_target (scm_to_cairo (ctx)));
+}
+
+static SCM make_point (double x, double y) 
+{
+    return scm_f64vector (scm_list_2 (scm_from_double (x),
+                                      scm_from_double (y)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_path_fold, "cairo-path-fold", 3, 0, 0,
+	    (SCM spath, SCM proc, SCM init),
+	    "Fold over a cairo path.")
+{
+    cairo_path_t *path;
+    int i, j, len;
+    SCM ret = init;
     cairo_path_data_t *data;
-    int num_data;
-} cairo_path_t;
+    cairo_path_data_type_t type;
+    SCM args, tail;
 
-cairo_public cairo_path_t *
-cairo_copy_path (cairo_t *cr);
+    path = scm_to_cairo_path (spath);
 
-cairo_public cairo_path_t *
-cairo_copy_path_flat (cairo_t *cr);
+    for (i = 0; i < path->num_data; /* i incremented below */) {
+        type = path->data[i].header.type;
+        len = path->data[i].header.length;
+        args = scm_cons (scm_from_cairo_path_data_type (type), SCM_EOL);
 
-cairo_public void
-cairo_append_path (cairo_t		*cr,
-		   const cairo_path_t	*path);
+        for (j = 0, i++, tail = args; j < len; j++, i++, tail = scm_cdr (tail)) {
+            data = &path->data[i];
+            scm_set_cdr_x (tail, scm_cons (make_point (data->point.x,
+                                                       data->point.y),
+                                           SCM_EOL));
+        }
+            
+        ret = scm_call_2 (proc, args, ret);
+    }
+    
+    return ret;
+}
 
-cairo_public void
-cairo_path_destroy (cairo_path_t *path);
+SCM_DEFINE_PUBLIC (scm_cairo_copy_path, "cairo-copy-path", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_path (cairo_copy_path (scm_to_cairo (ctx)));
+}
 
-/* Error status queries */
+SCM_DEFINE_PUBLIC (scm_cairo_copy_path_flat, "cairo-copy-path-flat", 1, 0, 0,
+	    (SCM ctx),
+	    "")
+{
+    return scm_from_cairo_path (cairo_copy_path_flat (scm_to_cairo (ctx)));
+}
 
-cairo_public cairo_status_t
-cairo_status (cairo_t *cr);
+SCM_DEFINE_PUBLIC (scm_cairo_append_path, "cairo-append-path", 2, 0, 0,
+                   (SCM ctx, SCM path),
+	    "")
+{
+    cairo_append_path (scm_to_cairo (ctx), scm_to_cairo_path (path));
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public const char *
-cairo_status_to_string (cairo_status_t status);
+SCM_DEFINE_PUBLIC (scm_cairo_surface_create_similar, "cairo-surface-create-similar", 4, 0, 0,
+                   (SCM other, SCM content, SCM w, SCM h),
+	    "")
+{
+    /* FIXME refcounting; take_* */
+    return scm_from_cairo_surface (cairo_surface_create_similar (scm_to_cairo_surface (other),
+                                                                 scm_to_cairo_content (content),
+                                                                 scm_to_int (w),
+                                                                 scm_to_int (h)));
+}
 
-/* Surface manipulation */
+SCM_DEFINE_PUBLIC (scm_cairo_surface_finish, "cairo-surface-finish", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    cairo_surface_finish (scm_to_cairo_surface (surf));
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public cairo_surface_t *
-cairo_surface_create_similar (cairo_surface_t  *other,
-			      cairo_content_t	content,
-			      int		width,
-			      int		height);
+#ifdef DEBUG_GUILE_CAIRO
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_reference_count, "cairo-surface-get-reference-count", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    return scm_from_uint (cairo_surface_get_reference_count (scm_to_cairo_surface (surf)));
+}
+#endif
 
-cairo_public cairo_surface_t *
-cairo_surface_reference (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_type, "cairo-surface-get-type", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    return scm_from_cairo_surface_type (cairo_surface_get_type (scm_to_cairo_surface (surf)));
+}
 
-cairo_public void
-cairo_surface_finish (cairo_surface_t *surface);
-
-cairo_public void
-cairo_surface_destroy (cairo_surface_t *surface);
-
-cairo_public unsigned int
-cairo_surface_get_reference_count (cairo_surface_t *surface);
-
-cairo_public cairo_status_t
-cairo_surface_status (cairo_surface_t *surface);
-
-/**
- * cairo_surface_type_t
- * @CAIRO_SURFACE_TYPE_IMAGE: The surface is of type image
- * @CAIRO_SURFACE_TYPE_PDF: The surface is of type pdf
- * @CAIRO_SURFACE_TYPE_PS: The surface is of type ps
- * @CAIRO_SURFACE_TYPE_XLIB: The surface is of type xlib
- * @CAIRO_SURFACE_TYPE_XCB: The surface is of type xcb
- * @CAIRO_SURFACE_TYPE_GLITZ: The surface is of type glitz
- * @CAIRO_SURFACE_TYPE_QUARTZ: The surface is of type quartz
- * @CAIRO_SURFACE_TYPE_WIN32: The surface is of type win32
- * @CAIRO_SURFACE_TYPE_BEOS: The surface is of type beos
- * @CAIRO_SURFACE_TYPE_DIRECTFB: The surface is of type directfb
- * @CAIRO_SURFACE_TYPE_SVG: The surface is of type svg
- * @CAIRO_SURFACE_TYPE_OS2: The surface is of type os2
- *
- * #cairo_surface_type_t is used to describe the type of a given
- * surface. The surface types are also known as "backends" or "surface
- * backends" within cairo.
- *
- * The type of a surface is determined by the function used to create
- * it, which will generally be of the form cairo_<emphasis>type</emphasis>_surface_create,
- * (though see cairo_surface_create_similar as well).
- *
- * The surface type can be queried with cairo_surface_get_type()
- *
- * The various cairo_surface functions can be used with surfaces of
- * any type, but some backends also provide type-specific functions
- * that must only be called with a surface of the appropriate
- * type. These functions have names that begin with
- * cairo_<emphasis>type</emphasis>_surface such as cairo_image_surface_get_width().
- *
- * The behavior of calling a type-specific function with a surface of
- * the wrong type is undefined.
- *
- * New entries may be added in future versions.
- *
- * Since: 1.2
- **/
-typedef enum _cairo_surface_type {
-    CAIRO_SURFACE_TYPE_IMAGE,
-    CAIRO_SURFACE_TYPE_PDF,
-    CAIRO_SURFACE_TYPE_PS,
-    CAIRO_SURFACE_TYPE_XLIB,
-    CAIRO_SURFACE_TYPE_XCB,
-    CAIRO_SURFACE_TYPE_GLITZ,
-    CAIRO_SURFACE_TYPE_QUARTZ,
-    CAIRO_SURFACE_TYPE_WIN32,
-    CAIRO_SURFACE_TYPE_BEOS,
-    CAIRO_SURFACE_TYPE_DIRECTFB,
-    CAIRO_SURFACE_TYPE_SVG,
-    CAIRO_SURFACE_TYPE_OS2
-} cairo_surface_type_t;
-
-cairo_public cairo_surface_type_t
-cairo_surface_get_type (cairo_surface_t *surface);
-
-cairo_public cairo_content_t
-cairo_surface_get_content (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_content, "cairo-surface-get-content", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    return scm_from_cairo_content (cairo_surface_get_content (scm_to_cairo_surface (surf)));
+}
 
 #if CAIRO_HAS_PNG_FUNCTIONS
 
-cairo_public cairo_status_t
-cairo_surface_write_to_png (cairo_surface_t	*surface,
-			    const char		*filename);
+SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png", 1, 0, 0,
+                   (SCM surf, SCM filename),
+	    "")
+{
+    char *str;
+    cairo_status_t status;
 
+    scm_dynwind_begin (0);
+    str = scm_to_locale_string (filename);
+    scm_dynwind_free (str);
+    
+    status = cairo_surface_write_to_png (scm_to_cairo_surface (surf), str);
+    scm_c_check_cairo_status (status, s_scm_cairo_surface_write_to_png);
+
+    return SCM_UNSPECIFIED;
+}
+
+#if 0
 cairo_public cairo_status_t
 cairo_surface_write_to_png_stream (cairo_surface_t	*surface,
 				   cairo_write_func_t	write_func,
 				   void			*closure);
+#endif /* 0 */
 
-#endif
+#endif /* CAIRO_HAS_PNG_FUNCTIONS */
+
+#if 0
 
 cairo_public void *
 cairo_surface_get_user_data (cairo_surface_t		 *surface,

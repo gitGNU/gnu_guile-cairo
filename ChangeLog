@@ -1,5 +1,8 @@
 2007-05-17  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c: Define more functions; only about 20
+	to go.
+
 	* guile-cairo/guile-cairo.c: Define about 80 functions. Still not
 	done.
 
