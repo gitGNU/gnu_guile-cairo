@@ -1,5 +1,12 @@
 2007-05-17  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c: Define about 80 functions. Still not
+	done.
+
+	* guile-cairo/guile-cairo-smob-types.c
+	(scm_cairo_font_options_equalp, scm_init_cairo_smob_types): Add
+	equal? handler for font options.
+
 	* Move C module and includes into guile-cairo dir; it seems I
 	might have to fight bzr for this one.
 

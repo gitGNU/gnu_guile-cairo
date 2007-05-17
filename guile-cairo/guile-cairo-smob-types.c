@@ -228,6 +228,16 @@ scm_cairo_font_options_free (SCM smob)
     return 0;
 }
 
+static SCM
+scm_cairo_font_options_equalp (SCM this, SCM other)
+{
+    if (cairo_font_options_equal (scm_to_cairo_font_options (this),
+                                  scm_to_cairo_font_options (other)))
+        return SCM_BOOL_T;
+    else
+        return SCM_BOOL_F;
+}
+
 /**********************************************************************
  * cairo_path_t
  **********************************************************************/
@@ -282,6 +292,7 @@ scm_init_cairo_smob_types (void)
 
     scm_tc16_cairo_font_options_t = scm_make_smob_type ("cairo-font-options", 0);
     scm_set_smob_free (scm_tc16_cairo_font_options_t, scm_cairo_font_options_free);
+    scm_set_smob_equalp (scm_tc16_cairo_font_options_t, scm_cairo_font_options_equalp);
 
     scm_tc16_cairo_path_t = scm_make_smob_type ("cairo-path", 0);
     scm_set_smob_free (scm_tc16_cairo_path_t, scm_cairo_path_free);
