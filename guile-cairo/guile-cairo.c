@@ -1447,302 +1447,373 @@ cairo_surface_write_to_png_stream (cairo_surface_t	*surface,
 
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_font_options, "cairo-surface-get-font-options", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    cairo_font_options_t *opts = cairo_font_options_create ();
+    
+    cairo_surface_get_font_options (scm_to_cairo_surface (surf), opts);
+    /* FIXME: take */
+    return scm_from_cairo_font_options(opts);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_flush, "cairo-surface-flush", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    cairo_surface_flush (scm_to_cairo_surface (surf));
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_mark_dirty, "cairo-surface-mark-dirty", 1, 0, 0,
+	    (SCM surf),
+	    "")
+{
+    cairo_surface_mark_dirty (scm_to_cairo_surface (surf));
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_mark_dirty_rectangle, "cairo-surface-mark-dirty-rectangle", 5, 0, 0,
+                   (SCM surf, SCM x, SCM y, SCM width, SCM height),
+	    "")
+{
+    cairo_surface_mark_dirty_rectangle (scm_to_cairo_surface (surf),
+                                        scm_to_double (x),
+                                        scm_to_double (y),
+                                        scm_to_double (width),
+                                        scm_to_double (height));
+    
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_set_device_offset, "cairo-surface-set-device-offset", 3, 0, 0,
+                   (SCM surf, SCM x, SCM y),
+	    "")
+{
+    cairo_surface_set_device_offset (scm_to_cairo_surface (surf),
+                                     scm_to_double (x),
+                                     scm_to_double (y));
+    
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device_offset, "cairo-surface-get-device-offset", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    double x, y;
+
+    cairo_surface_get_device_offset (scm_to_cairo_surface (surf),
+                                     &x, &y);
+    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_set_fallback_resolution, "cairo-surface-set-fallback_resolution", 3, 0, 0,
+                   (SCM surf, SCM x, SCM y),
+	    "")
+{
+    cairo_surface_set_fallback_resolution (scm_to_cairo_surface (surf),
+                                           scm_to_double (x),
+                                           scm_to_double (y));
+    
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create, "cairo-image-surface-create", 3, 0, 0,
+                   (SCM format, SCM x, SCM y),
+	    "")
+{
+    return scm_from_cairo_surface (cairo_image_surface_create (scm_to_cairo_format (format),
+                                                               scm_to_double (x),
+                                                               scm_to_double (y)));
+}
+
 #if 0
-
-cairo_public void *
-cairo_surface_get_user_data (cairo_surface_t		 *surface,
-			     const cairo_user_data_key_t *key);
-
-cairo_public cairo_status_t
-cairo_surface_set_user_data (cairo_surface_t		 *surface,
-			     const cairo_user_data_key_t *key,
-			     void			 *user_data,
-			     cairo_destroy_func_t	 destroy);
-
-cairo_public void
-cairo_surface_get_font_options (cairo_surface_t      *surface,
-				cairo_font_options_t *options);
-
-cairo_public void
-cairo_surface_flush (cairo_surface_t *surface);
-
-cairo_public void
-cairo_surface_mark_dirty (cairo_surface_t *surface);
-
-cairo_public void
-cairo_surface_mark_dirty_rectangle (cairo_surface_t *surface,
-				    int              x,
-				    int              y,
-				    int              width,
-				    int              height);
-
-cairo_public void
-cairo_surface_set_device_offset (cairo_surface_t *surface,
-				 double           x_offset,
-				 double           y_offset);
-
-cairo_public void
-cairo_surface_get_device_offset (cairo_surface_t *surface,
-				 double          *x_offset,
-				 double          *y_offset);
-
-cairo_public void
-cairo_surface_set_fallback_resolution (cairo_surface_t	*surface,
-				       double		 x_pixels_per_inch,
-				       double		 y_pixels_per_inch);
-
-/* Image-surface functions */
-
-/**
- * cairo_format_t
- * @CAIRO_FORMAT_ARGB32: each pixel is a 32-bit quantity, with
- *   alpha in the upper 8 bits, then red, then green, then blue.
- *   The 32-bit quantities are stored native-endian. Pre-multiplied
- *   alpha is used. (That is, 50% transparent red is 0x80800000,
- *   not 0x80ff0000.)
- * @CAIRO_FORMAT_RGB24: each pixel is a 32-bit quantity, with
- *   the upper 8 bits unused. Red, Green, and Blue are stored
- *   in the remaining 24 bits in that order.
- * @CAIRO_FORMAT_A8: each pixel is a 8-bit quantity holding
- *   an alpha value.
- * @CAIRO_FORMAT_A1: each pixel is a 1-bit quantity holding
- *   an alpha value. Pixels are packed together into 32-bit
- *   quantities. The ordering of the bits matches the
- *   endianess of the platform. On a big-endian machine, the
- *   first pixel is in the uppermost bit, on a little-endian
- *   machine the first pixel is in the least-significant bit.
- * @CAIRO_FORMAT_RGB16_565: This format value is deprecated. It has
- *   never been properly implemented in cairo and should not be used
- *   by applications. (since 1.2)
- *
- * #cairo_format_t is used to identify the memory format of
- * image data.
- *
- * New entries may be added in future versions.
- **/
-typedef enum _cairo_format {
-    CAIRO_FORMAT_ARGB32,
-    CAIRO_FORMAT_RGB24,
-    CAIRO_FORMAT_A8,
-    CAIRO_FORMAT_A1
-    /* The value of 4 is reserved by a deprecated enum value.
-     * The next format added must have an explicit value of 5.
-    CAIRO_FORMAT_RGB16_565 = 4,
-    */
-} cairo_format_t;
-
-cairo_public cairo_surface_t *
-cairo_image_surface_create (cairo_format_t	format,
-			    int			width,
-			    int			height);
-
 cairo_public cairo_surface_t *
 cairo_image_surface_create_for_data (unsigned char	       *data,
 				     cairo_format_t		format,
 				     int			width,
 				     int			height,
 				     int			stride);
-
 cairo_public unsigned char *
 cairo_image_surface_get_data (cairo_surface_t *surface);
 
-cairo_public cairo_format_t
-cairo_image_surface_get_format (cairo_surface_t *surface);
+#endif /* 0 */
 
-cairo_public int
-cairo_image_surface_get_width (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_format, "cairo-image-surface-get-format", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    return scm_from_cairo_format (cairo_image_surface_get_format (scm_to_cairo_surface (surf)));
+}
 
-cairo_public int
-cairo_image_surface_get_height (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_width, "cairo-image-surface-get-width", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    return scm_from_double (cairo_image_surface_get_width (scm_to_cairo_surface (surf)));
+}
 
-cairo_public int
-cairo_image_surface_get_stride (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_height, "cairo-image-surface-get-heigt", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    return scm_from_double (cairo_image_surface_get_height (scm_to_cairo_surface (surf)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_stride, "cairo-image-surface-get-heigt", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    return scm_from_double (cairo_image_surface_get_stride (scm_to_cairo_surface (surf)));
+}
 
 #if CAIRO_HAS_PNG_FUNCTIONS
 
-cairo_public cairo_surface_t *
-cairo_image_surface_create_from_png (const char	*filename);
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface-create-from-png", 1, 0, 0,
+                   (SCM sfilename),
+	    "")
+{
+    char *filename;
+    SCM ret;
+    
+    scm_dynwind_begin (0);
+    filename = scm_to_locale_string (sfilename);
+    scm_dynwind_free (filename);
 
+    ret = scm_from_cairo_surface (cairo_image_surface_create_from_png (filename));
+
+    scm_dynwind_end ();
+
+    return ret;
+}
+
+#if 0
 cairo_public cairo_surface_t *
 cairo_image_surface_create_from_png_stream (cairo_read_func_t	read_func,
 					    void		*closure);
+#endif /* 0 */
 
+#endif /* CAIRO_HAS_PNG_FUNCTIONS */
+
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_rgb, "cairo-pattern-create-rgb", 3, 0, 0,
+                   (SCM r, SCM g, SCM b),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_pattern_create_rgb (scm_to_double (r),
+                                                             scm_to_double (g),
+                                                             scm_to_double (b)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_rgba, "cairo-pattern-create-rgba", 4, 0, 0,
+                   (SCM r, SCM g, SCM b, SCM a),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_pattern_create_rgba (scm_to_double (r),
+                                                              scm_to_double (g),
+                                                              scm_to_double (b),
+                                                              scm_to_double (a)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_for_surface, "cairo-pattern-create-for-surface", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_pattern_create_for_surface (scm_to_cairo_surface (surf)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_linear, "cairo-pattern-create-linear", 4, 0, 0,
+                   (SCM x0, SCM y0, SCM x1, SCM y1),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_pattern_create_linear (scm_to_double (x0),
+                                                                scm_to_double (y0),
+                                                                scm_to_double (x1),
+                                                                scm_to_double (y1)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_radial, "cairo-pattern-create-radial", 6, 0, 0,
+                   (SCM cx0, SCM cy0, SCM r0, SCM cx1, SCM cy1, SCM r1),
+	    "")
+{
+    return scm_from_cairo_pattern (cairo_pattern_create_radial (scm_to_double (cx0),
+                                                                scm_to_double (cy0),
+                                                                scm_to_double (r0),
+                                                                scm_to_double (cx1),
+                                                                scm_to_double (cy1),
+                                                                scm_to_double (r1)));
+}
+
+#ifdef DEBUG_GUILE_CAIRO
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_reference_count, "cairo-pattern-get-reference-count", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    return scm_from_uint (cairo_pattern_get_reference_count (scm_to_cairo_pattern (pat)));
+}
 #endif
 
-/* Pattern creation functions */
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_type, "cairo-pattern-get-type", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    return scm_from_cairo_pattern_type (cairo_pattern_get_type (scm_to_cairo_pattern (pat)));
+}
 
-cairo_public cairo_pattern_t *
-cairo_pattern_create_rgb (double red, double green, double blue);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_add_color_stop_rgb, "cairo-pattern-add-color-stop-rgb", 5, 0, 0,
+                   (SCM pat, SCM offset, SCM r, SCM g, SCM b),
+	    "")
+{
+    cairo_pattern_add_color_stop_rgb (scm_to_cairo_pattern (pat),
+                                      scm_to_double (offset),
+                                      scm_to_double (r),
+                                      scm_to_double (g),
+                                      scm_to_double (b));
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public cairo_pattern_t *
-cairo_pattern_create_rgba (double red, double green, double blue,
-			   double alpha);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_add_color_stop_rgba, "cairo-pattern-add-color-stop-rgba", 6, 0, 0,
+                   (SCM pat, SCM offset, SCM r, SCM g, SCM b, SCM a),
+	    "")
+{
+    cairo_pattern_add_color_stop_rgba (scm_to_cairo_pattern (pat),
+                                       scm_to_double (offset),
+                                       scm_to_double (r),
+                                       scm_to_double (g),
+                                       scm_to_double (b),
+                                       scm_to_double (a));
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public cairo_pattern_t *
-cairo_pattern_create_for_surface (cairo_surface_t *surface);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_set_matrix, "cairo-pattern-set-matrix", 2, 0, 0,
+	    (SCM pat, SCM smatrix),
+	    "")
+{
+    cairo_matrix_t matrix;
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    
+    cairo_pattern_set_matrix (scm_to_cairo_pattern (pat), &matrix);
 
-cairo_public cairo_pattern_t *
-cairo_pattern_create_linear (double x0, double y0,
-			     double x1, double y1);
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public cairo_pattern_t *
-cairo_pattern_create_radial (double cx0, double cy0, double radius0,
-			     double cx1, double cy1, double radius1);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_matrix, "cairo-pattern-get-matrix", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_pattern_get_matrix (scm_to_cairo_pattern (pat), &matrix);
 
-cairo_public cairo_pattern_t *
-cairo_pattern_reference (cairo_pattern_t *pattern);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_pattern_destroy (cairo_pattern_t *pattern);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_set_extend, "cairo-pattern-set-extend", 2, 0, 0,
+	    (SCM pat, SCM extend),
+	    "")
+{
+    cairo_pattern_set_extend (scm_to_cairo_pattern (pat),
+                              scm_to_cairo_extend (extend));
 
-cairo_public unsigned int
-cairo_pattern_get_reference_count (cairo_pattern_t *pattern);
+    return SCM_UNSPECIFIED;
+}
 
-cairo_public cairo_status_t
-cairo_pattern_status (cairo_pattern_t *pattern);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_extend, "cairo-pattern-get-extend", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    return scm_from_cairo_extend (cairo_pattern_get_extend (scm_to_cairo_pattern (pat)));
+}
 
-cairo_public void *
-cairo_pattern_get_user_data (cairo_pattern_t		 *pattern,
-			     const cairo_user_data_key_t *key);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_set_filter, "cairo-pattern-set-filter", 2, 0, 0,
+	    (SCM pat, SCM filter),
+	    "")
+{
+    cairo_pattern_set_filter (scm_to_cairo_pattern (pat),
+                              scm_to_cairo_filter (filter));
 
-cairo_public cairo_status_t
-cairo_pattern_set_user_data (cairo_pattern_t		 *pattern,
-			     const cairo_user_data_key_t *key,
-			     void			 *user_data,
-			     cairo_destroy_func_t	  destroy);
+    return SCM_UNSPECIFIED;
+}
 
-/**
- * cairo_pattern_type_t
- * @CAIRO_PATTERN_TYPE_SOLID: The pattern is a solid (uniform)
- * color. It may be opaque or translucent.
- * @CAIRO_PATTERN_TYPE_SURFACE: The pattern is a based on a surface (an image).
- * @CAIRO_PATTERN_TYPE_LINEAR: The pattern is a linear gradient.
- * @CAIRO_PATTERN_TYPE_RADIAL: The pattern is a radial gradient.
- *
- * #cairo_pattern_type_t is used to describe the type of a given pattern.
- *
- * The type of a pattern is determined by the function used to create
- * it. The cairo_pattern_create_rgb() and cairo_pattern_create_rgba()
- * functions create SOLID patterns. The remaining
- * cairo_pattern_create functions map to pattern types in obvious
- * ways.
- *
- * The pattern type can be queried with cairo_pattern_get_type()
- *
- * Most cairo_pattern functions can be called with a pattern of any
- * type, (though trying to change the extend or filter for a solid
- * pattern will have no effect). A notable exception is
- * cairo_pattern_add_color_stop_rgb() and
- * cairo_pattern_add_color_stop_rgba() which must only be called with
- * gradient patterns (either LINEAR or RADIAL). Otherwise the pattern
- * will be shutdown and put into an error state.
- *
- * New entries may be added in future versions.
- *
- * Since: 1.2
- **/
-typedef enum _cairo_pattern_type {
-    CAIRO_PATTERN_TYPE_SOLID,
-    CAIRO_PATTERN_TYPE_SURFACE,
-    CAIRO_PATTERN_TYPE_LINEAR,
-    CAIRO_PATTERN_TYPE_RADIAL
-} cairo_pattern_type_t;
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_filter, "cairo-pattern-get-filter", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    return scm_from_cairo_filter (cairo_pattern_get_filter (scm_to_cairo_pattern (pat)));
+}
 
-cairo_public cairo_pattern_type_t
-cairo_pattern_get_type (cairo_pattern_t *pattern);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_rgba, "cairo-pattern-get-rgba", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    double r, g, b, a;
+    cairo_pattern_get_rgba (scm_to_cairo_pattern (pat), &r, &b, &g, &a);
+    return scm_values (scm_list_4 (scm_from_double (r), scm_from_double (g),
+                                   scm_from_double (b), scm_from_double (a)));
+}
 
-cairo_public void
-cairo_pattern_add_color_stop_rgb (cairo_pattern_t *pattern,
-				  double offset,
-				  double red, double green, double blue);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_surface, "cairo-pattern-get-surface", 1, 0, 0,
+	    (SCM pat),
+	    "")
+{
+    cairo_surface_t *surf = NULL;
+    cairo_status_t status;
+    
+    status = cairo_pattern_get_surface (scm_to_cairo_pattern (pat), &surf);
+    scm_c_check_cairo_status (status, s_scm_cairo_pattern_get_surface);
+    
+    return scm_from_cairo_surface (surf);
+}
 
-cairo_public void
-cairo_pattern_add_color_stop_rgba (cairo_pattern_t *pattern,
-				   double offset,
-				   double red, double green, double blue,
-				   double alpha);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_color_stop_rgba, "cairo-pattern-get-color-stop-rgba", 2, 0, 0,
+                   (SCM pat, SCM i),
+	    "")
+{
+    double off, r, g, b, a;
+    cairo_pattern_get_color_stop_rgba (scm_to_cairo_pattern (pat), scm_to_int (i),
+                                       &off, &r, &b, &g, &a);
+    return scm_values (scm_list_5 (scm_from_double (off),
+                                   scm_from_double (r), scm_from_double (g),
+                                   scm_from_double (b), scm_from_double (a)));
+}
 
-cairo_public void
-cairo_pattern_set_matrix (cairo_pattern_t      *pattern,
-			  const cairo_matrix_t *matrix);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_color_stop_count, "cairo-pattern-get-color-count", 1, 0, 0,
+                   (SCM pat),
+	    "")
+{
+    int count;
+    cairo_pattern_get_color_stop_count (scm_to_cairo_pattern (pat), &count);
+    return scm_from_int (count);
+}
 
-cairo_public void
-cairo_pattern_get_matrix (cairo_pattern_t *pattern,
-			  cairo_matrix_t  *matrix);
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_linear_points, "cairo-pattern-get-linear-points", 1, 0, 0,
+                   (SCM pat),
+	    "")
+{
+    double x0, y0, x1, y1;
+    cairo_pattern_get_linear_points (scm_to_cairo_pattern (pat),
+                                     &x0, &y0, &x1, &y1);
+    return scm_values (scm_list_4 (scm_from_double (x0), scm_from_double (y0),
+                                   scm_from_double (x1), scm_from_double (y1)));
+}
 
-/**
- * cairo_extend_t
- * @CAIRO_EXTEND_NONE: pixels outside of the source pattern
- *   are fully transparent
- * @CAIRO_EXTEND_REPEAT: the pattern is tiled by repeating
- * @CAIRO_EXTEND_REFLECT: the pattern is tiled by reflecting
- *   at the edges (not implemented for surface patterns currently)
- * @CAIRO_EXTEND_PAD: pixels outside of the pattern copy
- *   the closest pixel from the source (Since 1.2; not implemented
- *   for surface patterns currently)
- *
- * #cairo_extend_t is used to describe how the area outside
- * of a pattern will be drawn.
- *
- * New entries may be added in future versions.
- **/
-typedef enum _cairo_extend {
-    CAIRO_EXTEND_NONE,
-    CAIRO_EXTEND_REPEAT,
-    CAIRO_EXTEND_REFLECT,
-    CAIRO_EXTEND_PAD
-} cairo_extend_t;
+SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_radial_circles, "cairo-pattern-get-radial-circles", 1, 0, 0,
+                   (SCM pat),
+	    "")
+{
+    double x0, y0, r0, x1, y1, r1;
+    
+    cairo_pattern_get_radial_circles (scm_to_cairo_pattern (pat),
+                                      &x0, &y0, &r0, &x1, &y1, &r1);
+    return scm_values (scm_list_n (scm_from_double (x0), scm_from_double (y0),
+                                   scm_from_double (r0),
+                                   scm_from_double (x1), scm_from_double (y1),
+                                   scm_from_double (r1),
+                                   SCM_UNDEFINED));
+}
 
-cairo_public void
-cairo_pattern_set_extend (cairo_pattern_t *pattern, cairo_extend_t extend);
-
-cairo_public cairo_extend_t
-cairo_pattern_get_extend (cairo_pattern_t *pattern);
-
-typedef enum _cairo_filter {
-    CAIRO_FILTER_FAST,
-    CAIRO_FILTER_GOOD,
-    CAIRO_FILTER_BEST,
-    CAIRO_FILTER_NEAREST,
-    CAIRO_FILTER_BILINEAR,
-    CAIRO_FILTER_GAUSSIAN
-} cairo_filter_t;
-
-cairo_public void
-cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter);
-
-cairo_public cairo_filter_t
-cairo_pattern_get_filter (cairo_pattern_t *pattern);
-
-cairo_public cairo_status_t
-cairo_pattern_get_rgba (cairo_pattern_t *pattern,
-			double *red, double *green,
-			double *blue, double *alpha);
-
-cairo_public cairo_status_t
-cairo_pattern_get_surface (cairo_pattern_t *pattern,
-			   cairo_surface_t **surface);
-
-
-cairo_public cairo_status_t
-cairo_pattern_get_color_stop_rgba (cairo_pattern_t *pattern,
-				   int index, double *offset,
-				   double *red, double *green,
-				   double *blue, double *alpha);
-
-cairo_public cairo_status_t
-cairo_pattern_get_color_stop_count (cairo_pattern_t *pattern,
-				    int *count);
-
-cairo_public cairo_status_t
-cairo_pattern_get_linear_points (cairo_pattern_t *pattern,
-				 double *x0, double *y0,
-				 double *x1, double *y1);
-
-cairo_public cairo_status_t
-cairo_pattern_get_radial_circles (cairo_pattern_t *pattern,
-				  double *x0, double *y0, double *r0,
-				  double *x1, double *y1, double *r1);
+#if 0
 
 /* Matrix functions */
 
