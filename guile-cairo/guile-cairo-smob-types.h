@@ -26,25 +26,30 @@
 
 
 
+SCM scm_take_cairo (cairo_t *ctx);
 SCM scm_from_cairo (cairo_t *ctx);
 cairo_t* scm_to_cairo (SCM scm);
 
+SCM scm_take_cairo_surface (cairo_surface_t *surf);
 SCM scm_from_cairo_surface (cairo_surface_t *surf);
 cairo_surface_t* scm_to_cairo_surface (SCM scm);
 
+SCM scm_take_cairo_pattern (cairo_pattern_t *pat);
 SCM scm_from_cairo_pattern (cairo_pattern_t *pat);
 cairo_pattern_t* scm_to_cairo_pattern (SCM scm);
 
+SCM scm_take_cairo_font_face (cairo_font_face_t *pat);
 SCM scm_from_cairo_font_face (cairo_font_face_t *pat);
 cairo_font_face_t* scm_to_cairo_font_face (SCM scm);
 
+SCM scm_take_cairo_scaled_font (cairo_scaled_font_t *pat);
 SCM scm_from_cairo_scaled_font (cairo_scaled_font_t *pat);
 cairo_scaled_font_t* scm_to_cairo_scaled_font (SCM scm);
 
-SCM scm_from_cairo_font_options (cairo_font_options_t *fopt);
+SCM scm_take_cairo_font_options (cairo_font_options_t *fopt);
 cairo_font_options_t* scm_to_cairo_font_options (SCM scm);
 
-SCM scm_from_cairo_path (cairo_path_t *path);
+SCM scm_take_cairo_path (cairo_path_t *path);
 cairo_path_t* scm_to_cairo_path (SCM scm);
 
 

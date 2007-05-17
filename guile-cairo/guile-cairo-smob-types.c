@@ -42,14 +42,19 @@ scm_t_bits scm_tc16_cairo_path_t;
  **********************************************************************/
 
 SCM
-scm_from_cairo (cairo_t *ctx)
+scm_take_cairo (cairo_t *ctx)
 {
     SCM sctx;
 
-    cairo_reference (ctx);
     SCM_NEWSMOB (sctx, scm_tc16_cairo_t, ctx);
 
     return sctx;
+}
+
+SCM
+scm_from_cairo (cairo_t *ctx)
+{
+    return scm_take_cairo (cairo_reference (ctx));
 }
 
 cairo_t*
@@ -74,14 +79,19 @@ scm_cairo_free (SCM smob)
  **********************************************************************/
 
 SCM
-scm_from_cairo_surface (cairo_surface_t *surf)
+scm_take_cairo_surface (cairo_surface_t *surf)
 {
     SCM ssurf;
 
-    cairo_surface_reference (surf);
     SCM_NEWSMOB (ssurf, scm_tc16_cairo_surface_t, surf);
 
     return ssurf;
+}
+
+SCM
+scm_from_cairo_surface (cairo_surface_t *surf)
+{
+    return scm_take_cairo_surface (cairo_surface_reference (surf));
 }
 
 cairo_surface_t*
@@ -106,14 +116,19 @@ scm_cairo_surface_free (SCM smob)
  **********************************************************************/
 
 SCM
-scm_from_cairo_pattern (cairo_pattern_t *pat)
+scm_take_cairo_pattern (cairo_pattern_t *pat)
 {
     SCM spat;
 
-    cairo_pattern_reference (pat);
     SCM_NEWSMOB (spat, scm_tc16_cairo_pattern_t, pat);
 
     return spat;
+}
+
+SCM
+scm_from_cairo_pattern (cairo_pattern_t *pat)
+{
+    return scm_take_cairo_pattern (cairo_pattern_reference (pat));
 }
 
 cairo_pattern_t*
@@ -138,14 +153,19 @@ scm_cairo_pattern_free (SCM smob)
  **********************************************************************/
 
 SCM
-scm_from_cairo_font_face (cairo_font_face_t *pat)
+scm_take_cairo_font_face (cairo_font_face_t *pat)
 {
     SCM spat;
 
-    cairo_font_face_reference (pat);
     SCM_NEWSMOB (spat, scm_tc16_cairo_font_face_t, pat);
 
     return spat;
+}
+
+SCM
+scm_from_cairo_font_face (cairo_font_face_t *pat)
+{
+    return scm_take_cairo_font_face (cairo_font_face_reference (pat));
 }
 
 cairo_font_face_t*
@@ -170,7 +190,7 @@ scm_cairo_font_face_free (SCM smob)
  **********************************************************************/
 
 SCM
-scm_from_cairo_scaled_font (cairo_scaled_font_t *pat)
+scm_take_cairo_scaled_font (cairo_scaled_font_t *pat)
 {
     SCM spat;
 
@@ -178,6 +198,12 @@ scm_from_cairo_scaled_font (cairo_scaled_font_t *pat)
     SCM_NEWSMOB (spat, scm_tc16_cairo_scaled_font_t, pat);
 
     return spat;
+}
+
+SCM
+scm_from_cairo_scaled_font (cairo_scaled_font_t *pat)
+{
+    return scm_take_cairo_scaled_font (cairo_scaled_font_reference (pat));
 }
 
 cairo_scaled_font_t*
@@ -202,7 +228,7 @@ scm_cairo_scaled_font_free (SCM smob)
  **********************************************************************/
 
 SCM
-scm_from_cairo_font_options (cairo_font_options_t *fopt)
+scm_take_cairo_font_options (cairo_font_options_t *fopt)
 {
     SCM sfopt;
 
@@ -243,7 +269,7 @@ scm_cairo_font_options_equalp (SCM this, SCM other)
  **********************************************************************/
 
 SCM
-scm_from_cairo_path (cairo_path_t *path)
+scm_take_cairo_path (cairo_path_t *path)
 {
     SCM spath;
 

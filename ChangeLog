@@ -1,5 +1,20 @@
 2007-05-17  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.h: Expose scm_c_check_cairo_status.
+
+	* guile-cairo/guile-cairo.c: Update constructors and other
+	functions to use "take" functions as appropriate.
+
+	* guile-cairo/guile-cairo-smob-types.h:
+	* guile-cairo/guile-cairo-smob-types.c (scm_take_cairo)
+	(scm_take_cairo_surface, scm_take_cairo_pattern)
+	(scm_take_cairo_font_face, scm_take_cairo_scaled_font): Add take
+	variants to refcounted types, that do not reference their
+	arguments.
+	(scm_take_cairo_font_options, scm_take_cairo_path): Rename to
+	"take" instead of "from", indicating that these functions take
+	ownership of their args.
+
 	* guile-cairo/guile-cairo.c: 164 functions! Pretty much finished.
 
 	* guile-cairo/guile-cairo.c: Define more functions; only about 20

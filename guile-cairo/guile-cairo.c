@@ -27,7 +27,7 @@
 
 #include "guile-cairo.h"
 
-/* TODO: make sure that constructors have the right refcounting; checking of cairo_status */
+/* TODO: checking of cairo_status */
 
 void
 scm_c_check_cairo_status (cairo_status_t status, const char *subr)
@@ -58,11 +58,11 @@ SCM_DEFINE_PUBLIC (scm_cairo_version_string, "cairo-version-string", 0, 0, 0,
     return scm_from_locale_string (cairo_version_string ());
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_cairo, "cairo-create", 1, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
 	    (SCM surf),
 	    "")
 {
-    return scm_from_cairo (cairo_create (scm_to_cairo_surface (surf)));
+    return scm_take_cairo (cairo_create (scm_to_cairo_surface (surf)));
 }
 
 #ifdef DEBUG_GUILE_CAIRO
@@ -705,7 +705,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_font_options_create, "cairo-font-options-create", 0
 	    (void),
 	    "")
 {
-    return scm_from_cairo_font_options (cairo_font_options_create ());
+    return scm_take_cairo_font_options (cairo_font_options_create ());
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_font_options_copy, "cairo-font-options-copy", 1, 0, 0,
@@ -713,7 +713,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_font_options_copy, "cairo-font-options-copy", 1, 0,
 	    "")
 {
     cairo_font_options_t *opt = scm_to_cairo_font_options (fopt);
-    return scm_from_cairo_font_options (cairo_font_options_copy (opt));
+    return scm_take_cairo_font_options (cairo_font_options_copy (opt));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_font_options_merge, "cairo-font-options-merge", 2, 0, 0,
@@ -869,7 +869,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_font_options, "cairo-get-font-options", 1, 0, 0
 {
     cairo_font_options_t *opts = cairo_font_options_create ();
     cairo_get_font_options (scm_to_cairo (ctx), opts);
-    return scm_from_cairo_font_options (opts);
+    return scm_take_cairo_font_options (opts);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_font_face, "cairo-set-font-face", 2, 0, 0,
@@ -1073,7 +1073,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_create, "cairo-scaled-font-create", 3, 
     scm_fill_cairo_matrix (smatrix, &matrix);
     scm_fill_cairo_matrix (sctm, &ctm);
     
-    return scm_from_cairo_scaled_font (cairo_scaled_font_create (scm_to_cairo_font_face (face),
+    return scm_take_cairo_scaled_font (cairo_scaled_font_create (scm_to_cairo_font_face (face),
                                                                  &matrix, &ctm,
                                                                  scm_to_cairo_font_options (options)));
 }
@@ -1192,7 +1192,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_options, "cairo-scaled-font-ge
 
     cairo_scaled_font_get_font_options (scm_to_cairo_scaled_font (font), opts);
 
-    return scm_from_cairo_font_options (opts);
+    return scm_take_cairo_font_options (opts);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_get_operator, "cairo-get-operator", 1, 0, 0,
@@ -1359,14 +1359,14 @@ SCM_DEFINE_PUBLIC (scm_cairo_copy_path, "cairo-copy-path", 1, 0, 0,
 	    (SCM ctx),
 	    "")
 {
-    return scm_from_cairo_path (cairo_copy_path (scm_to_cairo (ctx)));
+    return scm_take_cairo_path (cairo_copy_path (scm_to_cairo (ctx)));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_copy_path_flat, "cairo-copy-path-flat", 1, 0, 0,
 	    (SCM ctx),
 	    "")
 {
-    return scm_from_cairo_path (cairo_copy_path_flat (scm_to_cairo (ctx)));
+    return scm_take_cairo_path (cairo_copy_path_flat (scm_to_cairo (ctx)));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_append_path, "cairo-append-path", 2, 0, 0,
@@ -1381,8 +1381,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_create_similar, "cairo-surface-create-simil
                    (SCM other, SCM content, SCM w, SCM h),
 	    "")
 {
-    /* FIXME refcounting; take_* */
-    return scm_from_cairo_surface (cairo_surface_create_similar (scm_to_cairo_surface (other),
+    return scm_take_cairo_surface (cairo_surface_create_similar (scm_to_cairo_surface (other),
                                                                  scm_to_cairo_content (content),
                                                                  scm_to_int (w),
                                                                  scm_to_int (h)));
@@ -1454,8 +1453,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_font_options, "cairo-surface-get-font-o
     cairo_font_options_t *opts = cairo_font_options_create ();
     
     cairo_surface_get_font_options (scm_to_cairo_surface (surf), opts);
-    /* FIXME: take */
-    return scm_from_cairo_font_options(opts);
+    return scm_take_cairo_font_options(opts);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_surface_flush, "cairo-surface-flush", 1, 0, 0,
@@ -1524,7 +1522,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create, "cairo-image-surface-create",
                    (SCM format, SCM x, SCM y),
 	    "")
 {
-    return scm_from_cairo_surface (cairo_image_surface_create (scm_to_cairo_format (format),
+    return scm_take_cairo_surface (cairo_image_surface_create (scm_to_cairo_format (format),
                                                                scm_to_double (x),
                                                                scm_to_double (y)));
 }
@@ -1582,7 +1580,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface
     filename = scm_to_locale_string (sfilename);
     scm_dynwind_free (filename);
 
-    ret = scm_from_cairo_surface (cairo_image_surface_create_from_png (filename));
+    ret = scm_take_cairo_surface (cairo_image_surface_create_from_png (filename));
 
     scm_dynwind_end ();
 
@@ -1601,7 +1599,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_rgb, "cairo-pattern-create-rgb", 3, 
                    (SCM r, SCM g, SCM b),
 	    "")
 {
-    return scm_from_cairo_pattern (cairo_pattern_create_rgb (scm_to_double (r),
+    return scm_take_cairo_pattern (cairo_pattern_create_rgb (scm_to_double (r),
                                                              scm_to_double (g),
                                                              scm_to_double (b)));
 }
@@ -1610,7 +1608,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_rgba, "cairo-pattern-create-rgba", 4
                    (SCM r, SCM g, SCM b, SCM a),
 	    "")
 {
-    return scm_from_cairo_pattern (cairo_pattern_create_rgba (scm_to_double (r),
+    return scm_take_cairo_pattern (cairo_pattern_create_rgba (scm_to_double (r),
                                                               scm_to_double (g),
                                                               scm_to_double (b),
                                                               scm_to_double (a)));
@@ -1620,14 +1618,14 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_for_surface, "cairo-pattern-create-f
                    (SCM surf),
 	    "")
 {
-    return scm_from_cairo_pattern (cairo_pattern_create_for_surface (scm_to_cairo_surface (surf)));
+    return scm_take_cairo_pattern (cairo_pattern_create_for_surface (scm_to_cairo_surface (surf)));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_linear, "cairo-pattern-create-linear", 4, 0, 0,
                    (SCM x0, SCM y0, SCM x1, SCM y1),
 	    "")
 {
-    return scm_from_cairo_pattern (cairo_pattern_create_linear (scm_to_double (x0),
+    return scm_take_cairo_pattern (cairo_pattern_create_linear (scm_to_double (x0),
                                                                 scm_to_double (y0),
                                                                 scm_to_double (x1),
                                                                 scm_to_double (y1)));
@@ -1637,7 +1635,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_radial, "cairo-pattern-create-radial
                    (SCM cx0, SCM cy0, SCM r0, SCM cx1, SCM cy1, SCM r1),
 	    "")
 {
-    return scm_from_cairo_pattern (cairo_pattern_create_radial (scm_to_double (cx0),
+    return scm_take_cairo_pattern (cairo_pattern_create_radial (scm_to_double (cx0),
                                                                 scm_to_double (cy0),
                                                                 scm_to_double (r0),
                                                                 scm_to_double (cx1),

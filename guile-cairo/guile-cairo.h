@@ -30,6 +30,8 @@
 #include <guile-cairo/guile-cairo-enum-types.h>
 #include <guile-cairo/guile-cairo-vector-types.h>
 
+void scm_c_check_cairo_status (cairo_status_t status, const char *subr);
+
 
 
 void scm_init_cairo (void);
