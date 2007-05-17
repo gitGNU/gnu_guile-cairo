@@ -1,7 +1,7 @@
 /* guile-cairo
  * Copyright (C) 2007 Andy Wingo <wingo at pobox dot com>
  *
- * guile-cairo-types.h:
+ * guile-cairo.h:
  *
  * This program is free software; you can redistribute it and/or    
  * modify it under the terms of the GNU General Public License as   
@@ -21,11 +21,17 @@
  * Boston, MA  02111-1307,  USA       gnu@gnu.org
  */
 
-#ifndef __GUILE_CAIRO_TYPES_H__
-#define __GUILE_CAIRO_TYPES_H__ 1
+#ifndef __GUILE_CAIRO_H__
+#define __GUILE_CAIRO_H__ 1
+
+/* fixme: figure out namespacing */
+
+#include <guile-cairo/guile-cairo-smob-types.h>
+#include <guile-cairo/guile-cairo-enum-types.h>
+#include <guile-cairo/guile-cairo-vector-types.h>
 
 
 
-void scm_init_cairo_types (void);
+void scm_init_cairo (void);
 
 #endif

@@ -1,7 +1,7 @@
 /* guile-cairo
  * Copyright (C) 2007 Andy Wingo <wingo at pobox dot com>
  *
- * guile-cairo.c: Cairo for Guile
+ * guile-cairo-smob-types.h:
  *
  * This program is free software; you can redistribute it and/or    
  * modify it under the terms of the GNU General Public License as   
@@ -21,28 +21,34 @@
  * Boston, MA  02111-1307,  USA       gnu@gnu.org
  */
 
-#include <libguile.h>
-
-#include <cairo.h>
-#include "guile-cairo-types.h"
-
-SCM_DEFINE (scm_cairo_version, "cairo-version", 0, 0, 0,
-	    (void),
-	    "Retrieves the version of the cairo library.")
-#define FUNC_NAME s_scm_cairo_version
-{
-    return scm_from_int (cairo_version ());
-}
-#undef FUNC_NAME
+#ifndef __GUILE_CAIRO_SMOB_TYPES_H__
+#define __GUILE_CAIRO_SMOB_TYPES_H__
 
 
 
-void
-scm_init_cairo (void)
-{
-#ifndef SCM_MAGIC_SNARFER
-#include "guile-cairo.x"
+SCM scm_from_cairo (cairo_t *ctx);
+cairo_t* scm_to_cairo (SCM scm);
+
+SCM scm_from_cairo_surface (cairo_surface_t *surf);
+cairo_surface_t* scm_to_cairo_surface (SCM scm);
+
+SCM scm_from_cairo_pattern (cairo_pattern_t *pat);
+cairo_pattern_t* scm_to_cairo_pattern (SCM scm);
+
+SCM scm_from_cairo_font_face (cairo_font_face_t *pat);
+cairo_font_face_t* scm_to_cairo_font_face (SCM scm);
+
+SCM scm_from_cairo_scaled_font (cairo_scaled_font_t *pat);
+cairo_scaled_font_t* scm_to_cairo_scaled_font (SCM scm);
+
+SCM scm_from_cairo_font_options (cairo_font_options_t *fopt);
+cairo_font_options_t* scm_to_cairo_font_options (SCM scm);
+
+SCM scm_from_cairo_path (cairo_path_t *path);
+cairo_path_t* scm_to_cairo_path (SCM scm);
+
+
+
+void scm_init_cairo_smob_types (void);
+
 #endif
-    scm_init_cairo_types ();
-    scm_c_export (NULL);
-}

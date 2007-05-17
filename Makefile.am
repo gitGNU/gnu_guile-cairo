@@ -1,4 +1,4 @@
-SUBDIRS = cairo examples tests
+SUBDIRS = guile-cairo cairo examples tests
 
 env: Makefile env.in
 	sed -e "s|@top_srcdir\@|$(shell cd $(top_srcdir) && pwd)|" \

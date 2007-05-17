@@ -65,6 +65,7 @@ AC_SUBST(CAIRO_CFLAGS)
 
 AC_CONFIG_FILES(
 Makefile
+guile-cairo/Makefile
 cairo/Makefile
 examples/Makefile
 tests/Makefile
