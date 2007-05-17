@@ -1811,56 +1811,162 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_radial_circles, "cairo-pattern-get-radi
                                    SCM_UNDEFINED));
 }
 
-#if 0
+SCM_DEFINE_PUBLIC (scm_cairo_make_matrix, "cairo-make-matrix", 6, 0, 0,
+                   (SCM xx, SCM yx, SCM xy, SCM yy, SCM x0, SCM y0),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_matrix_init (&matrix,
+                       scm_to_double (xx), scm_to_double (yx),
+                       scm_to_double (xy), scm_to_double (yy),
+                       scm_to_double (x0), scm_to_double (y0));
 
-/* Matrix functions */
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_matrix_init (cairo_matrix_t *matrix,
-		   double  xx, double  yx,
-		   double  xy, double  yy,
-		   double  x0, double  y0);
+SCM_DEFINE_PUBLIC (scm_cairo_make_identity_matrix, "cairo-make-identity-matrix", 0, 0, 0,
+                   (void),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_matrix_init_identity (&matrix);
 
-cairo_public void
-cairo_matrix_init_identity (cairo_matrix_t *matrix);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_matrix_init_translate (cairo_matrix_t *matrix,
-			     double tx, double ty);
+SCM_DEFINE_PUBLIC (scm_cairo_make_translate_matrix, "cairo-make-translate-matrix", 2, 0, 0,
+                   (SCM tx, SCM ty),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_matrix_init_translate (&matrix, scm_to_double (tx), scm_to_double (ty));
 
-cairo_public void
-cairo_matrix_init_scale (cairo_matrix_t *matrix,
-			 double sx, double sy);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_matrix_init_rotate (cairo_matrix_t *matrix,
-			  double radians);
+SCM_DEFINE_PUBLIC (scm_cairo_make_scale_matrix, "cairo-make-scale-matrix", 2, 0, 0,
+                   (SCM sx, SCM sy),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_matrix_init_scale (&matrix, scm_to_double (sx), scm_to_double (sy));
 
-cairo_public void
-cairo_matrix_translate (cairo_matrix_t *matrix, double tx, double ty);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_matrix_scale (cairo_matrix_t *matrix, double sx, double sy);
+SCM_DEFINE_PUBLIC (scm_cairo_make_rotate_matrix, "cairo-make-rotate-matrix", 1, 0, 0,
+                   (SCM rads),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    cairo_matrix_init_rotate (&matrix, scm_to_double (rads));
 
-cairo_public void
-cairo_matrix_rotate (cairo_matrix_t *matrix, double radians);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public cairo_status_t
-cairo_matrix_invert (cairo_matrix_t *matrix);
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_translate, "cairo-matrix-translate", 2, 0, 0,
+                   (SCM smatrix, SCM tx, SCM ty),
+	    "")
+{
+    cairo_matrix_t matrix;
 
-cairo_public void
-cairo_matrix_multiply (cairo_matrix_t	    *result,
-		       const cairo_matrix_t *a,
-		       const cairo_matrix_t *b);
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    
+    cairo_matrix_translate (&matrix, scm_to_double (tx), scm_to_double (ty));
 
-cairo_public void
-cairo_matrix_transform_distance (const cairo_matrix_t *matrix,
-				 double *dx, double *dy);
+    return scm_from_cairo_matrix (&matrix);
+}
 
-cairo_public void
-cairo_matrix_transform_point (const cairo_matrix_t *matrix,
-			      double *x, double *y);
-#endif
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_scale, "cairo-make-scale-matrix", 3, 0, 0,
+                   (SCM smatrix, SCM sx, SCM sy),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    
+    cairo_matrix_scale (&matrix, scm_to_double (sx), scm_to_double (sy));
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_rotate, "cairo-make-rotate-matrix", 2, 0, 0,
+                   (SCM smatrix, SCM rads),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    
+    cairo_matrix_rotate (&matrix, scm_to_double (rads));
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_invert, "cairo-matrix-invert", 1, 0, 0,
+                   (SCM smatrix),
+	    "")
+{
+    cairo_matrix_t matrix;
+    
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    
+    cairo_matrix_invert (&matrix);
+
+    return scm_from_cairo_matrix (&matrix);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_multiply, "cairo-matrix-multiply", 2, 0, 0,
+                   (SCM sm1, SCM sm2),
+	    "")
+{
+    cairo_matrix_t m1, m2;
+    
+    scm_fill_cairo_matrix (sm1, &m1);
+    scm_fill_cairo_matrix (sm2, &m2);
+    
+    cairo_matrix_multiply (&m1, &m1, &m2);
+
+    return scm_from_cairo_matrix (&m1);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_transform_distance, "cairo-matrix-transform-distance", 3, 0, 0,
+                   (SCM smatrix, SCM sdx, SCM sdy),
+	    "")
+{
+    cairo_matrix_t matrix;
+    double dx, dy;
+    
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    dx = scm_to_double (sdx);
+    dy = scm_to_double (sdy);
+    
+    cairo_matrix_transform_distance (&matrix, &dx, &dy);
+
+    return scm_values (scm_list_2 (scm_from_double (dx), scm_from_double (dy)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_transform_point, "cairo-matrix-transform-point", 3, 0, 0,
+                   (SCM smatrix, SCM sx, SCM sy),
+	    "")
+{
+    cairo_matrix_t matrix;
+    double x, y;
+    
+    scm_fill_cairo_matrix (smatrix, &matrix);
+    x = scm_to_double (sx);
+    y = scm_to_double (sy);
+    
+    cairo_matrix_transform_point (&matrix, &x, &y);
+
+    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+}
+
 
 
 void
