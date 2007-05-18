@@ -1,4 +1,3 @@
-# guile-gnome
 # Copyright (C) 2002 Thomas Vander Stichele
 
 # This program is free software; you can redistribute it and/or    
