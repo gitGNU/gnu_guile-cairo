@@ -1,5 +1,17 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.h: Include <guile-cairo.h>, not
+	<guile-cairo/guile-cairo.h>.
+
+	* guile-cairo/Makefile.am: 
+	* cairo/Makefile.am: Install the library as libguile-cairo.so; I
+	do not anticipate needing binary-incompat changes, and if we do
+	need them, we can rename the library.
+
+	* TODO: Update.
+
+	* README: New file, half-complete.
+
 	* guile-cairo/guile-cairo-enum-types.c: Add introspection
 	procedures for the enumerated types.
 

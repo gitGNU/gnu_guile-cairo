@@ -1,4 +1,3 @@
-* introspection on enumerated types: cairo-antialias-get-values
 * documentation (investigate munging the devhelp)
   - it seems doc snarfing is not a supported option; writing all those
     docs would suck, also
@@ -9,3 +8,5 @@
 * other surface types
 * stream functions, integration with guile ports
 * checking of cairo_status at function exit
+* fix up copyrights
+* README, etc

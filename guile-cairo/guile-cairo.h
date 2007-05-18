@@ -22,13 +22,13 @@
  */
 
 #ifndef __GUILE_CAIRO_H__
-#define __GUILE_CAIRO_H__ 1
+#define __GUILE_CAIRO_H__
 
-/* fixme: figure out namespacing */
+#include <guile-cairo-smob-types.h>
+#include <guile-cairo-enum-types.h>
+#include <guile-cairo-vector-types.h>
 
-#include <guile-cairo/guile-cairo-smob-types.h>
-#include <guile-cairo/guile-cairo-enum-types.h>
-#include <guile-cairo/guile-cairo-vector-types.h>
+
 
 void scm_c_check_cairo_status (cairo_status_t status, const char *subr);
 
