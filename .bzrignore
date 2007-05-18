@@ -26,3 +26,4 @@ ltmain.sh
 missing
 stamp-h1
 *.loT
+*.pc
