@@ -1,5 +1,10 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* Makefile.am (SUBDIRS): 
+	* configure.ac: 
+	* doc/: Add doc/ directory, which currently just holds the web
+	site.
+
 	* README: Use guile-user as a mailing list.
 
 	* configure.ac:

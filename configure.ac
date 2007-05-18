@@ -71,5 +71,6 @@ cairo/Makefile
 examples/Makefile
 tests/Makefile
 tests/unit-tests/Makefile
+doc/Makefile
 )
 AC_OUTPUT
