@@ -1,0 +1,14 @@
+Hacking Guile-Cairo
+===================
+
+I use bazaar as my versioning control system, http://bazaar-vcs.org/.
+It's quite easy.
+
+Currently I'm unclear where to host the bzr archive; for now the
+following instructions will work:
+
+bzr get http://wingolog.org/bzr/guile-cairo
+cd guile-cairo
+./autogen.sh --prefix=/opt/guile-cairo && make && sudo make install
+
+See the TODO file for pending tasks.

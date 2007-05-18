@@ -1,5 +1,8 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* NEWS: 
+	* HACKING: Add hacking and news files.
+
 	* guile-cairo/guile-cairo.c: Finish cairo_status error checking,
 	what a drag.
 	(scm_c_check_cairo_status): Fix scm_error args.

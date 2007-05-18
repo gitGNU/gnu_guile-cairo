@@ -1,4 +1,3 @@
-* HACKING, NEWS
 * release
 * documentation (investigate munging the devhelp)
   - it seems doc snarfing is not a supported option; writing all those
