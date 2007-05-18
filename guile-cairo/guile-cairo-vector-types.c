@@ -146,8 +146,6 @@ scm_fill_cairo_glyph (SCM scm, cairo_glyph_t *glyph)
 #undef GET
 }
 
-/* FIXME: add scheme-level accessors and constructors */
-
 /**********************************************************************
  * cairo_text_extents_t
  **********************************************************************/

@@ -1,5 +1,8 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo-enum-types.c: Add introspection
+	procedures for the enumerated types.
+
 	* TODO: Add a TODO.
 
 	* cairo.scm (cairo): Fix up imports and exports.
