@@ -1,4 +1,3 @@
-* checking of cairo_status at function exit
 * HACKING, NEWS
 * release
 * documentation (investigate munging the devhelp)
@@ -8,3 +7,4 @@
   - perhaps suckage is unavoidable
 * examples and neat things
 * stream functions, integration with guile ports; sucks because of exceptions
+* think about points representation in path-fold; multiple value returns also.
