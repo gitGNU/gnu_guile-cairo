@@ -1,5 +1,13 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c: Wrap functions for creating and
+	manipulating PDF, PS, and SVG surfaces.
+
+	* guile-cairo/guile-cairo-enum-types.h:
+	* guile-cairo/guile-cairo-enum-types.c: Wrap SVG version type.
+
+	* TODO: Update.
+
 	* TODO: Update.
 
 	* AUTHORS: I'm the author :)

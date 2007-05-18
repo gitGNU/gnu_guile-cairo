@@ -83,6 +83,11 @@ cairo_extend_t scm_to_cairo_extend (SCM scm);
 SCM scm_from_cairo_filter (cairo_filter_t cval);
 cairo_filter_t scm_to_cairo_filter (SCM scm);
 
+#if CAIRO_HAS_SVG_SURFACE
+SCM scm_from_cairo_svg_version (cairo_svg_version_t cval);
+cairo_svg_version_t scm_to_cairo_svg_version (SCM scm);
+#endif  /* CAIRO_HAS_SVG_SURFACE */
+
 
 
 void scm_init_cairo_enum_types (void);

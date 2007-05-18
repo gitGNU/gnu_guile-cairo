@@ -1,10 +1,10 @@
+* checking of cairo_status at function exit
+* HACKING, NEWS
+* release
 * documentation (investigate munging the devhelp)
   - it seems doc snarfing is not a supported option; writing all those
     docs would suck, also
   - we follow the C API closely, prehaps we can munge the devhelp files
   - perhaps suckage is unavoidable
 * examples and neat things
-* other surface types
-* stream functions, integration with guile ports
-* checking of cairo_status at function exit
-* HACKING, NEWS
+* stream functions, integration with guile ports; sucks because of exceptions

@@ -25,6 +25,18 @@
 
 #include <cairo.h>
 
+#if CAIRO_HAS_PDF_SURFACE
+#include <cairo-pdf.h>
+#endif /* CAIRO_HAS_PDF_SURFACE */
+
+#if CAIRO_HAS_PS_SURFACE
+#include <cairo-ps.h>
+#endif /* CAIRO_HAS_PS_SURFACE */
+
+#if CAIRO_HAS_SVG_SURFACE
+#include <cairo-svg.h>
+#endif  /* CAIRO_HAS_SVG_SURFACE */
+
 #include "guile-cairo.h"
 
 /* TODO: checking of cairo_status */
@@ -1966,6 +1978,173 @@ SCM_DEFINE_PUBLIC (scm_cairo_matrix_transform_point, "cairo-matrix-transform-poi
 
     return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
 }
+
+#if CAIRO_HAS_PDF_SURFACE
+
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_create, "cairo-pdf-surface-create", 3, 0, 0,
+                   (SCM sfilename, SCM sx, SCM sy),
+	    "")
+{
+    char *filename;
+    SCM ret;
+    
+    scm_dynwind_begin (0);
+    filename = scm_to_locale_string (sfilename);
+    scm_dynwind_free (filename);
+    
+    ret = scm_take_cairo_surface (cairo_pdf_surface_create (filename,
+                                                            scm_to_double (sx),
+                                                            scm_to_double (sy)));
+    
+    scm_dynwind_end ();
+    
+    return ret;
+}
+
+#if 0
+cairo_public cairo_surface_t *
+cairo_pdf_surface_create_for_stream (cairo_write_func_t	write_func,
+				     void	       *closure,
+				     double		width_in_points,
+				     double		height_in_points);
+#endif /* 0 */
+
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_set_size, "cairo-pdf-surface-set-size", 3, 0, 0,
+                   (SCM surf, SCM sx, SCM sy),
+	    "")
+{
+    cairo_pdf_surface_set_size (scm_to_cairo_surface (surf),
+                                scm_to_double (sx),
+                                scm_to_double (sy));
+    return SCM_UNSPECIFIED;
+}
+
+#endif /* CAIRO_HAS_PDF_SURFACE */
+
+#if CAIRO_HAS_PS_SURFACE
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_create, "cairo-ps-surface-create", 3, 0, 0,
+                   (SCM sfilename, SCM sx, SCM sy),
+	    "")
+{
+    char *filename;
+    SCM ret;
+    
+    scm_dynwind_begin (0);
+    filename = scm_to_locale_string (sfilename);
+    scm_dynwind_free (filename);
+    
+    ret = scm_take_cairo_surface (cairo_ps_surface_create (filename,
+                                                           scm_to_double (sx),
+                                                           scm_to_double (sy)));
+    
+    scm_dynwind_end ();
+    
+    return ret;
+}
+
+#if 0
+cairo_public cairo_surface_t *
+cairo_ps_surface_create_for_stream (cairo_write_func_t	write_func,
+                                    void	       *closure,
+                                    double		width_in_points,
+                                    double		height_in_points);
+#endif /* 0 */
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_set_size, "cairo-ps-surface-set-size", 3, 0, 0,
+                   (SCM surf, SCM sx, SCM sy),
+	    "")
+{
+    cairo_ps_surface_set_size (scm_to_cairo_surface (surf),
+                               scm_to_double (sx),
+                               scm_to_double (sy));
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_comment, "cairo-ps-surface-dsc-comment", 2, 0, 0,
+                   (SCM surf, SCM scomment),
+	    "")
+{
+    char *comment;
+    
+    scm_dynwind_begin (0);
+    comment = scm_to_locale_string (scomment);
+    scm_dynwind_free (comment);
+
+    cairo_ps_surface_dsc_comment (scm_to_cairo_surface (surf), comment);
+
+    scm_dynwind_end ();
+
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_begin_setup, "cairo-ps-surface-begin-setup", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    cairo_ps_surface_dsc_begin_setup (scm_to_cairo_surface (surf));
+    return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_begin_page_setup, "cairo-ps-surface-begin-page-setup", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+    cairo_ps_surface_dsc_begin_page_setup (scm_to_cairo_surface (surf));
+    return SCM_UNSPECIFIED;
+}
+
+#endif /* CAIRO_HAS_PS_SURFACE */
+
+#if CAIRO_HAS_SVG_SURFACE
+
+SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_create, "cairo-svg-surface-create", 3, 0, 0,
+                   (SCM sfilename, SCM sx, SCM sy),
+	    "")
+{
+    char *filename;
+    SCM ret;
+    
+    scm_dynwind_begin (0);
+    filename = scm_to_locale_string (sfilename);
+    scm_dynwind_free (filename);
+    
+    ret = scm_take_cairo_surface (cairo_svg_surface_create (filename,
+                                                            scm_to_double (sx),
+                                                            scm_to_double (sy)));
+    
+    scm_dynwind_end ();
+    
+    return ret;
+}
+
+#if 0
+cairo_public cairo_surface_t *
+cairo_svg_surface_create_for_stream (cairo_write_func_t	write_func,
+				     void	       *closure,
+				     double		width_in_points,
+				     double		height_in_points);
+#endif /* 0 */
+
+SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_restrict_to_version, "cairo-svg-surface-restrict-to-version", 2, 0, 0,
+                   (SCM surf, SCM vers),
+	    "")
+{
+    cairo_svg_surface_restrict_to_version (scm_to_cairo_surface (surf),
+                                           scm_to_cairo_svg_version (vers));
+    return SCM_UNSPECIFIED;
+}
+
+#if 0
+cairo_public void
+cairo_svg_get_versions (cairo_svg_version_t const	**versions,
+                        int                      	 *num_versions);
+
+cairo_public const char *
+cairo_svg_version_to_string (cairo_svg_version_t version);
+#endif /* 0 */
+
+#endif /* CAIRO_HAS_SVG_SURFACE */
 
 
 

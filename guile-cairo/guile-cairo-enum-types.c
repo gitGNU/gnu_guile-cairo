@@ -25,6 +25,10 @@
 
 #include <cairo.h>
 
+#if CAIRO_HAS_SVG_SURFACE
+#include <cairo-svg.h>
+#endif  /* CAIRO_HAS_SVG_SURFACE */
+
 #include "guile-cairo-enum-types.h"
 
 
@@ -254,6 +258,15 @@ static EnumPair _filter[] = {
     {0, NULL}
 };
 
+#if CAIRO_HAS_SVG_SURFACE
+static EnumPair _svg_version[] = {
+    {CAIRO_SVG_VERSION_1_1, "v1.1"},
+    {CAIRO_SVG_VERSION_1_2, "v1.2"},
+    {0, NULL}
+};
+#endif  /* CAIRO_HAS_SVG_SURFACE */
+
+
 SCM scm_from_cairo_status (cairo_status_t cval) { return _scm_from_enum (_status, cval); }
 cairo_status_t scm_to_cairo_status (SCM scm) { return _scm_to_enum (_status, scm); }
 
@@ -346,6 +359,13 @@ SCM scm_from_cairo_filter (cairo_filter_t cval) { return _scm_from_enum (_filter
 cairo_filter_t scm_to_cairo_filter (SCM scm) { return _scm_to_enum (_filter, scm); }
 SCM_DEFINE_PUBLIC (scm_cairo_filter_get_values, "cairo-filter-get-values", 0, 0, 0, (void), "")
   { return _get_values (_filter); }
+
+#if CAIRO_HAS_SVG_SURFACE
+SCM scm_from_cairo_svg_version (cairo_svg_version_t cval) { return _scm_from_enum (_svg_version, cval); }
+cairo_svg_version_t scm_to_cairo_svg_version (SCM scm) { return _scm_to_enum (_svg_version, scm); }
+SCM_DEFINE_PUBLIC (scm_cairo_svg_version_get_values, "cairo-svg-version-get-values", 0, 0, 0, (void), "")
+  { return _get_values (_svg_version); }
+#endif  /* CAIRO_HAS_SVG_SURFACE */
 
 void
 scm_init_cairo_enum_types (void)
