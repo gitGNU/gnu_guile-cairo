@@ -7,5 +7,4 @@
 * other surface types
 * stream functions, integration with guile ports
 * checking of cairo_status at function exit
-* fix up copyrights
-* README, etc
+* HACKING, NEWS
