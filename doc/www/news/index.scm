@@ -4,7 +4,7 @@
     (news
      (@ (date "18 May 2007")
         (title "initial release"))
-     (code "guile-cairo") " 1.3.0 released.")
+     (code "guile-cairo") " 1.3.90 released.")
     ))
 
 
