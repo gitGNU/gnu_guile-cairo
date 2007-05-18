@@ -1,5 +1,22 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* AUTHORS: I'm the author :)
+
+	* COPYING: 
+	* guile-cairo/guile-cairo.h: 
+	* guile-cairo/guile-cairo.c: 
+	* guile-cairo/guile-cairo-vector-types.h: 
+	* guile-cairo/guile-cairo-vector-types.c: 
+	* guile-cairo/guile-cairo-smob-types.h: 
+	* guile-cairo/guile-cairo-smob-types.c: 
+	* guile-cairo/guile-cairo-enum-types.h: 
+	* guile-cairo/guile-cairo-enum-types.c:
+	* cairo.scm: 
+	* cairo/vector-types.scm: 
+	* cairo/config.scm.in: Fix up license: it is LGPL 2.1 or higher.
+
+	* TODO: Update.
+
 	* guile-cairo/guile-cairo.c (cairo-surface-write-to-png): Fix
 	number of arguments.
 

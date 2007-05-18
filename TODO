@@ -3,7 +3,6 @@
     docs would suck, also
   - we follow the C API closely, prehaps we can munge the devhelp files
   - perhaps suckage is unavoidable
-* C namespacing: install into guile-cairo-0, add a pkg-config file
 * examples and neat things
 * other surface types
 * stream functions, integration with guile ports
