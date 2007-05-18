@@ -1,5 +1,16 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* TODO: Add a TODO.
+
+	* cairo.scm (cairo): Fix up imports and exports.
+
+	* guile-cairo/guile-cairo.c
+	(cairo-surface-set-fallback-resolution): Fix name.
+
+	* cairo/Makefile.am (module_DATA): 
+	* cairo/vector-types.scm: New module, defines constructors and
+	accessors for vector types.
+
 	* guile-cairo/guile-cairo.c (SCM_DEFINE_PUBLIC): Add matrix
 	functions.
 

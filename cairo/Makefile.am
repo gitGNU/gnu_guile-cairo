@@ -4,6 +4,8 @@ lib_builddir = $(shell cd $(top_builddir)/guile-cairo && pwd)
 
 moduledir=$(prefix)/share/guile/site/cairo
 
+module_DATA = vector-types.scm
+
 config.scm: Makefile config.scm.in
 	sed -e "s|@cairolibpath\@|$(lib_builddir)/libguile-cairo-1.0|" \
 	    $(srcdir)/config.scm.in > config.scm

@@ -28,7 +28,11 @@
 
 (define-module (cairo)
   :use-module (cairo config)
-  :export     (cairo-version))
+  :use-module (cairo vector-types))
 
+(module-use! (module-public-interface (current-module))
+             (resolve-interface '(cairo vector-types)))
+
+;; This will export many things
 (dynamic-call "scm_init_cairo"
               (dynamic-link *cairo-lib-path*))

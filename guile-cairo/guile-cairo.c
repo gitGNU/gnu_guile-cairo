@@ -1507,7 +1507,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device_offset, "cairo-surface-get-devic
     return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_surface_set_fallback_resolution, "cairo-surface-set-fallback_resolution", 3, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_surface_set_fallback_resolution, "cairo-surface-set-fallback-resolution", 3, 0, 0,
                    (SCM surf, SCM x, SCM y),
 	    "")
 {
