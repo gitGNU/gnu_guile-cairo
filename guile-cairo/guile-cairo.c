@@ -1420,7 +1420,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_content, "cairo-surface-get-content", 1
 
 #if CAIRO_HAS_PNG_FUNCTIONS
 
-SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png", 1, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png", 2, 0, 0,
                    (SCM surf, SCM filename),
 	    "")
 {

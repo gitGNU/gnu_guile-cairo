@@ -1,5 +1,10 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c (cairo-surface-write-to-png): Fix
+	number of arguments.
+
+	* README: Flesh out.
+
 	* guile-cairo/guile-cairo.h: Include <guile-cairo.h>, not
 	<guile-cairo/guile-cairo.h>.
 

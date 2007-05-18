@@ -8,16 +8,96 @@ About Guile-Cairo
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
-Using Guile-Cairo
-=================
+A pasteable introduction to using Guile-Cairo
+=============================================
+
+;; Paste this into your guile interpreter!
+
+;; This wrapset defines a module `(cairo)'
+
+(use-modules (cairo))
+
+;; Cairo procedures all start with `cairo-'
+
+(cairo-version-string)
+;; => "1.4.2"
+
+;; For most useful things, you have to make a surface first
+
+(define surf (cairo-image-surface-create 'argb32 140 100))
+
+;; Given a surface, you can create a cairo context, and start drawing
+
+(define cr (cairo-create surf))
+
+;; You then need to make a source
+
+(cairo-select-font-face cr "Bitstream Vera Sans" 'normal 'normal)
+(cairo-scale cr 100 100)
+(define pat (cairo-pattern-create-linear 0 0 1 1))
+(cairo-pattern-add-color-stop-rgba pat 1 1 0 0 1)
+(cairo-pattern-add-color-stop-rgba pat 0 0 0 1 1)
+(cairo-set-source cr pat)
+
+;; Then you make your mask
+
+(cairo-set-font-size cr 0.4)
+(cairo-move-to cr 0.0 0.6)
+(cairo-show-text cr "(cairo)")
+
+;; Finally you can write the surface out to a file if you want
+
+(cairo-surface-write-to-png surf "/tmp/guile-cairo.png")
+
+;; Enumerated types are represented as symbols. The available set of
+;; symbols for any given type can be retrieved at runtime
+
+(cairo-format-get-values)
+;; => (argb32 rgb24 a8 a1)
+
+;; That's it!
+
+
+Notes
+=====
+
+Guile-Cairo wraps almost all of Cairo's procedures. Notable exceptions
+include functions that read or write from streams instead of files and
+raw access to image data.
+
+Guile-Cairo wraps all of Cairo's types. As mentioned above, enumerated
+values are represented by symbols, but functions accept integers as
+well. Struct types like cairo_rectangle_t are represented as vectors.
+Constructors of the form cairo-make-rectangle are provided, as well as
+accessors like cairo-rectangle:x.
 
 
 Using Guile-Cairo's C interface
 ===============================
 
-pkg-config for linking and compiling flags
+These days Cairo forms a part of many software stacks; its types are
+seen in the APIs of a number of other libraries. Guile-Cairo provides an
+interface to represent all cairo C types as scheme values.
 
-#include <Guile-Cairo.h>
+To build against this library in your C program, first you will need to
+get the CFLAGS and LDFLAGS to link against libguile-cairo. Autoconf
+users should use:
+
+PKG_CHECK_MODULES(GUILE_CAIRO, guile-cairo >= 1.3.0)
+AC_SUBST(GUILE_CAIRO_CFLAGS)
+AC_SUBST(GUILE_CAIRO_LDFLAGS)
+
+In your C files you should then:
+
+  #include <guile-cairo.h>
+
+The type wrapping functions are all in the form scm_to_TYPE and
+scm_from_TYPE, where TYPE could be cairo_surface, for example. For
+vector types there is also scm_fill_TYPE, which expects you to have an
+already-allocated structure to fill. Additionally there are
+scm_take_TYPE functions that will take ownership of the pointer in
+question, for example for constructors and for non-refcounted opaque
+objects like cairo_font_options_t.
 
 
 Copying Guile-Cairo
@@ -48,9 +128,9 @@ Installation quickstart
 =======================
 
 Install using the standard autotools incantation:
-  ./configure && make && make install.
+  ./configure --prefix=/opt/guile-cairo && make && make install.
 
-Build from CVS or Arch using ./autogen.sh && make.
+Build from CVS or Arch using ./autogen.sh --prefix=/opt/guile-cairo && make.
 
 You can run without installing, just run './env guile'.
 
