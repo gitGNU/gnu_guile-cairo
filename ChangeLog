@@ -1,5 +1,8 @@
 2007-05-18  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c: Beginnings of cairo_status error
+	checking.
+
 	* guile-cairo/guile-cairo.c: Wrap functions for creating and
 	manipulating PDF, PS, and SVG surfaces.
 

@@ -39,6 +39,20 @@
 
 #include "guile-cairo.h"
 
+/* cairo_t constructor return */
+#define CCONSRET(cr) \
+    do {cairo_t *_ret = cr;                                             \
+        scm_c_check_cairo_status (cairo_status (_ret), NULL);           \
+        return scm_take_cairo (_ret);                                   \
+    } while (0)
+
+/* cairo_t checking return */
+#define CCHKRET(scr,ret) \
+    do {SCM _ret = ret;                                                 \
+        scm_c_check_cairo_status (cairo_status (scm_to_cairo (scr)), NULL); \
+        return _ret;                                                    \
+    } while (0)
+    
 /* TODO: checking of cairo_status */
 
 void
@@ -74,7 +88,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
 	    (SCM surf),
 	    "")
 {
-    return scm_take_cairo (cairo_create (scm_to_cairo_surface (surf)));
+    CCONSRET (cairo_create (scm_to_cairo_surface (surf)));
 }
 
 #ifdef DEBUG_GUILE_CAIRO
@@ -82,7 +96,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_reference_count, "cairo-get-reference-count", 1
 	    (SCM ctx),
 	    "")
 {
-    return scm_from_uint (cairo_get_reference_count (scm_to_cairo (ctx)));
+    CCHKRET (ctx, scm_from_uint (cairo_get_reference_count (scm_to_cairo (ctx))));
 }
 #endif
 
@@ -94,7 +108,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_save, "cairo-save", 1, 0, 0,
 	    "")
 {
     cairo_save (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_restore, "cairo-restore", 1, 0, 0,
@@ -102,7 +116,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_restore, "cairo-restore", 1, 0, 0,
 	    "")
 {
     cairo_restore (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_push_group, "cairo-push-group", 1, 0, 0,
@@ -110,7 +124,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_push_group, "cairo-push-group", 1, 0, 0,
 	    "")
 {
     cairo_push_group (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_push_group_with_context, "cairo-push-group-with-context", 2, 0, 0,
@@ -119,7 +133,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_push_group_with_context, "cairo-push-group-with-con
 {
     cairo_push_group_with_content (scm_to_cairo (ctx),
                                    scm_to_cairo_content (content));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_pop_group, "cairo-pop-group", 1, 0, 0,
@@ -127,7 +141,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pop_group, "cairo-pop-group", 1, 0, 0,
 	    "")
 {
     cairo_pop_group (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_pop_group_to_source, "cairo-pop-group-to-source", 1, 0, 0,
@@ -135,7 +149,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pop_group_to_source, "cairo-pop-group-to-source", 1
 	    "")
 {
     cairo_pop_group_to_source (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_operator, "cairo-set-operator", 2, 0, 0,
@@ -144,7 +158,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_operator, "cairo-set-operator", 2, 0, 0,
 {
     cairo_set_operator (scm_to_cairo (ctx),
                         scm_to_cairo_operator (op));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_source, "cairo-set-source", 2, 0, 0,
@@ -153,7 +167,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_source, "cairo-set-source", 2, 0, 0,
 {
     cairo_set_source (scm_to_cairo (ctx),
                       scm_to_cairo_pattern (pat));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgb, "cairo-set-source-rgb", 4, 0, 0,
@@ -164,7 +178,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgb, "cairo-set-source-rgb", 4, 0, 0,
                           scm_to_double (r),
                           scm_to_double (g),
                           scm_to_double (b));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgba, "cairo-set-source-rgb", 5, 0, 0,
@@ -176,7 +190,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgba, "cairo-set-source-rgb", 5, 0, 0,
                            scm_to_double (g),
                            scm_to_double (b),
                            scm_to_double (a));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_source_surface, "cairo-set-source-surface", 4, 0, 0,
@@ -187,7 +201,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_source_surface, "cairo-set-source-surface", 4, 
                               scm_to_cairo_surface (surf),
                               scm_to_double (x),
                               scm_to_double (y));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_tolerance, "cairo-set-tolerance", 2, 0, 0,
@@ -196,7 +210,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_tolerance, "cairo-set-tolerance", 2, 0, 0,
 {
     cairo_set_tolerance (scm_to_cairo (ctx),
                          scm_to_double (tolerance));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_antialias, "cairo-set-antialias", 2, 0, 0,
@@ -205,7 +219,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_antialias, "cairo-set-antialias", 2, 0, 0,
 {
     cairo_set_antialias (scm_to_cairo (ctx),
                          scm_to_cairo_antialias (antialias));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_fill_rule, "cairo-set-fill-rule", 2, 0, 0,
@@ -214,7 +228,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_fill_rule, "cairo-set-fill-rule", 2, 0, 0,
 {
     cairo_set_fill_rule (scm_to_cairo (ctx),
                          scm_to_cairo_fill_rule (fill_rule));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_line_width, "cairo-set-line-width", 2, 0, 0,
@@ -223,7 +237,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_line_width, "cairo-set-line-width", 2, 0, 0,
 {
     cairo_set_line_width (scm_to_cairo (ctx),
                           scm_to_double (line_width));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_line_cap, "cairo-set-line-cap", 2, 0, 0,
@@ -232,7 +246,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_line_cap, "cairo-set-line-cap", 2, 0, 0,
 {
     cairo_set_line_cap (scm_to_cairo (ctx),
                         scm_to_cairo_line_cap (line_cap));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_line_join, "cairo-set-line-join", 2, 0, 0,
@@ -241,7 +255,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_line_join, "cairo-set-line-join", 2, 0, 0,
 {
     cairo_set_line_join (scm_to_cairo (ctx),
                          scm_to_cairo_line_join (line_join));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_dash, "cairo-set-dash", 3, 0, 0,
@@ -263,7 +277,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_dash, "cairo-set-dash", 3, 0, 0,
 
     scm_dynwind_end ();
     
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_miter_limit, "cairo-set-miter-limit", 2, 0, 0,
@@ -272,7 +286,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_miter_limit, "cairo-set-miter-limit", 2, 0, 0,
 {
     cairo_set_miter_limit (scm_to_cairo (ctx),
                            scm_to_double (limit));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_translate, "cairo-translate", 3, 0, 0,
@@ -281,7 +295,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_translate, "cairo-translate", 3, 0, 0,
 {
     cairo_translate (scm_to_cairo (ctx),
                      scm_to_double (tx), scm_to_double (ty));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_scale, "cairo-scale", 3, 0, 0,
@@ -290,7 +304,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_scale, "cairo-scale", 3, 0, 0,
 {
     cairo_scale (scm_to_cairo (ctx),
                  scm_to_double (sx), scm_to_double (sy));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_rotate, "cairo-rotate", 2, 0, 0,
@@ -299,7 +313,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_rotate, "cairo-rotate", 2, 0, 0,
 {
     cairo_rotate (scm_to_cairo (ctx),
                   scm_to_double (radians));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_transform, "cairo-transform", 2, 0, 0,
@@ -311,7 +325,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_transform, "cairo-transform", 2, 0, 0,
     
     cairo_transform (scm_to_cairo (ctx), &matrix);
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_set_matrix, "cairo-set-matrix", 2, 0, 0,
@@ -323,7 +337,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_matrix, "cairo-set-matrix", 2, 0, 0,
     
     cairo_set_matrix (scm_to_cairo (ctx), &matrix);
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_identity_matrix, "cairo-identity-matrix", 1, 0, 0,
@@ -332,7 +346,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_identity_matrix, "cairo-identity-matrix", 1, 0, 0,
 {
     cairo_identity_matrix (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_user_to_device, "cairo-user-to-device", 3, 0, 0,
@@ -346,7 +360,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_user_to_device, "cairo-user-to-device", 3, 0, 0,
 
     cairo_user_to_device (scm_to_cairo (ctx), &x, &y);
 
-    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+    CCHKRET (ctx, scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_user_to_device_distance, "cairo-user-to-device-distance", 3, 0, 0,
@@ -360,7 +374,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_user_to_device_distance, "cairo-user-to-device-dist
 
     cairo_user_to_device_distance (scm_to_cairo (ctx), &x, &y);
 
-    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+    CCHKRET (ctx, scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_device_to_user, "cairo-device-to-user", 3, 0, 0,
@@ -374,7 +388,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_device_to_user, "cairo-device-to-user", 3, 0, 0,
 
     cairo_device_to_user (scm_to_cairo (ctx), &x, &y);
 
-    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+    CCHKRET (ctx, scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_device_to_user_distance, "cairo-device-to-user-distance", 3, 0, 0,
@@ -388,7 +402,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_device_to_user_distance, "cairo-device-to-user-dist
 
     cairo_device_to_user_distance (scm_to_cairo (ctx), &x, &y);
 
-    return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+    CCHKRET (ctx, scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_new_path, "cairo-new-path", 1, 0, 0,
@@ -396,7 +410,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_new_path, "cairo-new-path", 1, 0, 0,
 	    "")
 {
     cairo_new_path (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_move_to, "cairo-move-to", 3, 0, 0,
@@ -406,7 +420,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_move_to, "cairo-move-to", 3, 0, 0,
     cairo_move_to (scm_to_cairo (ctx),
                    scm_to_double (x), scm_to_double (y));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_new_sub_path, "cairo-new-sub-path", 1, 0, 0,
@@ -414,7 +428,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_new_sub_path, "cairo-new-sub-path", 1, 0, 0,
 	    "")
 {
     cairo_new_sub_path (scm_to_cairo (ctx));
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_line_to, "cairo-line-to", 3, 0, 0,
@@ -424,7 +438,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_line_to, "cairo-line-to", 3, 0, 0,
     cairo_line_to (scm_to_cairo (ctx),
                    scm_to_double (x), scm_to_double (y));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_curve_to, "cairo-curve-to", 7, 0, 0,
@@ -436,7 +450,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_curve_to, "cairo-curve-to", 7, 0, 0,
                     scm_to_double (x2), scm_to_double (y2),
                     scm_to_double (x3), scm_to_double (y3));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_arc, "cairo-arc", 6, 0, 0,
@@ -448,7 +462,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_arc, "cairo-arc", 6, 0, 0,
                scm_to_double (radius),
                scm_to_double (angle1), scm_to_double (angle2));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_arc_negative, "cairo-arc-negative", 6, 0, 0,
@@ -459,8 +473,8 @@ SCM_DEFINE_PUBLIC (scm_cairo_arc_negative, "cairo-arc-negative", 6, 0, 0,
                         scm_to_double (xc), scm_to_double (yc),
                         scm_to_double (radius),
                         scm_to_double (angle1), scm_to_double (angle2));
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 
-    return SCM_UNSPECIFIED;
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_rel_move_to, "cairo-rel-move-to", 3, 0, 0,
@@ -470,7 +484,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_rel_move_to, "cairo-rel-move-to", 3, 0, 0,
     cairo_rel_move_to (scm_to_cairo (ctx),
                        scm_to_double (x), scm_to_double (y));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_rel_line_to, "cairo-rel-line-to", 3, 0, 0,
@@ -480,7 +494,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_rel_line_to, "cairo-rel-line-to", 3, 0, 0,
     cairo_rel_line_to (scm_to_cairo (ctx),
                        scm_to_double (x), scm_to_double (y));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_rel_curve_to, "cairo-rel-curve-to", 7, 0, 0,
@@ -492,7 +506,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_rel_curve_to, "cairo-rel-curve-to", 7, 0, 0,
                         scm_to_double (x2), scm_to_double (y2),
                         scm_to_double (x3), scm_to_double (y3));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_rectangle, "cairo-rectangle", 5, 0, 0,
@@ -503,7 +517,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_rectangle, "cairo-rectangle", 5, 0, 0,
                      scm_to_double (x), scm_to_double (y),
                      scm_to_double (width), scm_to_double (height));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_close_path, "cairo-close-path", 1, 0, 0,
@@ -512,7 +526,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_close_path, "cairo-close-path", 1, 0, 0,
 {
     cairo_close_path (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_paint, "cairo-paint", 1, 0, 0,
@@ -521,7 +535,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_paint, "cairo-paint", 1, 0, 0,
 {
     cairo_paint (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_paint_with_alpha, "cairo-paint-with-alpha", 2, 0, 0,
@@ -531,7 +545,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_paint_with_alpha, "cairo-paint-with-alpha", 2, 0, 0
     cairo_paint_with_alpha (scm_to_cairo (ctx),
                             scm_to_double (alpha));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_mask, "cairo-mask", 2, 0, 0,
@@ -541,7 +555,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_mask, "cairo-mask", 2, 0, 0,
     cairo_mask (scm_to_cairo (ctx),
                 scm_to_cairo_pattern (pat));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_mask_surface, "cairo-mask-surface", 2, 0, 0,
@@ -552,7 +566,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_mask_surface, "cairo-mask-surface", 2, 0, 0,
                         scm_to_cairo_surface (surf),
                         scm_to_double (x), scm_to_double (y));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_stroke, "cairo-stroke", 1, 0, 0,
@@ -561,7 +575,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_stroke, "cairo-stroke", 1, 0, 0,
 {
     cairo_stroke (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_stroke_preserve, "cairo-stroke-preserve", 1, 0, 0,
@@ -570,7 +584,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_stroke_preserve, "cairo-stroke-preserve", 1, 0, 0,
 {
     cairo_stroke_preserve (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_fill, "cairo-fill", 1, 0, 0,
@@ -579,7 +593,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_fill, "cairo-fill", 1, 0, 0,
 {
     cairo_fill (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_fill_preserve, "cairo-fill-preserve", 1, 0, 0,
@@ -588,7 +602,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_fill_preserve, "cairo-fill-preserve", 1, 0, 0,
 {
     cairo_fill_preserve (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_copy_page, "cairo-copy-page", 1, 0, 0,
@@ -597,7 +611,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_copy_page, "cairo-copy-page", 1, 0, 0,
 {
     cairo_copy_page (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_show_page, "cairo-show-page", 1, 0, 0,
@@ -606,25 +620,27 @@ SCM_DEFINE_PUBLIC (scm_cairo_show_page, "cairo-show-page", 1, 0, 0,
 {
     cairo_show_page (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_in_stroke, "cairo-in-stroke", 3, 0, 0,
 	    (SCM ctx, SCM x, SCM y),
 	    "")
 {
-    return scm_from_bool (cairo_in_stroke (scm_to_cairo (ctx),
-                                           scm_to_double (x),
-                                           scm_to_double (y)));
+    CCHKRET (ctx,
+             scm_from_bool (cairo_in_stroke (scm_to_cairo (ctx),
+                                             scm_to_double (x),
+                                             scm_to_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_in_fill, "cairo-in-fill", 3, 0, 0,
 	    (SCM ctx, SCM x, SCM y),
 	    "")
 {
-    return scm_from_bool (cairo_in_fill (scm_to_cairo (ctx),
-                                         scm_to_double (x),
-                                         scm_to_double (y)));
+    CCHKRET (ctx,
+             scm_from_bool (cairo_in_fill (scm_to_cairo (ctx),
+                                           scm_to_double (x),
+                                           scm_to_double (y))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_stroke_extents, "cairo-stroke-extents", 1, 0, 0,
@@ -635,10 +651,11 @@ SCM_DEFINE_PUBLIC (scm_cairo_stroke_extents, "cairo-stroke-extents", 1, 0, 0,
     
     cairo_stroke_extents (scm_to_cairo (ctx), &x1, &y1, &x2, &y2);
 
-    return scm_values (scm_list_4 (scm_from_double (x1),
-                                   scm_from_double (y1),
-                                   scm_from_double (x2),
-                                   scm_from_double (y2)));
+    CCHKRET (ctx,
+             scm_values (scm_list_4 (scm_from_double (x1),
+                                     scm_from_double (y1),
+                                     scm_from_double (x2),
+                                     scm_from_double (y2))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_fill_extents, "cairo-fill-extents", 1, 0, 0,
@@ -649,10 +666,11 @@ SCM_DEFINE_PUBLIC (scm_cairo_fill_extents, "cairo-fill-extents", 1, 0, 0,
     
     cairo_fill_extents (scm_to_cairo (ctx), &x1, &y1, &x2, &y2);
 
-    return scm_values (scm_list_4 (scm_from_double (x1),
-                                   scm_from_double (y1),
-                                   scm_from_double (x2),
-                                   scm_from_double (y2)));
+    CCHKRET (ctx,
+             scm_values (scm_list_4 (scm_from_double (x1),
+                                     scm_from_double (y1),
+                                     scm_from_double (x2),
+                                     scm_from_double (y2))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_reset_clip, "cairo-reset-clip", 1, 0, 0,
@@ -661,7 +679,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_reset_clip, "cairo-reset-clip", 1, 0, 0,
 {
     cairo_reset_clip (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_clip, "cairo-clip", 1, 0, 0,
@@ -670,7 +688,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_clip, "cairo-clip", 1, 0, 0,
 {
     cairo_clip (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_clip_preserve, "cairo-clip-preserve", 1, 0, 0,
@@ -679,7 +697,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_clip_preserve, "cairo-clip-preserve", 1, 0, 0,
 {
     cairo_clip_preserve (scm_to_cairo (ctx));
 
-    return SCM_UNSPECIFIED;
+    CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_clip_extents, "cairo-clip-extents", 1, 0, 0,
@@ -690,10 +708,11 @@ SCM_DEFINE_PUBLIC (scm_cairo_clip_extents, "cairo-clip-extents", 1, 0, 0,
     
     cairo_clip_extents (scm_to_cairo (ctx), &x1, &y1, &x2, &y2);
 
-    return scm_values (scm_list_4 (scm_from_double (x1),
-                                   scm_from_double (y1),
-                                   scm_from_double (x2),
-                                   scm_from_double (y2)));
+    CCHKRET (ctx,
+             scm_values (scm_list_4 (scm_from_double (x1),
+                                     scm_from_double (y1),
+                                     scm_from_double (x2),
+                                     scm_from_double (y2))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_copy_clip_rectangle_list, "cairo-copy-clip-rectangle-list", 1, 0, 0,
@@ -710,6 +729,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_copy_clip_rectangle_list, "cairo-copy-clip-rectangl
         ret = scm_cons (scm_from_cairo_rectangle (&rlist->rectangles[i]), ret);
     cairo_rectangle_list_destroy (rlist);
 
+    /* XXX */
     return ret;
 }
 
