@@ -2281,6 +2281,11 @@ cairo_svg_version_to_string (cairo_svg_version_t version);
 void
 scm_init_cairo (void)
 {
+    static int initialized = 0;
+
+    if (initialized)
+        return;
+
 #ifndef SCM_MAGIC_SNARFER
 #include "guile-cairo.x"
 #endif
@@ -2288,5 +2293,6 @@ scm_init_cairo (void)
     scm_init_cairo_smob_types ();
     scm_init_cairo_vector_types ();
     scm_init_cairo_enum_types ();
-    scm_c_export (NULL);
+
+    initialized = 1;
 }

@@ -1,5 +1,8 @@
 2007-05-20  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c (scm_init_cairo): Add guard against
+	multiple instantiations.
+
 	* guile-cairo/guile-cairo.h: Include cairo.h header.
 
 2007-05-18  Andy Wingo  <wingo@pobox.com>
