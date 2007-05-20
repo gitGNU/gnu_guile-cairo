@@ -24,6 +24,8 @@
 #ifndef __GUILE_CAIRO_H__
 #define __GUILE_CAIRO_H__
 
+#include <cairo.h>
+
 #include <guile-cairo-smob-types.h>
 #include <guile-cairo-enum-types.h>
 #include <guile-cairo-vector-types.h>

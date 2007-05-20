@@ -29,6 +29,6 @@ Scheme") ".")
   (cadr news-page))
 
 (define (make-index)
-  (output-html page "guile-lib" "guile-lib" ""
+  (output-html page "guile-cairo" "guile-cairo" ""
                #:transform-rules `((news . ,news)
                                    (latest-news *macro* . ,latest-news))))
