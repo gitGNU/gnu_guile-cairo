@@ -24,6 +24,10 @@
 #ifndef __GUILE_CAIRO_ENUM_TYPES_H__
 #define __GUILE_CAIRO_ENUM_TYPES_H__
 
+#if CAIRO_HAS_SVG_SURFACE
+#include <cairo-svg.h>
+#endif
+
 
 
 SCM scm_from_cairo_status (cairo_status_t cval);

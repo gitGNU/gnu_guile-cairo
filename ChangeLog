@@ -1,3 +1,8 @@
+2007-05-21  Andy Wingo  <wingo@pobox.com>
+
+	* guile-cairo/guile-cairo-enum-types.h: Include <cairo-svg.h> if
+	we are wrapping cairo_svg_version_t.
+
 2007-05-20  Andy Wingo  <wingo@pobox.com>
 
 	* guile-cairo/guile-cairo.c (scm_init_cairo): Add guard against
