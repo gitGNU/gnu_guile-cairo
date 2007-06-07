@@ -31,8 +31,10 @@
 SCM scm_from_cairo_matrix (cairo_matrix_t *matrix);
 void scm_fill_cairo_matrix (SCM scm, cairo_matrix_t *matrix);
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM scm_from_cairo_rectangle (cairo_rectangle_t *rect);
 void scm_fill_cairo_rectangle (SCM scm, cairo_rectangle_t *rect);
+#endif
 
 SCM scm_from_cairo_glyph (cairo_glyph_t *glyph);
 void scm_fill_cairo_glyph (SCM scm, cairo_glyph_t *glyph);

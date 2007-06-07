@@ -163,6 +163,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
     CCONSRET (cairo_create (scm_to_cairo_surface (surf)));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 #ifdef DEBUG_GUILE_CAIRO
 SCM_DEFINE_PUBLIC (scm_cairo_get_reference_count, "cairo-get-reference-count", 1, 0, 0,
 	    (SCM ctx),
@@ -170,6 +171,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_reference_count, "cairo-get-reference-count", 1
 {
     CCHKRET (ctx, scm_from_uint (cairo_get_reference_count (scm_to_cairo (ctx))));
 }
+#endif
 #endif
 
 /* not wrapping the user_data because I need to mail the guile list,
@@ -772,6 +774,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_clip_preserve, "cairo-clip-preserve", 1, 0, 0,
     CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM_DEFINE_PUBLIC (scm_cairo_clip_extents, "cairo-clip-extents", 1, 0, 0,
 	    (SCM ctx),
 	    "")
@@ -805,6 +808,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_copy_clip_rectangle_list, "cairo-copy-clip-rectangl
 
     return ret;
 }
+#endif /* HAVE_CAIRO_140_API */
 
 SCM_DEFINE_PUBLIC (scm_cairo_font_options_create, "cairo-font-options-create", 0, 0, 0,
 	    (void),
@@ -1008,6 +1012,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_scaled_font, "cairo-set-scaled-font", 2, 0, 0,
     CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM_DEFINE_PUBLIC (scm_cairo_get_scaled_font, "cairo-get-scaled-font", 1, 0, 0,
 	    (SCM ctx),
 	    "")
@@ -1015,6 +1020,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_scaled_font, "cairo-get-scaled-font", 1, 0, 0,
     SCM ret = scm_from_cairo_scaled_font (cairo_get_scaled_font (scm_to_cairo (ctx)));
     SFCHKRET (ret, ret);
 }
+#endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_show_text, "cairo-show-text", 2, 0, 0,
 	    (SCM ctx, SCM val),
@@ -1160,6 +1166,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_font_extents, "cairo-font-extents", 1, 0, 0,
     CCHKRET (ctx, ret);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 #ifdef DEBUG_GUILE_CAIRO
 SCM_DEFINE_PUBLIC (scm_cairo_font_face_get_reference_count, "cairo-font-face-get-reference-count", 1, 0, 0,
 	    (SCM face),
@@ -1167,6 +1174,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_font_face_get_reference_count, "cairo-font-face-get
 {
     return scm_from_uint (cairo_font_face_get_reference_count (scm_to_cairo_font_face (face)));
 }
+#endif
 #endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_font_face_get_type, "cairo-font-face-get-type", 1, 0, 0,
@@ -1390,6 +1398,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_miter_limit, "cairo-get-miter-limit", 1, 0, 0,
              scm_from_double (cairo_get_miter_limit (scm_to_cairo (ctx))));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM_DEFINE_PUBLIC (scm_cairo_get_dash_count, "cairo-get-dash-count", 1, 0, 0,
 	    (SCM ctx),
 	    "")
@@ -1417,6 +1426,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_dash, "cairo-get-line-join", 1, 0, 0,
              scm_values (scm_list_2 (data ? scm_take_f64vector(data, ndoubles) : SCM_BOOL_F,
                                      scm_from_double (offset))));
 }
+#endif /* HAVE_CAIRO_140_API */
 
 SCM_DEFINE_PUBLIC (scm_cairo_get_matrix, "cairo-get-matrix", 1, 0, 0,
 	    (SCM ctx),
@@ -1525,6 +1535,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_finish, "cairo-surface-finish", 1, 0, 0,
     return SCM_UNSPECIFIED;
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 #ifdef DEBUG_GUILE_CAIRO
 SCM_DEFINE_PUBLIC (scm_cairo_surface_get_reference_count, "cairo-surface-get-reference-count", 1, 0, 0,
 	    (SCM surf),
@@ -1532,6 +1543,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_reference_count, "cairo-surface-get-ref
 {
     return scm_from_uint (cairo_surface_get_reference_count (scm_to_cairo_surface (surf)));
 }
+#endif
 #endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_surface_get_type, "cairo-surface-get-type", 1, 0, 0,
@@ -1779,6 +1791,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_radial, "cairo-pattern-create-radial
                                              scm_to_double (r1)));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 #ifdef DEBUG_GUILE_CAIRO
 SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_reference_count, "cairo-pattern-get-reference-count", 1, 0, 0,
 	    (SCM pat),
@@ -1786,6 +1799,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_reference_count, "cairo-pattern-get-ref
 {
     return scm_from_uint (cairo_pattern_get_reference_count (scm_to_cairo_pattern (pat)));
 }
+#endif
 #endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_type, "cairo-pattern-get-type", 1, 0, 0,
@@ -1879,6 +1893,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_filter, "cairo-pattern-get-filter", 1, 
                scm_from_cairo_filter (cairo_pattern_get_filter (scm_to_cairo_pattern (pat))));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_rgba, "cairo-pattern-get-rgba", 1, 0, 0,
 	    (SCM pat),
 	    "")
@@ -1952,6 +1967,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pattern_get_radial_circles, "cairo-pattern-get-radi
                                        scm_from_double (r1),
                                        SCM_UNDEFINED)));
 }
+#endif /* HAVE_CAIRO_140_API */
 
 SCM_DEFINE_PUBLIC (scm_cairo_make_matrix, "cairo-make-matrix", 6, 0, 0,
                    (SCM xx, SCM yx, SCM xy, SCM yy, SCM x0, SCM y0),

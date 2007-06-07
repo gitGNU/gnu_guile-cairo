@@ -98,6 +98,7 @@ scm_fill_cairo_matrix (SCM scm, cairo_matrix_t *matrix)
  * cairo_rectangle_t
  **********************************************************************/
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 SCM
 scm_from_cairo_rectangle (cairo_rectangle_t *rect)
 {
@@ -120,6 +121,7 @@ scm_fill_cairo_rectangle (SCM scm, cairo_rectangle_t *rect)
     rect->height = GET (scm, 3);
 #undef GET
 }
+#endif 
 
 /**********************************************************************
  * cairo_glyph_t

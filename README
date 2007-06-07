@@ -120,7 +120,7 @@ Build dependencies
 
 * Guile 1.8.0 or newer
   http://www.gnu.org/software/guile/
-* Cairo 1.4.0 or newer
+* Cairo 1.2.0 or newer
   http://cairographics.org/
 
 

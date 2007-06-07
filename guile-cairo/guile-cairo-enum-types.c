@@ -96,8 +96,10 @@ static EnumPair _status[] = {
     {CAIRO_STATUS_FILE_NOT_FOUND, "file-not-found"},
     {CAIRO_STATUS_INVALID_DASH, "invalid-dash"},
     {CAIRO_STATUS_INVALID_DSC_COMMENT, "invalid-dsc-comment"},
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
     {CAIRO_STATUS_INVALID_INDEX, "invalid-index"},
     {CAIRO_STATUS_CLIP_NOT_REPRESENTABLE, "clip-not-representable"},
+#endif
     {0, NULL}
 };
 
@@ -220,7 +222,9 @@ static EnumPair _surface_type[] = {
     {CAIRO_SURFACE_TYPE_BEOS, "beos"},
     {CAIRO_SURFACE_TYPE_DIRECTFB, "directfb"},
     {CAIRO_SURFACE_TYPE_SVG, "svg"},
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
     {CAIRO_SURFACE_TYPE_OS2, "os2"},
+#endif
     {0, NULL}
 };
 

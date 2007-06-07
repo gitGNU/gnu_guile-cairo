@@ -1,5 +1,19 @@
 2007-06-07  Andy Wingo  <wingo@pobox.com>
 
+	* doc/www/dev/index.scm (page): Update to show that we support
+	cairo 1.2.
+
+	Patch by: Steve Tell <tell telltronics.org>
+	
+	* configure.ac: Reduce cairo requirement to 1.2.0.
+	* guile-cairo/guile-cairo.c:
+	* guile-cairo/guile-cairo-vector-types.h: 
+	* guile-cairo/guile-cairo-vector-types.c: 
+	* guile-cairo/guile-cairo-enum-types.c: Add #ifdefs around cairo
+	1.4 code.
+
+2007-06-07  Andy Wingo  <wingo@pobox.com>
+
 	* guile-cairo/guile-cairo.h: Include libguile.h, so that includers
 	don't have to think about include order.
 

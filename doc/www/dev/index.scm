@@ -5,7 +5,7 @@
 
     (h3 "dependencies")
 
-    (p (code "guile-cairo") " currently requires Cairo 1.4,
+    (p (code "guile-cairo") " currently requires Cairo 1.2,
 although patches providing back compatibility will be accepted.")
 
     (p (code "guile-cairo") " works with the current "
