@@ -20,7 +20,7 @@ User-visible changes only.
    with, but that doesn't seem possible.
 
 9) Sign and upload tarball:
-   gpg -a tarball
+   gpg -b tarball
    scp tarball tarball.sig download.gna.org:/upload/guile-cairo/
 
 10) Make a release note, which should be like this:
@@ -29,6 +29,8 @@ I am pleased to announce that Guile-Cairo N.M.O has been released. It
 may be obtained at:
 
   http://download.gna.org/guile-cairo/guile-cairo-XXX.tar.gz
+
+11) Add a news entry on the web site.
 
 What is Guile-Cairo
 -------------------
