@@ -1,12 +1,22 @@
-Guile-Cairo README
-Last updated 18 May 2007.
+Guile-Cairo NEWS
 
 
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
-guile-cairo 1.3.0 -- 2007-05-18
-===============================
+guile-cairo 1.3.91 -- 2007-06-08
+================================
+
+* Add backwards compatability to Cairo 1.2. Thanks to Steve Tell.
+
+* Build fix for external projects using guile-cairo: header files now
+  include everything they depend on.
+
+* Bugfixes in vector type accessors and cairo-set-source-rgba.
+
+
+guile-cairo 1.3.90 -- 2007-05-18
+================================
 
 * Initial release.
 
