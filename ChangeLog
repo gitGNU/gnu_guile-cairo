@@ -1,3 +1,7 @@
+2007-06-08  Andy Wingo  <wingo@pobox.com>
+
+	* doc/release: Add howto on release process.
+
 2007-06-07  Andy Wingo  <wingo@pobox.com>
 
 	* doc/www/dev/index.scm (page): Update to show that we support
