@@ -26,7 +26,7 @@
 
 (define-module (cairo vector-types))
 
-(define-macro (define-accessors type . fields)
+(define-macro (define-accessors type accessor . fields)
   `(begin
      ,@(map (lambda (field)
               ;; can't have : as a symbol
@@ -34,14 +34,16 @@
                                  (string-append
                                   (symbol->string type) ":" (symbol->string field)))
                                obj)
-                 (vector-ref obj ,(list-index fields field))))
+                 (,accessor obj ,(list-index fields field))))
             fields)))
 
 (define-macro (define-vector-type module type constructor . fields)
   `(begin
      (define-public (,(symbol-append module '-make- type) ,@fields)
        (,constructor ,@fields))
-     (define-accessors ,(symbol-append module '- type) ,@fields)))
+     (define-accessors ,(symbol-append module '- type)
+       ,(symbol-append constructor '-ref)
+       ,@fields)))
 
 (define-vector-type cairo rectangle f64vector
   x y width height)

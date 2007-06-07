@@ -1,3 +1,15 @@
+2007-06-07  Andy Wingo  <wingo@pobox.com>
+
+	* guile-cairo/guile-cairo.h: Include libguile.h, so that includers
+	don't have to think about include order.
+
+	* guile-cairo/guile-cairo.c (cairo-set-source-rgba): Fix problem
+	where this function was mistakenly named set-source-rgb.
+
+	* cairo/vector-types.scm (define-accessors, define-vector-type):
+	It turns out you can't vector-ref an f64vector; use the specific
+	accessors instead.
+
 2007-05-21  Andy Wingo  <wingo@pobox.com>
 
 	* guile-cairo/guile-cairo-enum-types.h: Include <cairo-svg.h> if

@@ -253,7 +253,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgb, "cairo-set-source-rgb", 4, 0, 0,
     CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgba, "cairo-set-source-rgb", 5, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_set_source_rgba, "cairo-set-source-rgba", 5, 0, 0,
 	    (SCM ctx, SCM r, SCM g, SCM b, SCM a),
 	    "")
 {
