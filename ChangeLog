@@ -1,5 +1,7 @@
 2007-06-08  Andy Wingo  <wingo@pobox.com>
 
+	* doc/www/news/index.scm (page): Fix news ordering.
+
 	* guile-cairo/guile-cairo.c
 	(guile_cairo_read_func, guile_cairo_write_func): New static
 	functions that can be passed to the streaming functions.
