@@ -4,5 +4,4 @@
   - we follow the C API closely, prehaps we can munge the devhelp files
   - perhaps suckage is unavoidable
 * examples and neat things
-* stream functions, integration with guile ports; sucks because of exceptions
 * think about points representation in path-fold; multiple value returns also.

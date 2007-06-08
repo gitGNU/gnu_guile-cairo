@@ -127,6 +127,67 @@
     } while (0)
     
 
+struct stream_data {
+    char *data;
+    unsigned int len;
+    SCM port;
+};
+
+static SCM
+do_read (struct stream_data *data)
+{
+    size_t n;
+    n = scm_c_read (data->port, data->data, data->len);
+    return scm_from_bool (n == data->len);
+}
+
+static cairo_status_t
+guile_cairo_read_func (void *closure, unsigned char *data, unsigned int length)
+{
+    struct stream_data sdata;
+    SCM success;
+    
+    sdata.data = (char*)data;
+    sdata.len = length;
+    sdata.port = closure ? SCM_PACK (closure) : scm_current_input_port ();
+    
+    success = scm_c_catch (SCM_BOOL_T,
+                           (scm_t_catch_body)do_read, &sdata,
+                           scm_handle_by_message_noexit, "Guile-Cairo",
+                           NULL, NULL);
+    if (scm_is_true (success))
+        return CAIRO_STATUS_SUCCESS;
+    else
+        return CAIRO_STATUS_WRITE_ERROR;
+}
+
+static SCM
+do_write (struct stream_data *data)
+{
+    scm_lfwrite (data->data, data->len, data->port);
+    return SCM_BOOL_T;
+}
+
+static cairo_status_t
+guile_cairo_write_func (void *closure, const unsigned char *data, unsigned int length)
+{
+    struct stream_data sdata;
+    SCM success;
+    
+    sdata.data = (char*)data;
+    sdata.len = length;
+    sdata.port = closure ? SCM_PACK (closure) : scm_current_output_port ();
+
+    success = scm_c_catch (SCM_BOOL_T,
+                           (scm_t_catch_body)do_write, &sdata,
+                           scm_handle_by_message_noexit, "Guile-Cairo",
+                           NULL, NULL);
+    if (scm_is_true (success))
+        return CAIRO_STATUS_SUCCESS;
+    else
+        return CAIRO_STATUS_WRITE_ERROR;
+}
+
 void
 scm_c_check_cairo_status (cairo_status_t status, const char *subr)
 {
@@ -1563,29 +1624,30 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_content, "cairo-surface-get-content", 1
 
 #if CAIRO_HAS_PNG_FUNCTIONS
 
-SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png", 2, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png", 1, 1, 0,
                    (SCM surf, SCM filename),
 	    "")
 {
-    char *str;
     cairo_status_t status;
 
-    scm_dynwind_begin (0);
-    str = scm_to_locale_string (filename);
-    scm_dynwind_free (str);
-    
-    status = cairo_surface_write_to_png (scm_to_cairo_surface (surf), str);
+    if (!SCM_UNBNDP (filename)) {
+        char *str;
+        scm_dynwind_begin (0);
+        str = scm_to_locale_string (filename);
+        scm_dynwind_free (str);
+        
+        status = cairo_surface_write_to_png (scm_to_cairo_surface (surf), str);
+
+        scm_dynwind_end ();
+    } else {
+        status = cairo_surface_write_to_png_stream (scm_to_cairo_surface (surf),
+                                                    guile_cairo_write_func, NULL);
+    }
+
     scm_c_check_cairo_status (status, s_scm_cairo_surface_write_to_png);
 
     return SCM_UNSPECIFIED;
 }
-
-#if 0
-cairo_public cairo_status_t
-cairo_surface_write_to_png_stream (cairo_surface_t	*surface,
-				   cairo_write_func_t	write_func,
-				   void			*closure);
-#endif /* 0 */
 
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
@@ -1717,29 +1779,27 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_stride, "cairo-image-surface-get-
 
 #if CAIRO_HAS_PNG_FUNCTIONS
 
-SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface-create-from-png", 1, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface-create-from-png", 0, 1, 0,
                    (SCM sfilename),
 	    "")
 {
-    char *filename;
     cairo_surface_t *ret;
     
-    scm_dynwind_begin (0);
-    filename = scm_to_locale_string (sfilename);
-    scm_dynwind_free (filename);
+    if (!SCM_UNBNDP (sfilename)) {
+        char *filename;
+        scm_dynwind_begin (0);
+        filename = scm_to_locale_string (sfilename);
+        scm_dynwind_free (filename);
 
-    ret = cairo_image_surface_create_from_png (filename);
+        ret = cairo_image_surface_create_from_png (filename);
 
-    scm_dynwind_end ();
+        scm_dynwind_end ();
+    } else {
+        ret = cairo_image_surface_create_from_png_stream (guile_cairo_read_func, NULL);
+    }
 
     SCONSRET (ret);
 }
-
-#if 0
-cairo_public cairo_surface_t *
-cairo_image_surface_create_from_png_stream (cairo_read_func_t	read_func,
-					    void		*closure);
-#endif /* 0 */
 
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
@@ -2127,33 +2187,32 @@ SCM_DEFINE_PUBLIC (scm_cairo_matrix_transform_point, "cairo-matrix-transform-poi
 
 #if CAIRO_HAS_PDF_SURFACE
 
-SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_create, "cairo-pdf-surface-create", 3, 0, 0,
-                   (SCM sfilename, SCM sx, SCM sy),
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_create, "cairo-pdf-surface-create", 2, 1, 0,
+                   (SCM sx, SCM sy, SCM sfilename),
 	    "")
 {
-    char *filename;
     cairo_surface_t *ret;
     
-    scm_dynwind_begin (0);
-    filename = scm_to_locale_string (sfilename);
-    scm_dynwind_free (filename);
-    
-    ret = cairo_pdf_surface_create (filename,
-                                    scm_to_double (sx),
-                                    scm_to_double (sy));
-    
-    scm_dynwind_end ();
-    
+    if (!SCM_UNBNDP (sfilename)) {
+        char *filename;
+        scm_dynwind_begin (0);
+        filename = scm_to_locale_string (sfilename);
+        scm_dynwind_free (filename);
+        
+        ret = cairo_pdf_surface_create (filename,
+                                        scm_to_double (sx),
+                                        scm_to_double (sy));
+        
+        scm_dynwind_end ();
+    } else {
+        ret = cairo_pdf_surface_create_for_stream
+            (guile_cairo_write_func,
+             (void*)SCM_UNPACK (scm_current_output_port ()),
+             scm_to_double (sx), scm_to_double (sy));
+    }
+                                                   
     SCONSRET (ret);
 }
-
-#if 0
-cairo_public cairo_surface_t *
-cairo_pdf_surface_create_for_stream (cairo_write_func_t	write_func,
-				     void	       *closure,
-				     double		width_in_points,
-				     double		height_in_points);
-#endif /* 0 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_set_size, "cairo-pdf-surface-set-size", 3, 0, 0,
                    (SCM surf, SCM sx, SCM sy),
@@ -2169,33 +2228,32 @@ SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_set_size, "cairo-pdf-surface-set-size",
 
 #if CAIRO_HAS_PS_SURFACE
 
-SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_create, "cairo-ps-surface-create", 3, 0, 0,
-                   (SCM sfilename, SCM sx, SCM sy),
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_create, "cairo-ps-surface-create", 2, 1, 0,
+                   (SCM sx, SCM sy, SCM sfilename),
 	    "")
 {
-    char *filename;
     cairo_surface_t *ret;
     
-    scm_dynwind_begin (0);
-    filename = scm_to_locale_string (sfilename);
-    scm_dynwind_free (filename);
-    
-    ret = cairo_ps_surface_create (filename,
-                                   scm_to_double (sx),
-                                   scm_to_double (sy));
-    
-    scm_dynwind_end ();
+    if (!SCM_UNBNDP (sfilename)) {
+        char *filename;
+        scm_dynwind_begin (0);
+        filename = scm_to_locale_string (sfilename);
+        scm_dynwind_free (filename);
+        
+        ret = cairo_ps_surface_create (filename,
+                                       scm_to_double (sx),
+                                       scm_to_double (sy));
+        
+        scm_dynwind_end ();
+    } else {
+        ret = cairo_ps_surface_create_for_stream
+            (guile_cairo_write_func,
+             (void*)SCM_UNPACK (scm_current_output_port ()),
+             scm_to_double (sx), scm_to_double (sy));
+    }
     
     SCONSRET (ret);
 }
-
-#if 0
-cairo_public cairo_surface_t *
-cairo_ps_surface_create_for_stream (cairo_write_func_t	write_func,
-                                    void	       *closure,
-                                    double		width_in_points,
-                                    double		height_in_points);
-#endif /* 0 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_set_size, "cairo-ps-surface-set-size", 3, 0, 0,
                    (SCM surf, SCM sx, SCM sy),
@@ -2244,33 +2302,32 @@ SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_begin_page_setup, "cairo-ps-surface-
 
 #if CAIRO_HAS_SVG_SURFACE
 
-SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_create, "cairo-svg-surface-create", 3, 0, 0,
-                   (SCM sfilename, SCM sx, SCM sy),
+SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_create, "cairo-svg-surface-create", 2, 1, 0,
+                   (SCM sx, SCM sy, SCM sfilename),
 	    "")
 {
-    char *filename;
     cairo_surface_t *ret;
     
-    scm_dynwind_begin (0);
-    filename = scm_to_locale_string (sfilename);
-    scm_dynwind_free (filename);
-    
-    ret = cairo_svg_surface_create (filename,
-                                    scm_to_double (sx),
-                                    scm_to_double (sy));
+    if (!SCM_UNBNDP (sfilename)) {
+        char *filename;
+        scm_dynwind_begin (0);
+        filename = scm_to_locale_string (sfilename);
+        scm_dynwind_free (filename);
+        
+        ret = cairo_svg_surface_create (filename,
+                                        scm_to_double (sx),
+                                        scm_to_double (sy));
 
-    scm_dynwind_end ();
+        scm_dynwind_end ();
+    } else {
+        ret = cairo_svg_surface_create_for_stream
+            (guile_cairo_write_func,
+             (void*)SCM_UNPACK (scm_current_output_port ()),
+             scm_to_double (sx), scm_to_double (sy));
+    }
     
     SCONSRET (ret);
 }
-
-#if 0
-cairo_public cairo_surface_t *
-cairo_svg_surface_create_for_stream (cairo_write_func_t	write_func,
-				     void	       *closure,
-				     double		width_in_points,
-				     double		height_in_points);
-#endif /* 0 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_restrict_to_version, "cairo-svg-surface-restrict-to-version", 2, 0, 0,
                    (SCM surf, SCM vers),

@@ -49,6 +49,14 @@ A pasteable introduction to using Guile-Cairo
 
 (cairo-surface-write-to-png surf "/tmp/guile-cairo.png")
 
+;; Functions that write out to files always take the filename as their
+;; last argument, which is optional. If you leave it out, guile-cairo
+;; will write to the current output port. So this is another way of
+;; doing the same thing:
+
+(with-output-to-file "/tmp/guile-cairo.png"
+  (lambda () (cairo-surface-write-to-png surf)))
+
 ;; Enumerated types are represented as symbols. The available set of
 ;; symbols for any given type can be retrieved at runtime
 

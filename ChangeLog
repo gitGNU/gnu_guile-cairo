@@ -1,5 +1,18 @@
 2007-06-08  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c
+	(guile_cairo_read_func, guile_cairo_write_func): New static
+	functions that can be passed to the streaming functions.
+	(cairo-surface-write-to-png, cairo-image-surface-create-from-png)
+	(cairo-pdf-surface-create, cairo-ps-surface-create)
+	(cairo-svg-surface-create): Move the filename argument to the end,
+	and make it optional; if not supplied use the current input/output
+	ports.
+	
+	* TODO: Streaming functions: check!
+
+	* README: Update readme with bits about output-to-ports.
+
 	* doc/release: Update with some details.
 	
 	* doc/www/news/index.scm: Add news entry about release.
