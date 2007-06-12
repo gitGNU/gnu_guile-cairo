@@ -2,6 +2,11 @@
   '((h2 "news")
 
     (news
+     (@ (date "12 June 2007")
+        (title "guile-cairo 1.3.92 available"))
+     (code "guile-cairo") " 1.3.92 has been released, featuring input from and output to Scheme ports.")
+
+    (news
      (@ (date "8 June 2007")
         (title "guile-cairo 1.3.91 available"))
      (code "guile-cairo") " 1.3.91 has been released, featuring Cairo 1.2 support.")

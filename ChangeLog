@@ -1,5 +1,9 @@
 2007-06-12  Andy Wingo  <wingo@pobox.com>
 
+	* doc/www/news/index.scm (page): Add release news entry.
+
+	* doc/release: Fix up.
+
 	== Guile-Cairo 1.3.92 released ==
 
 	* configure.ac: Bump version to 1.3.92.

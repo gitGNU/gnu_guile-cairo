@@ -32,8 +32,6 @@ may be obtained at:
 
   http://download.gna.org/guile-cairo/guile-cairo-XXX.tar.gz
 
-11) Add a news entry on the web site.
-
 What is Guile-Cairo
 -------------------
 
@@ -47,3 +45,5 @@ What's new
  * things from the NEWS, mentioning contributors
 
 Mail the release note to guile-user and guile-gtk-general.
+
+11) Add a news entry on the web site.
