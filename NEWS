@@ -4,6 +4,22 @@ Guile-Cairo NEWS
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
+guile-cairo 1.3.92 - 2007-06-12
+===============================
+
+* File output and input functions can now read from and write to Scheme
+ports.
+
+The convention is that the filename is an optional last argument, and
+that if it is not given, output will be written to the current output
+port, and likewise for input and the current input port.
+
+For example:
+
+  (with-output-to-file "/tmp/guile-cairo.png"
+    (lambda () (cairo-surface-write-to-png surf)))
+
+
 guile-cairo 1.3.91 -- 2007-06-08
 ================================
 

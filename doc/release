@@ -12,7 +12,9 @@ User-visible changes only.
 
 5) Update the README if appropriate.
 
-6) Commit with the new version and NEWS updates.
+6) Commit with the new version and NEWS updates. Add a line to Changelog
+   like:
+   == Guile-Cairo XXX released ==
 
 7) Re-autogen and make dist.
 
