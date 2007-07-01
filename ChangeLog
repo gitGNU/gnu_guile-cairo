@@ -1,5 +1,7 @@
 2007-07-01  Andy Wingo  <wingo@pobox.com>
 
+	* cairo/cairo-procedures.txt: Add the docs to bzr. A bit large.
+
 	* cairo/config.scm.in: Encode docs location here.
 
 	* cairo/Makefile.am: Install docs. Add rule to rebuild docs.
