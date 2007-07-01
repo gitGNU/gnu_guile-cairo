@@ -25,6 +25,8 @@
 ;;; Code:
 
 (define-module (cairo config)
-  :export     (*cairo-lib-path*))
+  :export     (*cairo-lib-path*
+               *cairo-documentation-path*))
 
 (define *cairo-lib-path* "@cairolibpath@")
+(define *cairo-documentation-path* "@cairodocumentationpath@")

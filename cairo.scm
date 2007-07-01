@@ -28,6 +28,7 @@
 
 (define-module (cairo)
   :use-module (cairo config)
+  :use-module ((ice-9 documentation) #:select (documentation-files))
   :use-module (cairo vector-types))
 
 (module-use! (module-public-interface (current-module))
@@ -36,3 +37,7 @@
 ;; This will export many things
 (dynamic-call "scm_init_cairo"
               (dynamic-link *cairo-lib-path*))
+
+(if (not (member *cairo-documentation-path* documentation-files))
+    (set! documentation-files (cons *cairo-documentation-path*
+                                    documentation-files)))

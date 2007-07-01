@@ -1,0 +1,22 @@
+#!/bin/bash
+# -*- scheme -*-
+exec guile --debug -e main -s "$0" "$@"
+!#
+
+(use-modules (gnome gw support gtk-doc)
+             (texinfo plain-text))
+
+(define (docbook->guile-doc . files)
+  (for-each
+   (lambda (file)
+     (for-each
+      (lambda (docs)
+        (display #\014)
+        (display (car (assq-ref (cdadr docs) 'name)))
+        (newline)
+        (display (stexi->plain-text docs)))
+      (gtk-doc-file->stexi-list file)))
+   files))
+
+(define (main args)
+  (apply docbook->guile-doc (cdr args)))

@@ -1,3 +1,15 @@
+2007-07-01  Andy Wingo  <wingo@pobox.com>
+
+	* cairo/config.scm.in: Encode docs location here.
+
+	* cairo/Makefile.am: Install docs. Add rule to rebuild docs.
+
+	* cairo.scm: Hook into the documentation system to so that our
+	documentation is available.
+
+	* doc/docbook-to-guile-doc: New file, generates docstrings for the
+	bindings. A bit ghetto.
+
 2007-06-12  Andy Wingo  <wingo@pobox.com>
 
 	* doc/www/news/index.scm (page): Add release news entry.
