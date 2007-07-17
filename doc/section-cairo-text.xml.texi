@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node Text
+@chapter Text: Rendering text and sets of glyphs
+@section Overview
+@section Usage
+@include defuns-cairo-text.xml.texi
+
+@c %end of fragment

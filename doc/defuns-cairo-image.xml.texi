@@ -1,0 +1,68 @@
+
+@c %start of fragment
+
+@deffn Function cairo-image-surface-create ( @var{format}   @code{<cairo-format-t>} ) ( @var{width}   @code{<int>} ) ( @var{height}   @code{<int>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+Creates an image surface of the specified format and dimensions. Initially the
+surface contents are all 0. (Specifically, within each pixel, each color or
+alpha channel belonging to format will be 0. The contents of bits within a
+pixel, but not belonging to the given format are undefined).
+
+@table @var
+@item format
+format of pixels in the surface to create
+
+@item width
+width of the surface, in pixels
+
+@item height
+height of the surface, in pixels
+
+@item ret
+a pointer to the newly created surface. The caller owns the surface and should
+call cairo_surface_destroy when done with it. This function always returns a
+valid pointer, but it will return a pointer to a "nil" surface if an error such
+as out of memory occurs. You can use @code{cairo-surface-status} to check for
+this.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-image-surface-get-format ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-format-t>} )
+Get the format of the surface.
+
+@table @var
+@item surface
+a @code{<cairo-image-surface-t>}
+
+@item ret
+the format of the surface
+
+@end table
+
+Since 1.2
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-image-surface-get-width ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<int>} )
+Get the width of the image surface in pixels.
+
+@table @var
+@item surface
+a @code{<cairo-image-surface-t>}
+
+@item ret
+the width of the surface in pixels.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment

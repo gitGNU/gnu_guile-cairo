@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node FreeType Fonts
+@chapter FreeType Fonts: Font support for FreeType
+@section Overview
+@section Usage
+@include defuns-cairo-ft.xml.texi
+
+@c %end of fragment

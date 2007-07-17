@@ -1,0 +1,168 @@
+
+@c %start of fragment
+
+@deffn Function cairo-font-options-create   @result{} ( @var{ret}   @code{<cairo-font-options-t>} )
+Allocates a new font options object with all options initialized to default
+values.
+
+@table @var
+@item ret
+a newly allocated @code{<cairo-font-options-t>}. Free with
+@code{cairo-font-options-destroy}. This function always returns a valid pointer;
+if memory cannot be allocated, then a special error object is returned where all
+operations on the object do nothing. You can check for this with
+@code{cairo-font-options-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-copy ( @var{original}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-font-options-t>} )
+Allocates a new font options object copying the option values from
+@var{original}.
+
+@table @var
+@item original
+a @code{<cairo-font-options-t>}
+
+@item ret
+a newly allocated @code{<cairo-font-options-t>}. Free with
+@code{cairo-font-options-destroy}. This function always returns a valid pointer;
+if memory cannot be allocated, then a special error object is returned where all
+operations on the object do nothing. You can check for this with
+@code{cairo-font-options-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-merge ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{other}   @code{<cairo-font-options-t>} )
+Merges non-default options from @var{other} into @var{options}, replacing
+existing values. This operation can be thought of as somewhat similar to
+compositing @var{other} onto @var{options} with the operation of
+@samp{CAIRO_OPERATION_OVER}.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item other
+another @code{<cairo-font-options-t>}
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-hash ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<unsigned long>} )
+Compute a hash for the font options object; this value will be useful when
+storing an object containing a cairo_font_options_t in a hash table.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item ret
+the hash value for the font options object. The return value can be cast to a
+32-bit type if a 32-bit hash value is needed.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-set-antialias ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{antialias}   @code{<cairo-antialias-t>} )
+Sets the antialiasing mode for the font options object. This specifies the type
+of antialiasing to do when rendering text.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item antialias
+the new antialiasing mode
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-get-antialias ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-antialias-t>} )
+Gets the antialiasing mode for the font options object.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item ret
+the antialiasing mode
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-set-hint-style ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{hint-style}   @code{<cairo-hint-style-t>} )
+Sets the hint style for font outlines for the font options object. This controls
+whether to fit font outlines to the pixel grid, and if so, whether to optimize
+for fidelity or contrast. See the documentation for @code{<cairo-hint-style-t>}
+for full details.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item hint-style
+the new hint style
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-get-hint-style ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-hint-style-t>} )
+Gets the hint style for font outlines for the font options object. See the
+documentation for @code{<cairo-hint-style-t>} for full details.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item ret
+the hint style for the font options object
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-font-options-set-hint-metrics ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{hint-metrics}   @code{<cairo-hint-metrics-t>} )
+Sets the metrics hinting mode for the font options object. This controls whether
+metrics are quantized to integer values in device units. See the documentation
+for @code{<cairo-hint-metrics-t>} for full details.
+
+@table @var
+@item options
+a @code{<cairo-font-options-t>}
+
+@item hint-metrics
+the new metrics hinting mode
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment

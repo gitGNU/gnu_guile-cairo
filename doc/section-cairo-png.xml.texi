@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node PNG Support
+@chapter PNG Support: Reading and writing PNG images
+@section Overview
+@section Usage
+@include defuns-cairo-png.xml.texi
+
+@c %end of fragment

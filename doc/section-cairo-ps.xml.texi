@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node PostScript Surfaces
+@chapter PostScript Surfaces: Rendering PostScript documents
+@section Overview
+@section Usage
+@include defuns-cairo-ps.xml.texi
+
+@c %end of fragment

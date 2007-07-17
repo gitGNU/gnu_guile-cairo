@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node Win32 Surfaces
+@chapter Win32 Surfaces: Microsoft Windows surface support
+@section Overview
+@section Usage
+@include defuns-cairo-win32.xml.texi
+
+@c %end of fragment

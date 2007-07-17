@@ -1,0 +1,125 @@
+
+@c %start of fragment
+
+@deffn Function cairo-matrix-translate ( @var{matrix}   @code{<cairo-matrix-t>} ) ( @var{tx}   @code{<double>} ) ( @var{ty}   @code{<double>} )
+Applies a translation by @var{tx}, @var{ty} to the transformation in
+@var{matrix}. The effect of the new transformation is to first translate the
+coordinates by @var{tx} and @var{ty}, then apply the original transformation to
+the coordinates.
+
+@table @var
+@item matrix
+a cairo_matrix_t
+
+@item tx
+amount to translate in the X direction
+
+@item ty
+amount to translate in the Y direction
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-matrix-invert ( @var{matrix}   @code{<cairo-matrix-t>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} )
+Changes @var{matrix} to be the inverse of it's original value. Not all
+transformation matrices have inverses; if the matrix collapses points together
+(it is @dfn{degenerate}), then it has no inverse and this function will fail.
+
+Returns: If @var{matrix} has an inverse, modifies @var{matrix} to be the inverse
+matrix and returns @samp{CAIRO_STATUS_SUCCESS}. Otherwise,
+
+@table @var
+@item matrix
+a @code{<cairo-matrix-t>}
+
+@item ret
+@samp{CAIRO_STATUS_INVALID_MATRIX}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-matrix-multiply ( @var{result}   @code{<cairo-matrix-t>} ) ( @var{a}   @code{<cairo-matrix-t>} ) ( @var{b}   @code{<cairo-matrix-t>} )
+Multiplies the affine transformations in @var{a} and @var{b} together and stores
+the result in @var{result}. The effect of the resulting transformation is to
+first apply the transformation in @var{a} to the coordinates and then apply the
+transformation in @var{b} to the coordinates.
+
+It is allowable for @var{result} to be identical to either @var{a} or @var{b}.
+
+@table @var
+@item result
+a @code{<cairo-matrix-t>} in which to store the result
+
+@item a
+a @code{<cairo-matrix-t>}
+
+@item b
+a @code{<cairo-matrix-t>}
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-matrix-transform-distance ( @var{matrix}   @code{<cairo-matrix-t>} )   @result{} ( @var{dx}   @code{<double>} ) ( @var{dy}   @code{<double>} )
+Transforms the distance vector (@var{dx},@var{dy}) by @var{matrix}. This is
+similar to @code{cairo-matrix-transform-point} except that the translation
+components of the transformation are ignored. The calculation of the returned
+vector is as follows:
+
+@example 
+
+dx2 = dx1 * a + dy1 * c;
+dy2 = dx1 * b + dy1 * d;
+@end example
+
+Affine transformations are position invariant, so the same vector always
+transforms to the same vector. If (@var{x1},@var{y1}) transforms to
+(@var{x2},@var{y2}) then (@var{x1}+@var{dx1},@var{y1}+@var{dy1}) will transform
+to (@var{x1}+@var{dx2},@var{y1}+@var{dy2}) for all values of @var{x1} and
+@var{x2}.
+
+@table @var
+@item matrix
+a @code{<cairo-matrix-t>}
+
+@item dx
+X component of a distance vector. An in/out parameter
+
+@item dy
+Y component of a distance vector. An in/out parameter
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-matrix-transform-point ( @var{matrix}   @code{<cairo-matrix-t>} )   @result{} ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )
+Transforms the point (@var{x}, @var{y}) by @var{matrix}.
+
+@table @var
+@item matrix
+a @code{<cairo-matrix-t>}
+
+@item x
+X position. An in/out parameter
+
+@item y
+Y position. An in/out parameter
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment

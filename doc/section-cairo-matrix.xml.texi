@@ -1,0 +1,28 @@
+
+@c %start of fragment
+
+@node cairo_matrix_t
+@chapter cairo_matrix_t: Generic matrix operations
+@section Overview
+@cindex types, cairo_matrix @c %start of fragment @c %end of fragment
+@code{<cairo-matrix-t>} is used throughout cairo to convert between different
+coordinate spaces. A @code{<cairo-matrix-t>} holds an affine transformation,
+such as a scale, rotation, shear, or a combination of these. The transformation
+of a point (@samp{x},@samp{y}) is given by:
+
+@example 
+
+    x_new = xx * x + xy * y + x0;
+    y_new = yx * x + yy * y + y0;
+  
+@end example
+
+The current transformation matrix of a @code{<cairo-t>}, represented as a
+@code{<cairo-matrix-t>}, defines the transformation from user-space coordinates
+to device-space coordinates. See @code{cairo-get-matrix} and
+@code{cairo-set-matrix}.
+
+@section Usage
+@include defuns-cairo-matrix.xml.texi
+
+@c %end of fragment

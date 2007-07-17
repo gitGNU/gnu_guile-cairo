@@ -1,5 +1,10 @@
 2007-07-17  Andy Wingo  <wingo@pobox.com>
 
+	* doc/defuns-*.texi:
+	* doc/section-*.texi: Add generated docs. To update, "make
+	generate-defuns" or "make generate-stubs"; but generate-stubs
+	probably shouldn't be run again.
+
 	* doc/docbook-to-guile-doc (docbook->guile-doc): Update for
 	function name change. Perhaps doesn't work now...
 

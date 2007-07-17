@@ -1,0 +1,48 @@
+
+@c %start of fragment
+
+@deffn Function cairo-image-surface-create-from-png ( @var{filename}   @code{<char>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+Creates a new image surface and initializes the contents to the given PNG file.
+
+@table @var
+@item filename
+name of PNG file to load
+
+@item ret
+a new @code{<cairo-surface-t>} initialized with the contents of the PNG file, or
+a "nil" surface if any error occurred. A nil surface can be checked for with
+cairo_surface_status(surface) which may return one of the following values:
+CAIRO_STATUS_NO_MEMORY CAIRO_STATUS_FILE_NOT_FOUND CAIRO_STATUS_READ_ERROR
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-surface-write-to-png ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{filename}   @code{<char>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} )
+Writes the contents of @var{surface} to a new file @var{filename} as a PNG
+image.
+
+@table @var
+@item surface
+a @code{<cairo-surface-t>} with pixel contents
+
+@item filename
+the name of a file to write to
+
+@item ret
+CAIRO_STATUS_SUCCESS if the PNG file was written successfully. Otherwise,
+CAIRO_STATUS_NO_MEMORY if memory could not be allocated for the operation or
+CAIRO_STATUS_SURFACE_TYPE_MISMATCH if the surface does not have pixel contents,
+or CAIRO_STATUS_WRITE_ERROR if an I/O error occurs while attempting to write the
+file.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment

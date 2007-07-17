@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node Scaled Fonts
+@chapter Scaled Fonts: Caching metrics for a particular font size
+@section Overview
+@section Usage
+@include defuns-cairo-scaled-font.xml.texi
+
+@c %end of fragment

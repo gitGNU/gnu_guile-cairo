@@ -1,0 +1,48 @@
+
+@c %start of fragment
+
+@deffn Function cairo-version   @result{} ( @var{ret}   @code{<int>} )
+Returns the version of the cairo library encoded in a single integer as per
+CAIRO_VERSION_ENCODE. The encoding ensures that later versions compare greater
+than earlier versions.
+
+A run-time comparison to check that cairo's version is greater than or equal to
+version X.Y.Z could be performed as follows:
+
+@example 
+
+if (cairo_version() >= CAIRO_VERSION_ENCODE(X,Y,Z)) @{...@}
+@end example
+
+See also @code{cairo-version-string} as well as the compile-time equivalents
+@samp{CAIRO_VERSION} and @samp{CAIRO_VERSION_STRING}.
+
+@table @var
+@item ret
+the encoded version.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-version-string   @result{} ( @var{ret}   @code{<char>} )
+Returns the version of the cairo library as a human-readable string of the form
+"X.Y.Z".
+
+See also @code{cairo-version} as well as the compile-time equivalents
+@samp{CAIRO_VERSION_STRING} and @samp{CAIRO_VERSION}.
+
+@table @var
+@item ret
+a string containing the version.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment

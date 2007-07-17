@@ -1,0 +1,10 @@
+
+@c %start of fragment
+
+@node Patterns
+@chapter Patterns: Gradients and filtered sources
+@section Overview
+@section Usage
+@include defuns-cairo-pattern.xml.texi
+
+@c %end of fragment

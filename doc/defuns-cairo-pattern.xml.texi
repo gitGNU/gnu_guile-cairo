@@ -1,0 +1,548 @@
+
+@c %start of fragment
+
+@deffn Function cairo-pattern-add-color-stop-rgb ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{offset}   @code{<double>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} )
+Adds an opaque color stop to a gradient pattern. The offset specifies the
+location along the gradient's control vector. For example, a linear gradient's
+control vector is from (x0,y0) to (x1,y1) while a radial gradient's control
+vector is from any point on the start circle to the corresponding point on the
+end circle.
+
+The color is specified in the same way as in @code{cairo-set-source-rgb}.
+
+Note: If the pattern is not a gradient pattern, (eg. a linear or radial
+pattern), then the pattern will be put into an error status with a status of
+@samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH}.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item offset
+an offset in the range [0.0 .. 1.0]
+
+@item red
+red component of color
+
+@item green
+green component of color
+
+@item blue
+blue component of color
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-add-color-stop-rgba ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{offset}   @code{<double>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} ) ( @var{alpha}   @code{<double>} )
+Adds a translucent color stop to a gradient pattern. The offset specifies the
+location along the gradient's control vector. For example, a linear gradient's
+control vector is from (x0,y0) to (x1,y1) while a radial gradient's control
+vector is from any point on the start circle to the corresponding point on the
+end circle.
+
+The color is specified in the same way as in @code{cairo-set-source-rgba}.
+
+Note: If the pattern is not a gradient pattern, (eg. a linear or radial
+pattern), then the pattern will be put into an error status with a status of
+@samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH}.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item offset
+an offset in the range [0.0 .. 1.0]
+
+@item red
+red component of color
+
+@item green
+green component of color
+
+@item blue
+blue component of color
+
+@item alpha
+alpha component of color
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-color-stop-rgba ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{index}   @code{<int>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} ) ( @var{offset}   @code{<double>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} ) ( @var{alpha}   @code{<double>} )
+Gets the color and offset information at the given @var{index} for a gradient
+pattern. Values of @var{index} are 0 to 1 less than the number returned by
+@code{cairo-pattern-get-color-stop-count}.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item index
+index of the stop to return data for
+
+@item offset
+return value for the offset of the stop, or @samp{@code{#f}}
+
+@item red
+return value for red component of color, or @samp{@code{#f}}
+
+@item green
+return value for green component of color, or @samp{@code{#f}}
+
+@item blue
+return value for blue component of color, or @samp{@code{#f}}
+
+@item alpha
+return value for alpha component of color, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS}, or @samp{CAIRO_STATUS_INVALID_INDEX} if @var{index}
+is not valid for the given pattern. If the pattern is not a gradient pattern,
+@samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH} is returned.
+
+@end table
+
+Since 1.4
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-create-rgb ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+Creates a new cairo_pattern_t corresponding to an opaque color. The color
+components are floating point numbers in the range 0 to 1. If the values passed
+in are outside that range, they will be clamped.
+
+@table @var
+@item red
+red component of the color
+
+@item green
+green component of the color
+
+@item blue
+blue component of the color
+
+@item ret
+the newly created @code{<cairo-pattern-t>} if successful, or an error pattern in
+case of no memory. The caller owns the returned object and should call
+@code{cairo-pattern-destroy} when finished with it. This function will always
+return a valid pointer, but if an error occurred the pattern status will be set
+to an error. To inspect the status of a pattern use @code{cairo-pattern-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-create-rgba ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} ) ( @var{alpha}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+Creates a new cairo_pattern_t corresponding to a translucent color. The color
+components are floating point numbers in the range 0 to 1. If the values passed
+in are outside that range, they will be clamped.
+
+@table @var
+@item red
+red component of the color
+
+@item green
+green component of the color
+
+@item blue
+blue component of the color
+
+@item alpha
+alpha component of the color
+
+@item ret
+the newly created @code{<cairo-pattern-t>} if successful, or an error pattern in
+case of no memory. The caller owns the returned object and should call
+@code{cairo-pattern-destroy} when finished with it. This function will always
+return a valid pointer, but if an error occurred the pattern status will be set
+to an error. To inspect the status of a pattern use @code{cairo-pattern-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-rgba ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} ) ( @var{alpha}   @code{<double>} )
+Gets the solid color for a solid color pattern.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item red
+return value for red component of color, or @samp{@code{#f}}
+
+@item green
+return value for green component of color, or @samp{@code{#f}}
+
+@item blue
+return value for blue component of color, or @samp{@code{#f}}
+
+@item alpha
+return value for alpha component of color, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS}, or @samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH} if the
+pattern is not a solid color pattern.
+
+@end table
+
+Since 1.4
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-create-for-surface ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+Create a new cairo_pattern_t for the given surface.
+
+@table @var
+@item surface
+the surface
+
+@item ret
+the newly created @code{<cairo-pattern-t>} if successful, or an error pattern in
+case of no memory. The caller owns the returned object and should call
+@code{cairo-pattern-destroy} when finished with it. This function will always
+return a valid pointer, but if an error occurred the pattern status will be set
+to an error. To inspect the status of a pattern use @code{cairo-pattern-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-surface ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} ) ( @var{surface}   @code{<cairo-surface-t*>} )
+Gets the surface of a surface pattern. The reference returned in @var{surface}
+is owned by the pattern; the caller should call @code{cairo-surface-reference}
+if the surface is to be retained.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item surface
+return value for surface of pattern, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS}, or @samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH} if the
+pattern is not a surface pattern.
+
+@end table
+
+Since 1.4
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-create-linear ( @var{x0}   @code{<double>} ) ( @var{y0}   @code{<double>} ) ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+Create a new linear gradient cairo_pattern_t along the line defined by (x0, y0)
+and (x1, y1). Before using the gradient pattern, a number of color stops should
+be defined using @code{cairo-pattern-add-color-stop-rgb} or
+@code{cairo-pattern-add-color-stop-rgba}.
+
+Note: The coordinates here are in pattern space. For a new pattern, pattern
+space is identical to user space, but the relationship between the spaces can be
+changed with @code{cairo-pattern-set-matrix}.
+
+@table @var
+@item x0
+x coordinate of the start point
+
+@item y0
+y coordinate of the start point
+
+@item x1
+x coordinate of the end point
+
+@item y1
+y coordinate of the end point
+
+@item ret
+the newly created @code{<cairo-pattern-t>} if successful, or an error pattern in
+case of no memory. The caller owns the returned object and should call
+@code{cairo-pattern-destroy} when finished with it. This function will always
+return a valid pointer, but if an error occurred the pattern status will be set
+to an error. To inspect the status of a pattern use @code{cairo-pattern-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-linear-points ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} ) ( @var{x0}   @code{<double>} ) ( @var{y0}   @code{<double>} ) ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} )
+Gets the gradient endpoints for a linear gradient.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item x0
+return value for the x coordinate of the first point, or @samp{@code{#f}}
+
+@item y0
+return value for the y coordinate of the first point, or @samp{@code{#f}}
+
+@item x1
+return value for the x coordinate of the second point, or @samp{@code{#f}}
+
+@item y1
+return value for the y coordinate of the second point, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS}, or @samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH} if
+@var{pattern} is not a linear gradient pattern.
+
+@end table
+
+Since 1.4
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-create-radial ( @var{cx0}   @code{<double>} ) ( @var{cy0}   @code{<double>} ) ( @var{radius0}   @code{<double>} ) ( @var{cx1}   @code{<double>} ) ( @var{cy1}   @code{<double>} ) ( @var{radius1}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+Creates a new radial gradient cairo_pattern_t between the two circles defined by
+(x0, y0, c0) and (x1, y1, c0). Before using the gradient pattern, a number of
+color stops should be defined using @code{cairo-pattern-add-color-stop-rgb} or
+@code{cairo-pattern-add-color-stop-rgba}.
+
+Note: The coordinates here are in pattern space. For a new pattern, pattern
+space is identical to user space, but the relationship between the spaces can be
+changed with @code{cairo-pattern-set-matrix}.
+
+@table @var
+@item cx0
+x coordinate for the center of the start circle
+
+@item cy0
+y coordinate for the center of the start circle
+
+@item radius0
+radius of the start circle
+
+@item cx1
+x coordinate for the center of the end circle
+
+@item cy1
+y coordinate for the center of the end circle
+
+@item radius1
+radius of the end circle
+
+@item ret
+the newly created @code{<cairo-pattern-t>} if successful, or an error pattern in
+case of no memory. The caller owns the returned object and should call
+@code{cairo-pattern-destroy} when finished with it. This function will always
+return a valid pointer, but if an error occurred the pattern status will be set
+to an error. To inspect the status of a pattern use @code{cairo-pattern-status}.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-radial-circles ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-status-t>} ) ( @var{x0}   @code{<double>} ) ( @var{y0}   @code{<double>} ) ( @var{r0}   @code{<double>} ) ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} ) ( @var{r1}   @code{<double>} )
+Gets the gradient endpoint circles for a radial gradient, each specified as a
+center coordinate and a radius.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item x0
+return value for the x coordinate of the center of the first circle, or
+@samp{@code{#f}}
+
+@item y0
+return value for the y coordinate of the center of the first circle, or
+@samp{@code{#f}}
+
+@item r0
+return value for the radius of the first circle, or @samp{@code{#f}}
+
+@item x1
+return value for the x coordinate of the center of the second circle, or
+@samp{@code{#f}}
+
+@item y1
+return value for the y coordinate of the center of the second circle, or
+@samp{@code{#f}}
+
+@item r1
+return value for the radius of the second circle, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS}, or @samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH} if
+@var{pattern} is not a radial gradient pattern.
+
+@end table
+
+Since 1.4
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-set-extend ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{extend}   @code{<cairo-extend-t>} )
+Sets the mode to be used for drawing outside the area of a pattern. See
+@code{<cairo-extend-t>} for details on the semantics of each extend strategy.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item extend
+a @code{<cairo-extend-t>} describing how the area outside of the pattern will be
+drawn
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-extend ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-extend-t>} )
+Gets the current extend mode for a pattern. See @code{<cairo-extend-t>} for
+details on the semantics of each extend strategy.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item ret
+the current extend strategy used for drawing the pattern.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-set-filter ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{filter}   @code{<cairo-filter-t>} )
+Sets the filter to be used for resizing when using this pattern. See
+@code{<cairo-filter-t>} for details on each filter.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item filter
+a @code{<cairo-filter-t>} describing the filter to use for resizing the pattern
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-filter ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-filter-t>} )
+Gets the current filter for a pattern. See @code{<cairo-filter-t>} for details
+on each filter.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item ret
+the current filter used for resizing the pattern.
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-set-matrix ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+Sets the pattern's transformation matrix to @var{matrix}. This matrix is a
+transformation from user space to pattern space.
+
+When a pattern is first created it always has the identity matrix for its
+transformation matrix, which means that pattern space is initially identical to
+user space.
+
+Important: Please note that the direction of this transformation matrix is from
+user space to pattern space. This means that if you imagine the flow from a
+pattern to user space (and on to device space), then coordinates in that flow
+will be transformed by the inverse of the pattern matrix.
+
+For example, if you want to make a pattern appear twice as large as it does by
+default the correct code to use is:
+
+@example 
+
+cairo_matrix_init_scale (&matrix, 0.5, 0.5);
+cairo_pattern_set_matrix (pattern, &matrix);
+@end example
+
+Meanwhile, using values of 2.0 rather than 0.5 in the code above would cause the
+pattern to appear at half of its default size.
+
+Also, please note the discussion of the user-space locking semantics of
+@code{cairo-set-source}.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item matrix
+a @code{<cairo-matrix-t>}
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-matrix ( @var{pattern}   @code{<cairo-pattern-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+Stores the pattern's transformation matrix into @var{matrix}.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item matrix
+return value for the matrix
+
+@end table
+
+This documentation was automatically generated.
+
+@end deffn
+
+@deffn Function cairo-pattern-get-type ( @var{pattern}   @code{<cairo-pattern-t>} )   @result{} ( @var{ret}   @code{<cairo-pattern-type-t>} )
+This function returns the type a pattern. See @code{<cairo-pattern-type-t>} for
+available types.
+
+@table @var
+@item pattern
+a @code{<cairo-pattern-t>}
+
+@item ret
+The type of @var{pattern}.
+
+@end table
+
+Since 1.2
+
+This documentation was automatically generated.
+
+@end deffn
+
+
+@c %end of fragment
