@@ -1,0 +1,118 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename guile-cairo.info
+@settitle Guile-Cairo
+@c %**end of header
+
+@set VERSION 1.4
+@set UPDATED 17 July 2007
+
+@copying 
+This manual is for Guile-Cairo (version @value{VERSION}, updated
+@value{UPDATED})
+
+Copyright 2002-2007 Carl Worth and others
+
+@quotation 
+Permission is granted to copy, distribute and/or modify this document
+under the terms of either the GNU Lesser General Public License (LGPL)
+version 2.1 or the Mozilla Public License (MPL) version 1.1.
+@end quotation
+
+@end copying
+
+@dircategory The Algorithmic Language Scheme
+@direntry 
+* Guile-Cairo: (guile-cairo.info).  Scheme vector graphics with Cairo.
+@end direntry
+
+@titlepage 
+@title Guile-Cairo
+@subtitle version @value{VERSION}, updated @value{UPDATED}
+@author Carl Worth
+@author Andy Wingo
+@author (many others)
+@page 
+@vskip 0pt plus 1filll
+@insertcopying 
+@end titlepage
+
+@ifnottex 
+@node Top
+@top Guile-Cairo
+
+
+@insertcopying 
+@menu
+* cairo_t::                     The cairo drawing context
+* Paths::                       Creating paths and manipulating path data
+* Patterns::                    Gradients and filteres sources
+* Transformations::             Manipulating the current
+                                transformation network
+* Text::                        Rendering text and sets of glyphs
+
+* cairo_font_face_t::           Base class for fonts
+* Scaled Fonts::                Caching metrics for a particular font size
+* Font Options::                How a font should be rendered
+* FreeType Fonts::              Font support for FreeType
+* Win32 Fonts::                 Font support for Microsoft Windows
+
+* cairo_surface_t::             Base class for surfaces
+* Image Surfaces::              Rendering to memory buffers
+* PDF Surfaces::                Rendering PDF documents
+* PNG Support::                 Reading and writing PNG images
+* PostScript Surfaces::         Rendering PostScript documents
+* SVG Surfaces::                Rendering SVG documents
+
+* cairo_matrix_t::              Generic matrix operations
+* Error handling::              Decoding cairo's status
+* Version Information::         Compile-time and run-time version checks
+* Types::                       Generic data types used in the Cairo API
+
+* Concept Index::
+* Function Index::
+@end menu
+
+@end ifnottex
+
+@iftex 
+@shortcontents 
+@end iftex
+
+@c Drawing
+@include section-cairo.xml.texi
+@include section-cairo-paths.xml.texi
+@include section-cairo-pattern.xml.texi
+@include section-cairo-transforms.xml.texi
+@include section-cairo-text.xml.texi
+
+@c Fonts
+@include section-cairo-font.xml.texi
+@include section-cairo-scaled-font.xml.texi
+@include section-cairo-font-options.xml.texi
+@include section-cairo-ft.xml.texi
+@include section-cairo-win32-fonts.xml.texi
+
+@c Surfaces
+@include section-cairo-surface.xml.texi
+@include section-cairo-image.xml.texi
+@include section-cairo-pdf.xml.texi
+@include section-cairo-png.xml.texi
+@include section-cairo-ps.xml.texi
+@c @include section-cairo-win32.xml.texi
+@include section-cairo-svg.xml.texi
+@c @include section-cairo-xlib.xml.texi
+
+@c Utilities
+@include section-cairo-matrix.xml.texi
+@include section-cairo-status.xml.texi
+@include section-cairo-version.xml.texi
+@include section-cairo-types.xml.texi
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+@node Function Index
+@unnumbered Function Index
+@printindex fn
+@bye

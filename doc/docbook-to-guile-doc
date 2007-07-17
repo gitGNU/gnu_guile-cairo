@@ -15,7 +15,7 @@ exec guile --debug -e main -s "$0" "$@"
         (display (car (assq-ref (cdadr docs) 'name)))
         (newline)
         (display (stexi->plain-text docs)))
-      (gtk-doc-file->stexi-list file)))
+      (gtk-doc-file->defun-list file)))
    files))
 
 (define (main args)

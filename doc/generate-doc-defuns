@@ -1,0 +1,27 @@
+#!/bin/bash
+# -*- scheme -*-
+exec guile --debug -e main -s "$0" "$@"
+!#
+
+(use-modules (gnome gw support gtk-doc)
+             (texinfo serialize))
+
+(define (docbook->defuns . files)
+  (for-each
+   (lambda (file)
+     (let* ((sdocbook (docbook->sdocbook file))
+            (basename (basename file))
+            (interface (resolve-interface '(cairo)))
+            (docs (stexi->texi
+                   `(*fragment*
+                     ,@(gtk-doc-sdocbook->def-list
+                        sdocbook
+                        (lambda (sym)
+                          (module-variable interface sym)))))))
+       (with-output-to-file (string-append "defuns-" basename ".texi")
+         (lambda ()
+           (display docs)))))
+   files))
+
+(define (main args)
+  (apply docbook->defuns (cdr args)))

@@ -1,7 +1,24 @@
-* documentation (investigate munging the devhelp)
-  - it seems doc snarfing is not a supported option; writing all those
-    docs would suck, also
-  - we follow the C API closely, prehaps we can munge the devhelp files
-  - perhaps suckage is unavoidable
-* examples and neat things
-* think about points representation in path-fold; multiple value returns also.
+* Documentation
+
+** Automagic generation
+
+We already have this, but it would be good to be able to override for
+certain functions.
+
+** Online/texinfo docs
+
+Need to figure out how to categorize functions, etc.
+
+** Type documentation
+
+** signals, properties
+
+** inheritance
+
+For me to call cairo docs finished, i'd want sectioned function docs,
+with autoconverted headers.
+
+* Tests
+
+At the very least, a test that ensures that the API stays the same: same
+set of symbols exported.

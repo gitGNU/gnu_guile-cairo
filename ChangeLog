@@ -1,3 +1,19 @@
+2007-07-17  Andy Wingo  <wingo@pobox.com>
+
+	* doc/docbook-to-guile-doc (docbook->guile-doc): Update for
+	function name change. Perhaps doesn't work now...
+
+	* TODO: Work on this a bit.
+
+	* doc/guile-cairo.texi: New wrapper for cairo docs.
+
+	* doc/generate-doc-stubs: 
+	* doc/generate-doc-defuns: New scripts, use new code from
+	guile-gnome's gtk-doc.scm.
+
+	* doc/Makefile.am: Add a first pass at a docs Makefile.am. More to
+	come.
+
 2007-07-01  Andy Wingo  <wingo@pobox.com>
 
 	* cairo/cairo-procedures.txt: Add the docs to bzr. A bit large.
