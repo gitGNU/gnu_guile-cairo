@@ -18,7 +18,7 @@
           ,@(list-join
              (map (lambda (x)
                     `(a (@ ,(href (cdr x) "/") ,@(rev? (car x))) ,(car x)))
-                  '(;("documentation" . "docs")
+                  '(("documentation" . "docs")
                     ("download" . "download")
                     ("developers" . "dev")
                     ("news" . "news")

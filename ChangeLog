@@ -1,5 +1,13 @@
 2007-07-17  Andy Wingo  <wingo@pobox.com>
 
+	* doc/www/template.scm (templatize): Enable documentation.
+
+	* doc/section-cairo-matrix.xml.texi (cairo_matrix_t): Regenerate.
+
+	* doc/Makefile.am (www): Add docs generation to web doc procedure.
+
+	* doc/www/docs/index.scm (page): New document.
+
 	* doc/docbook-to-guile-doc (docbook->guile-doc): Update so that it
 	works.
 
