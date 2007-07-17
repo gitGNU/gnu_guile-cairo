@@ -4,19 +4,23 @@ exec guile --debug -e main -s "$0" "$@"
 !#
 
 (use-modules (gnome gw support gtk-doc)
-             (texinfo plain-text))
+             (texinfo plain-text)
+             (cairo))
 
 (define (docbook->guile-doc . files)
-  (for-each
-   (lambda (file)
-     (for-each
-      (lambda (docs)
-        (display #\014)
-        (display (car (assq-ref (cdadr docs) 'name)))
-        (newline)
-        (display (stexi->plain-text docs)))
-      (gtk-doc-file->defun-list file)))
-   files))
+  (let ((interface (resolve-interface '(cairo))))
+    (for-each
+     (lambda (file)
+       (for-each
+        (lambda (docs)
+          (display #\014)
+          (display (car (assq-ref (cdadr docs) 'name)))
+          (newline)
+          (display (stexi->plain-text docs)))
+        (gtk-doc-sdocbook->def-list
+         (docbook->sdocbook file)
+         (lambda (sym) (module-variable interface sym)))))
+     files)))
 
 (define (main args)
   (apply docbook->guile-doc (cdr args)))
