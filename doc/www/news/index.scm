@@ -2,6 +2,11 @@
   '((h2 "news")
 
     (news
+     (@ (date "17 July 2007")
+        (title "guile-cairo 1.3.93 available"))
+     (code "guile-cairo") " 1.3.93 has been released, featuring " (rlink "docs/" "documentation") ".")
+
+    (news
      (@ (date "12 June 2007")
         (title "guile-cairo 1.3.92 available"))
      (code "guile-cairo") " 1.3.92 has been released, featuring input from and output to Scheme ports.")

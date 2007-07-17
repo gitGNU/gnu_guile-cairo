@@ -1,5 +1,7 @@
 2007-07-17  Andy Wingo  <wingo@pobox.com>
 
+	* doc/www/news/index.scm (page): Update for release.
+
 	== Guile-Cairo 1.3.93 released ==
 
 	* configure.ac: 
