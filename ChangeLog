@@ -1,5 +1,11 @@
 2007-07-21  Andy Wingo  <wingo@pobox.com>
 
+	* guile-cairo/guile-cairo.c (cairo-image-surface-get-height)
+	(cairo-image-surface-get-stride)
+	* guile-cairo/guile-cairo-enum-types.c
+	(cairo-path-data-type-get-values): Fix some names after manually
+	looking over the API export list.
+
 	* tests/unit-tests/api-stability.scm: 
 	* tests/unit-tests/Makefile.am: Dist the api file. Indicate the
 	api file location via an environment variable; makes the check

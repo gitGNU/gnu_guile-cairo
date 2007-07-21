@@ -1761,7 +1761,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_width, "cairo-image-surface-get-w
              scm_from_double (cairo_image_surface_get_width (scm_to_cairo_surface (surf))));
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_height, "cairo-image-surface-get-heigt", 1, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_height, "cairo-image-surface-get-height", 1, 0, 0,
                    (SCM surf),
 	    "")
 {
@@ -1769,7 +1769,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_height, "cairo-image-surface-get-
              scm_from_double (cairo_image_surface_get_height (scm_to_cairo_surface (surf))));
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_stride, "cairo-image-surface-get-heigt", 1, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_stride, "cairo-image-surface-get-stride", 1, 0, 0,
                    (SCM surf),
 	    "")
 {

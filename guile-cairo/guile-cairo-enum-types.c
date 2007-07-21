@@ -336,7 +336,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_font_type_get_values, "cairo-font-type-get-values",
 
 SCM scm_from_cairo_path_data_type (cairo_path_data_type_t cval) { return _scm_from_enum (_path_data_type, cval); }
 cairo_path_data_type_t scm_to_cairo_path_data_type (SCM scm) { return _scm_to_enum (_path_data_type, scm); }
-SCM_DEFINE_PUBLIC (scm_cairo_path_data_type_get_values, "cairo-path-data_type-get-values", 0, 0, 0, (void), "")
+SCM_DEFINE_PUBLIC (scm_cairo_path_data_type_get_values, "cairo-path-data-type-get-values", 0, 0, 0, (void), "")
   { return _get_values (_path_data_type); }
 
 SCM scm_from_cairo_surface_type (cairo_surface_type_t cval) { return _scm_from_enum (_surface_type, cval); }
