@@ -1,3 +1,18 @@
+2007-07-21  Andy Wingo  <wingo@pobox.com>
+
+	* tests/unit-tests/Makefile.am: Add api-stability.scm check, and a
+	rule to regenerate a .api file.
+
+	* tests/unit-tests/update-api: New file, a script to update a .api
+	file.
+
+	* tests/unit-tests/cairo.api: New file, the set of symbols
+	exported by (cairo).
+
+	* tests/unit-tests/api-stability.scm: New file, a unit test that
+	checks that no symbol that cairo exports is ever removed from its
+	API.
+
 2007-07-17  Andy Wingo  <wingo@pobox.com>
 
 	* doc/www/news/index.scm (page): Update for release.
