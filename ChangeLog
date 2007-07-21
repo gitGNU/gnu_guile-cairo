@@ -1,5 +1,10 @@
 2007-07-21  Andy Wingo  <wingo@pobox.com>
 
+	* tests/unit-tests/api-stability.scm: 
+	* tests/unit-tests/Makefile.am: Dist the api file. Indicate the
+	api file location via an environment variable; makes the check
+	generic at the same time as fixing distcheck issues.
+	
 	* tests/unit-tests/Makefile.am: Add api-stability.scm check, and a
 	rule to regenerate a .api file.
 

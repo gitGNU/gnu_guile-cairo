@@ -2,7 +2,8 @@ TESTS= \
 	api-stability.scm \
 	version.scm
 
-TESTS_ENVIRONMENT=$(top_builddir)/env guile -s
+TESTS_ENVIRONMENT=\
+	API_FILE=$(srcdir)/cairo.api $(top_builddir)/env guile -s
 
 %.api.update:
 	$(srcdir)/update-api $(subst ., ,$*) > $(srcdir)/$*.api
@@ -10,4 +11,4 @@ TESTS_ENVIRONMENT=$(top_builddir)/env guile -s
 %.check: %
 	$(TESTS_ENVIRONMENT) $*
 
-EXTRA_DIST=$(TESTS)
+EXTRA_DIST=$(TESTS) cairo.api

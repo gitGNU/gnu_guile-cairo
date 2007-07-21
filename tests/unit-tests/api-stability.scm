@@ -19,7 +19,6 @@
 
 (use-modules (unit-test)
              (oop goops)
-             (cairo)
              ((srfi srfi-1) #:select (lset-difference)))
 
 (define (module-all-uses module)
@@ -46,7 +45,7 @@
 (define-class <test-api> (<test-case>))
 
 (define-method (test-api (self <test-api>))
-  (let ((expected (call-with-input-file "cairo.api" read))
+  (let ((expected (call-with-input-file (getenv "API_FILE") read))
         (actual (module-all-exports '(cairo))))
     (let ((new (lset-difference eq? actual expected)))
       (if (not (null? new))
