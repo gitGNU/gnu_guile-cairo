@@ -22,10 +22,16 @@
                     ("download" . "download")
                     ("developers" . "dev")
                     ("news" . "news")
-                    ;("contact" . "contact")
-                    ;("links" . "links")
+                    ;;("contact" . "contact")
+                    ;;("links" . "links")
                     ))
-             " ")))
+             " ")
+          " "
+          (a (@ (href "https://code.launchpad.net/guile-cairo/")) "code")
+          " "
+          (a (@ (href "http://bugs.freedesktop.org/buglist.cgi?product=guile-cairo")) "bug list")
+          " "
+          (a (@ (href "https://bugs.freedesktop.org/enter_bug.cgi?product=guile-cairo")) "new bug")))
   `(html
     (head (title ,title)
           (meta (@ (name "Generator")

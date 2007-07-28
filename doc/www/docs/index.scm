@@ -13,7 +13,9 @@ generated documentation. We will be fixing this with time.")
 
     (p "Once you install " (code "guile-cairo") ", you can access
 documentation from within Info (" (code "info guile-cairo") ") or from
-within Guile itself " (code "(help cairo-create)") ".")))
+within Guile itself " (code "(help cairo-create)") ". If you are
+interested in helping to improve the documentation, there is information
+in the source tree, in the file " (tt "doc/README") ".")))
 
 (load "../template.scm")
 (define (make-index)

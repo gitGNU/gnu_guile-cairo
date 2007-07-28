@@ -25,11 +25,21 @@ although patches providing back compatibility will be accepted.")
        (code "make install") ", or run it uninstalled using the "
        (code "env") " script.")
 
-    (h3 "patches")
+    (h3 "browse the code, get commit mails, etc")
 
-    (p "Send patches to " (code "guile-user") ", for now, and
-copy Andy Wingo (" (code "wingo pobox com") "). We will have a
-freedesktop.org bug tracker in the future.")
+    (p "Our source code, while hosted primarily at gna.org, is mirrored
+over at " (a (@ (href "http://code.launchpad.net/guile-cairo/")) "launchpad.net") ".
+Visit that page to browse the source code, register your
+branch, " (a (@ (href "https://code.launchpad.net/~andywingo/guile-cairo/trunk/+subscribe")) "sign
+up for commit mails") ", etc.")
+
+    (h3 "patches and bug reports")
+
+    (p "File bug reports, etc in
+our " (a (@ (href "https://bugs.freedesktop.org/enter_bug.cgi?product=guile-cairo")) "bug
+tracker") " hosted by freedesktop.org. If you're more of the mailing
+list type, you can send queries to " (code "guile-user") ", and copy Andy
+Wingo (" (code "wingo pobox com") ").")
 
     (h3 "gna project page")
 
