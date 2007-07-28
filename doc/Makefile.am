@@ -27,9 +27,9 @@ generate-stubs:
 	./generate-doc-stubs $(wildcard $(cairo_docbook_xml_wildcard))
 
 generate-defuns:
-	./generate-doc-defuns $(wildcard $(cairo_docbook_xml_wildcard))
+	./generate-doc-defuns $(srcdir)/overrides.texi $(wildcard $(cairo_docbook_xml_wildcard))
 
-EXTRA_DIST = docbook-to-guile-doc
+EXTRA_DIST = docbook-to-guile-doc overrides.texi
 
 info_TEXINFOS=guile-cairo.texi
 guile_cairo_TEXINFOS=$(wildcard section-*.texi) $(wildcard defuns-*.texi)

@@ -4,24 +4,34 @@ exec guile --debug -e main -s "$0" "$@"
 !#
 
 (use-modules (gnome gw support gtk-doc)
+             (sxml xpath)
+             (texinfo)
              (texinfo serialize))
 
-(define (docbook->defuns . files)
-  (for-each
-   (lambda (file)
-     (let* ((sdocbook (docbook->sdocbook file))
-            (basename (basename file))
-            (interface (resolve-interface '(cairo)))
-            (docs (stexi->texi
-                   `(*fragment*
-                     ,@(gtk-doc-sdocbook->def-list
-                        sdocbook
-                        (lambda (sym)
-                          (module-variable interface sym)))))))
-       (with-output-to-file (string-append "defuns-" basename ".texi")
-         (lambda ()
-           (display docs)))))
-   files))
+(define (def-name def)
+  (string->symbol (cadr (assq 'name (cdadr def)))))
+
+(define (docbook->defuns overrides . files)
+  (let* ((defs ((sxpath '(deffn))
+                (call-with-input-file overrides texi-fragment->stexi)))
+         (defs-alist (map cons (map def-name defs) defs)))
+    (for-each
+     (lambda (file)
+       (let* ((sdocbook (docbook->sdocbook file))
+              (basename (basename file))
+              (interface (resolve-interface '(cairo)))
+              (docs (stexi->texi
+                     `(*fragment*
+                       ,@(gtk-doc-sdocbook->def-list
+                          sdocbook
+                          (lambda (name def)
+                            (and (module-variable interface name)
+                                 (or (and=> (assq name defs-alist) cdr)
+                                     def))))))))
+         (with-output-to-file (string-append "defuns-" basename ".texi")
+           (lambda ()
+             (display docs)))))
+     files)))
 
 (define (main args)
   (apply docbook->defuns (cdr args)))

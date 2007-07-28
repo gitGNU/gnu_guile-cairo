@@ -1,3 +1,15 @@
+2007-07-28  Andy Wingo  <wingo@pobox.com>
+
+	* doc/generate-doc-defuns: Support taking doc overrides from an
+	overrides file.
+
+	* doc/defuns-cairo.xml.texi: Regenerated.
+
+	* doc/Makefile.am: Use the overrides file when generating the
+	defuns, and a dist fix.
+
+	* doc/overrides.texi: New file. Overriden docs should go here.
+
 2007-07-21  Andy Wingo  <wingo@pobox.com>
 
 	* guile-cairo/guile-cairo.c (cairo-image-surface-get-height)

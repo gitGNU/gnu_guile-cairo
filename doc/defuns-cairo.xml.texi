@@ -1,32 +1,21 @@
 
 @c %start of fragment
 
-@deffn Function cairo-create ( @var{target}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-t>} )
+@deffn Function cairo-create ( @var{target}   @code{<cairo-surface-t>} )  @result{}  ( @var{ret}   @code{<cairo-t>} )
 Creates a new @code{<cairo-t>} with all graphics state parameters set to default
 values and with @var{target} as a target surface. The target surface should be
 constructed with a backend-specific function such as
 @code{cairo-image-surface-create} (or any other
 @samp{cairo_<backend>_surface_create} variant).
 
-This function references @var{target}, so you can immediately call
-@code{cairo-surface-destroy} on it if you don't need to maintain a separate
-reference to it.
-
 @table @var
 @item target
 target surface for the context
 
 @item ret
-a newly allocated @code{<cairo-t>} with a reference count of 1. The initial
-reference count should be released with @code{cairo-destroy} when you are done
-using the @code{<cairo-t>}. This function never returns @samp{@code{#f}}. If
-memory cannot be allocated, a special @code{<cairo-t>} object will be returned
-on which @code{cairo-status} returns @samp{CAIRO_STATUS_NO_MEMORY}. You can use
-this object normally, but no drawing will be done.
+a newly allocated @code{<cairo-t>}.
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 

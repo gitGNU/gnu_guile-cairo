@@ -1,0 +1,16 @@
+@deffn Function cairo-create (@var{target} @code{<cairo-surface-t>}) @result{} (@var{ret} @code{<cairo-t>})
+Creates a new @code{<cairo-t>} with all graphics state parameters set to default
+values and with @var{target} as a target surface. The target surface should be
+constructed with a backend-specific function such as
+@code{cairo-image-surface-create} (or any other
+@samp{cairo_<backend>_surface_create} variant).
+
+@table @var
+@item target
+target surface for the context
+
+@item ret
+a newly allocated @code{<cairo-t>}.
+@end table
+
+@end deffn
