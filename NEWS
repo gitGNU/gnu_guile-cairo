@@ -4,6 +4,20 @@ Guile-Cairo NEWS
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
+guile-cairo 1.4.0 -- 2007-07-28
+===============================
+
+* Guile-Cairo, like Cairo itself, now has a stable API and ABI. There
+  will be no more incompatible changes made.
+
+* Users may now contribute improvements to the generated documentation.
+  See doc/README for more information.
+
+* Some Scheme name typos fixed, after looking over the exported symbol
+  list: cairo-image-surface-get-height, cairo-image-surface-get-stride,
+  cairo-path-data-type-get-values.
+
+
 guile-cairo 1.3.93 - 2007-07-17
 ===============================
 

@@ -6,7 +6,7 @@ TESTS_ENVIRONMENT=\
 	API_FILE=$(srcdir)/cairo.api $(top_builddir)/env guile -s
 
 %.api.update:
-	$(srcdir)/update-api $(subst ., ,$*) > $(srcdir)/$*.api
+	$(top_builddir)/env $(srcdir)/update-api $(subst ., ,$*) > $(srcdir)/$*.api
 
 %.check: %
 	$(TESTS_ENVIRONMENT) $*

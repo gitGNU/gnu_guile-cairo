@@ -1,5 +1,17 @@
 2007-07-28  Andy Wingo  <wingo@pobox.com>
 
+	* tests/unit-tests/api-stability.scm (test-api): `warn', not
+	`warning'.
+
+	* NEWS: Update.
+
+	* configure.ac: Bump version.
+
+	* tests/unit-tests/cairo.api: Updated.
+
+	* tests/unit-tests/Makefile.am (%.api.update): Update API from
+	within dev environment.
+
 	* doc/README: New file, describes how the docs work.
 
 	* doc/Makefile.am (EXTRA_DIST): Add README and the doc generation

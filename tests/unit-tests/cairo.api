@@ -73,7 +73,8 @@
   cairo-image-surface-create
   cairo-image-surface-create-from-png
   cairo-image-surface-get-format
-  cairo-image-surface-get-heigt
+  cairo-image-surface-get-height
+  cairo-image-surface-get-stride
   cairo-image-surface-get-width
   cairo-in-fill
   cairo-in-stroke
@@ -102,7 +103,7 @@
   cairo-operator-get-values
   cairo-paint
   cairo-paint-with-alpha
-  cairo-path-data_type-get-values
+  cairo-path-data-type-get-values
   cairo-path-fold
   cairo-pattern-add-color-stop-rgb
   cairo-pattern-add-color-stop-rgba

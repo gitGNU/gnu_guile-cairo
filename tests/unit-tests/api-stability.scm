@@ -49,7 +49,7 @@
         (actual (module-all-exports '(cairo))))
     (let ((new (lset-difference eq? actual expected)))
       (if (not (null? new))
-          (warning "New API, run make cairo.api.update" new)))
+          (warn "New API, run make cairo.api.update" new)))
     (assert-equal '()
                   (lset-difference eq? expected actual))))
 
