@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node XLib Surfaces
-@chapter XLib Surfaces: X Window System rendering using XLib
+@chapter XLib Surfaces
+X Window System rendering using XLib
+
 @section Overview
 @section Usage
 @include defuns-cairo-xlib.xml.texi

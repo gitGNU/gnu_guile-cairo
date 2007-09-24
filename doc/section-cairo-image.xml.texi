@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Image Surfaces
-@chapter Image Surfaces: Rendering to memory buffers
+@chapter Image Surfaces
+Rendering to memory buffers
+
 @section Overview
 Image surfaces provide the ability to render to memory buffers either allocated
 by cairo or by the calling code. The supported image formats are those defined

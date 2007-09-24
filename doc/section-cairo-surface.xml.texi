@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node cairo_surface_t
-@chapter cairo_surface_t: Base class for surfaces
+@chapter cairo_surface_t
+Base class for surfaces
+
 @section Overview
 @section Usage
 @include defuns-cairo-surface.xml.texi

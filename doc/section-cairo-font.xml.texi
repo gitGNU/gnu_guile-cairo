@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node cairo_font_face_t
-@chapter cairo_font_face_t: Base class for fonts
+@chapter cairo_font_face_t
+Base class for fonts
+
 @section Overview
 @section Usage
 @include defuns-cairo-font.xml.texi

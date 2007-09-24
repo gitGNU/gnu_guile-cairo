@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-select-font-face ( @var{cr}   @code{<cairo-t>} ) ( @var{family}   @code{<char>} ) ( @var{slant}   @code{<cairo-font-slant-t>} ) ( @var{weight}   @code{<cairo-font-weight-t>} )
+@deffn Function cairo-select-font-face  (@var{cr}@tie{}@code{<cairo-t>}) (@var{family}@tie{}@code{<char>}) (@var{slant}@tie{}@code{<cairo-font-slant-t>}) (@var{weight}@tie{}@code{<cairo-font-weight-t>})
 Selects a family and style of font from a simplified description as a family
 name, slant and weight. This function is meant to be used only for applications
 with simple font needs: Cairo doesn't provide for operations such as listing all
@@ -24,11 +24,9 @@ the weight for the font
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-font-size ( @var{cr}   @code{<cairo-t>} ) ( @var{size}   @code{<double>} )
+@deffn Function cairo-set-font-size  (@var{cr}@tie{}@code{<cairo-t>}) (@var{size}@tie{}@code{<double>})
 Sets the current font matrix to a scale by a factor of @var{size}, replacing any
 font matrix previously set with @code{cairo-set-font-size} or
 @code{cairo-set-font-matrix}. This results in a font size of @var{size} user
@@ -44,11 +42,9 @@ the new font size, in user space units
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-font-matrix ( @var{cr}   @code{<cairo-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-set-font-matrix  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Sets the current font matrix to @var{matrix}. The font matrix gives a
 transformation from the design space of the font (in this space, the em-square
 is 1 unit by 1 unit) to user space. Normally, a simple scale is used (see
@@ -65,11 +61,9 @@ font.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-font-matrix ( @var{cr}   @code{<cairo-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-get-font-matrix  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Stores the current font matrix into @var{matrix}. See
 @code{cairo-set-font-matrix}.
 
@@ -82,11 +76,9 @@ return value for the matrix
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-font-options ( @var{cr}   @code{<cairo-t>} ) ( @var{options}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-set-font-options  (@var{cr}@tie{}@code{<cairo-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
 Sets a set of custom font rendering options for the @code{<cairo-t>}. Rendering
 options are derived by merging these options with the options derived from
 underlying surface; if the value in @var{options} has a default value (like
@@ -101,11 +93,9 @@ font options to use
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-font-options ( @var{cr}   @code{<cairo-t>} ) ( @var{options}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-get-font-options  (@var{cr}@tie{}@code{<cairo-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
 Retrieves font rendering options set via @code{<cairo-set-font-options>}. Note
 that the returned options do not include any options derived from the underlying
 surface; they are literally the options passed to @code{cairo-set-font-options}.
@@ -120,11 +110,9 @@ options. All existing values are overwritten
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-font-face ( @var{cr}   @code{<cairo-t>} ) ( @var{font-face}   @code{<cairo-font-face-t>} )
+@deffn Function cairo-set-font-face  (@var{cr}@tie{}@code{<cairo-t>}) (@var{font-face}@tie{}@code{<cairo-font-face-t>})
 Replaces the current @code{<cairo-font-face-t>} object in the @code{<cairo-t>}
 with @var{font-face}. The replaced font face in the @code{<cairo-t>} will be
 destroyed if there are no other references to it.
@@ -138,11 +126,9 @@ a @code{<cairo-font-face-t>}, or @samp{@code{#f}} to restore to the default font
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-font-face ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-font-face-t>} )
+@deffn Function cairo-get-font-face  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t>})
 Gets the current font face for a @code{<cairo-t>}.
 
 @table @var
@@ -161,11 +147,9 @@ trigger an error that will shutdown the cairo_t object).
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-scaled-font ( @var{cr}   @code{<cairo-t>} ) ( @var{scaled-font}   @code{<cairo-scaled-font-t>} )
+@deffn Function cairo-set-scaled-font  (@var{cr}@tie{}@code{<cairo-t>}) (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>})
 Replaces the current font face, font matrix, and font options in the
 @code{<cairo-t>} with those of the @code{<cairo-scaled-font-t>}. Except for some
 translation, the current CTM of the @code{<cairo-t>} should be the same as that
@@ -183,11 +167,9 @@ a @code{<cairo-scaled-font-t>}
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-scaled-font ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-scaled-font-t>} )
+@deffn Function cairo-get-scaled-font  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t>})
 Gets the current scaled font for a @code{<cairo-t>}.
 
 @table @var
@@ -208,11 +190,9 @@ will trigger an error that will shutdown the cairo_t object).
 
 Since 1.4
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-show-text ( @var{cr}   @code{<cairo-t>} ) ( @var{utf8}   @code{<char>} )
+@deffn Function cairo-show-text  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>})
 A drawing operator that generates the shape from a string of UTF-8 characters,
 rendered according to the current font_face, font_size (font_matrix), and
 font_options.
@@ -243,11 +223,9 @@ a string of text encoded in UTF-8
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-show-glyphs ( @var{cr}   @code{<cairo-t>} ) ( @var{glyphs}   @code{<cairo-glyph-t>} ) ( @var{num-glyphs}   @code{<int>} )
+@deffn Function cairo-show-glyphs  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>})
 A drawing operator that generates the shape from an array of glyphs, rendered
 according to the current font_face, font_size (font_matrix), and font_options.
 
@@ -263,11 +241,9 @@ number of glyphs to show
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-extents ( @var{cr}   @code{<cairo-t>} ) ( @var{extents}   @code{<cairo-font-extents-t>} )
+@deffn Function cairo-font-extents  (@var{cr}@tie{}@code{<cairo-t>}) (@var{extents}@tie{}@code{<cairo-font-extents-t>})
 Gets the font extents for the currently selected font.
 
 @table @var
@@ -279,11 +255,9 @@ a @code{<cairo-font-extents-t>} object into which the results will be stored.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-text-extents ( @var{cr}   @code{<cairo-t>} ) ( @var{utf8}   @code{<char>} ) ( @var{extents}   @code{<cairo-text-extents-t>} )
+@deffn Function cairo-text-extents  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for a string of text. The extents describe a user-space
 rectangle that encloses the "inked" portion of the text, (as it would be drawn
 by @code{cairo-show-text}). Additionally, the x_advance and y_advance values
@@ -308,11 +282,9 @@ a @code{<cairo-text-extents-t>} object into which the results will be stored
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-glyph-extents ( @var{cr}   @code{<cairo-t>} ) ( @var{glyphs}   @code{<cairo-glyph-t>} ) ( @var{num-glyphs}   @code{<int>} ) ( @var{extents}   @code{<cairo-text-extents-t>} )
+@deffn Function cairo-glyph-extents  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for an array of glyphs. The extents describe a user-space
 rectangle that encloses the "inked" portion of the glyphs, (as they would be
 drawn by @code{cairo-show-glyphs}). Additionally, the x_advance and y_advance
@@ -336,8 +308,6 @@ the number of elements in @var{glyphs}
 a @code{<cairo-text-extents-t>} object into which the results will be stored
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 

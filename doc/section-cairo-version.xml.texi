@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Version Information
-@chapter Version Information: Compile-time and run-time version checks.
+@chapter Version Information
+Compile-time and run-time version checks.
+
 @section Overview
 Cairo has a three-part version number scheme. In this scheme, we use even vs.
 odd numbers to distinguish fixed points in the software vs. in-progress

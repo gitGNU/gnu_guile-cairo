@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-font-face-get-type ( @var{font-face}   @code{<cairo-font-face-t>} )   @result{} ( @var{ret}   @code{<cairo-font-type-t>} )
+@deffn Function cairo-font-face-get-type  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-type-t>})
 This function returns the type of the backend used to create a font face. See
 @code{<cairo-font-type-t>} for available types.
 
@@ -15,8 +15,6 @@ The type of @var{font-face}.
 @end table
 
 Since 1.2
-
-This documentation was automatically generated.
 
 @end deffn
 

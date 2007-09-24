@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-scaled-font-create ( @var{font-face}   @code{<cairo-font-face-t>} ) ( @var{font-matrix}   @code{<cairo-matrix-t>} ) ( @var{ctm}   @code{<cairo-matrix-t>} ) ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-scaled-font-t>} )
+@deffn Function cairo-scaled-font-create  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) (@var{font-matrix}@tie{}@code{<cairo-matrix-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t>})
 Creates a @code{<cairo-scaled-font-t>} object from a font face and matrices that
 describe the size of the font and the environment in which it will be used.
 
@@ -27,11 +27,9 @@ a newly created @code{<cairo-scaled-font-t>}. Destroy with
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-extents ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{extents}   @code{<cairo-font-extents-t>} )
+@deffn Function cairo-scaled-font-extents  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{extents}@tie{}@code{<cairo-font-extents-t>})
 Gets the metrics for a @code{<cairo-scaled-font-t>}.
 
 @table @var
@@ -43,11 +41,9 @@ a @code{<cairo-font-extents-t>} which to store the retrieved extents.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-text-extents ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{utf8}   @code{<char>} ) ( @var{extents}   @code{<cairo-text-extents-t>} )
+@deffn Function cairo-scaled-font-text-extents  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{utf8}@tie{}@code{<char>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for a string of text. The extents describe a user-space
 rectangle that encloses the "inked" portion of the text drawn at the origin
 (0,0) (as it would be drawn by @code{cairo-show-text} if the cairo graphics
@@ -76,11 +72,9 @@ a @code{<cairo-text-extents-t>} which to store the retrieved extents.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-glyph-extents ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{glyphs}   @code{<cairo-glyph-t>} ) ( @var{num-glyphs}   @code{<int>} ) ( @var{extents}   @code{<cairo-text-extents-t>} )
+@deffn Function cairo-scaled-font-glyph-extents  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for an array of glyphs. The extents describe a user-space
 rectangle that encloses the "inked" portion of the glyphs, (as they would be
 drawn by @code{cairo-show-glyphs} if the cairo graphics state were set to the
@@ -106,11 +100,9 @@ a @code{<cairo-text-extents-t>} which to store the retrieved extents.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-get-font-face ( @var{scaled-font}   @code{<cairo-scaled-font-t>} )   @result{} ( @var{ret}   @code{<cairo-font-face-t>} )
+@deffn Function cairo-scaled-font-get-font-face  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t>})
 Gets the font face that this scaled font was created for.
 
 @table @var
@@ -124,11 +116,9 @@ The @code{<cairo-font-face-t>} with which @var{scaled-font} was created.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-get-font-options ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{options}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-scaled-font-get-font-options  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
 Stores the font options with which @var{scaled-font} was created into
 @var{options}.
 
@@ -143,11 +133,9 @@ return value for the font options
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-get-font-matrix ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{font-matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-scaled-font-get-font-matrix  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{font-matrix}@tie{}@code{<cairo-matrix-t>})
 Stores the font matrix with which @var{scaled-font} was created into
 @var{matrix}.
 
@@ -162,11 +150,9 @@ return value for the matrix
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-get-ctm ( @var{scaled-font}   @code{<cairo-scaled-font-t>} ) ( @var{ctm}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-scaled-font-get-ctm  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>})
 Stores the CTM with which @var{scaled-font} was created into @var{ctm}.
 
 @table @var
@@ -180,11 +166,9 @@ return value for the CTM
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scaled-font-get-type ( @var{scaled-font}   @code{<cairo-scaled-font-t>} )   @result{} ( @var{ret}   @code{<cairo-font-type-t>} )
+@deffn Function cairo-scaled-font-get-type  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-type-t>})
 This function returns the type of the backend used to create a scaled font. See
 @code{<cairo-font-type-t>} for available types.
 
@@ -198,8 +182,6 @@ The type of @var{scaled-font}.
 @end table
 
 Since 1.2
-
-This documentation was automatically generated.
 
 @end deffn
 

@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node XLib/Xrender Backend
-@chapter XLib/Xrender Backend: 
+@chapter XLib/Xrender Backend
+
+
 @section Overview
 @section Usage
 @include defuns-cairo-xlib-xrender.xml.texi

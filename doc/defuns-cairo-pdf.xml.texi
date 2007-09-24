@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-pdf-surface-create ( @var{filename}   @code{<char>} ) ( @var{width-in-points}   @code{<double>} ) ( @var{height-in-points}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-pdf-surface-create  (@var{filename}@tie{}@code{<char>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Creates a PDF surface of the specified size in points to be written to
 @var{filename}.
 
@@ -26,11 +26,9 @@ this.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-pdf-surface-set-size ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{width-in-points}   @code{<double>} ) ( @var{height-in-points}   @code{<double>} )
+@deffn Function cairo-pdf-surface-set-size  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>})
 Changes the size of a PDF surface for the current (and subsequent) pages.
 
 This function should only be called before any drawing operations have been
@@ -51,8 +49,6 @@ new surface height, in points (1 point == 1/72.0 inch)
 @end table
 
 Since 1.2
-
-This documentation was automatically generated.
 
 @end deffn
 

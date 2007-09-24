@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Error handling
-@chapter Error handling: Decoding cairo's status
+@chapter Error handling
+Decoding cairo's status
+
 @section Overview
 @section Usage
 @include defuns-cairo-status.xml.texi

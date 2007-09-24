@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-image-surface-create ( @var{format}   @code{<cairo-format-t>} ) ( @var{width}   @code{<int>} ) ( @var{height}   @code{<int>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-image-surface-create  (@var{format}@tie{}@code{<cairo-format-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Creates an image surface of the specified format and dimensions. Initially the
 surface contents are all 0. (Specifically, within each pixel, each color or
 alpha channel belonging to format will be 0. The contents of bits within a
@@ -26,11 +26,9 @@ this.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-image-surface-get-format ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-format-t>} )
+@deffn Function cairo-image-surface-get-format  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-format-t>})
 Get the format of the surface.
 
 @table @var
@@ -44,11 +42,9 @@ the format of the surface
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-image-surface-get-width ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<int>} )
+@deffn Function cairo-image-surface-get-width  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<int>})
 Get the width of the image surface in pixels.
 
 @table @var
@@ -60,7 +56,37 @@ the width of the surface in pixels.
 
 @end table
 
-This documentation was automatically generated.
+@end deffn
+
+@deffn Function cairo-image-surface-get-height  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<int>})
+Get the height of the image surface in pixels.
+
+@table @var
+@item surface
+a @code{<cairo-image-surface-t>}
+
+@item ret
+the height of the surface in pixels.
+
+@end table
+
+@end deffn
+
+@deffn Function cairo-image-surface-get-stride  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<int>})
+Get the stride of the image surface in bytes
+
+@table @var
+@item surface
+a @code{<cairo-image-surface-t>}
+
+@item ret
+the stride of the image surface in bytes (or 0 if @var{surface} is not an image
+surface). The stride is the distance in bytes from the beginning of one row of
+the image data to the beginning of the next row.
+
+@end table
+
+Since 1.2
 
 @end deffn
 

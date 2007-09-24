@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Win32 Fonts
-@chapter Win32 Fonts: Font support for Microsoft Windows
+@chapter Win32 Fonts
+Font support for Microsoft Windows
+
 @section Overview
 @section Usage
 @include defuns-cairo-win32-fonts.xml.texi

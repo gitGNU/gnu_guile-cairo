@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-create ( @var{target}   @code{<cairo-surface-t>} )  @result{}  ( @var{ret}   @code{<cairo-t>} )
+@deffn Function cairo-create (@var{target} @code{<cairo-surface-t>}) @result{} (@var{ret} @code{<cairo-t>})
 Creates a new @code{<cairo-t>} with all graphics state parameters set to default
 values and with @var{target} as a target surface. The target surface should be
 constructed with a backend-specific function such as
@@ -19,7 +19,7 @@ a newly allocated @code{<cairo-t>}.
 
 @end deffn
 
-@deffn Function cairo-save ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-save  (@var{cr}@tie{}@code{<cairo-t>})
 Makes a copy of the current state of @var{cr} and saves it on an internal stack
 of saved states for @var{cr}. When @code{cairo-restore} is called, @var{cr} will
 be restored to the saved state. Multiple calls to @code{cairo-save} and
@@ -37,11 +37,9 @@ a @code{<cairo-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-restore ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-restore  (@var{cr}@tie{}@code{<cairo-t>})
 Restores @var{cr} to the state saved by a preceding call to @code{cairo-save}
 and removes that state from the stack of saved states.
 
@@ -51,11 +49,9 @@ a @code{<cairo-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-target ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-get-target  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Gets the target surface for the cairo context as passed to @code{cairo-create}.
 
 This function will always return a valid pointer, but the result can be a "nil"
@@ -73,11 +69,9 @@ you must call @code{cairo-surface-reference}.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-push-group ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-push-group  (@var{cr}@tie{}@code{<cairo-t>})
 Temporarily redirects drawing to an intermediate surface known as a group. The
 redirection lasts until the group is completed by a call to
 @code{cairo-pop-group} or @code{cairo-pop-group-to-source}. These calls provide
@@ -123,11 +117,9 @@ a cairo context
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-pop-group ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+@deffn Function cairo-pop-group  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
 Terminates the redirection begun by a call to @code{cairo-push-group} or
 @code{cairo-push-group-with-content} and returns a new pattern containing the
 results of all drawing operations performed to the group.
@@ -149,11 +141,9 @@ should call @code{cairo-pattern-destroy} when finished with it.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-pop-group-to-source ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-pop-group-to-source  (@var{cr}@tie{}@code{<cairo-t>})
 Terminates the redirection begun by a call to @code{cairo-push-group} or
 @code{cairo-push-group-with-content} and installs the resulting pattern as the
 source pattern in the given cairo context.
@@ -182,11 +172,9 @@ a cairo context
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-group-target ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-get-group-target  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Gets the target surface for the current group as started by the most recent call
 to @code{cairo-push-group} or @code{cairo-push-group-with-content}.
 
@@ -206,11 +194,9 @@ keep a reference to it, you must call @code{cairo-surface-reference}.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-source-rgb ( @var{cr}   @code{<cairo-t>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} )
+@deffn Function cairo-set-source-rgb  (@var{cr}@tie{}@code{<cairo-t>}) (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>})
 Sets the source pattern within @var{cr} to an opaque color. This opaque color
 will then be used for any subsequent drawing operation until a new source
 pattern is set.
@@ -233,11 +219,9 @@ blue component of color
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-source-rgba ( @var{cr}   @code{<cairo-t>} ) ( @var{red}   @code{<double>} ) ( @var{green}   @code{<double>} ) ( @var{blue}   @code{<double>} ) ( @var{alpha}   @code{<double>} )
+@deffn Function cairo-set-source-rgba  (@var{cr}@tie{}@code{<cairo-t>}) (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>}) (@var{alpha}@tie{}@code{<double>})
 Sets the source pattern within @var{cr} to a translucent color. This color will
 then be used for any subsequent drawing operation until a new source pattern is
 set.
@@ -263,11 +247,9 @@ alpha component of color
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-source ( @var{cr}   @code{<cairo-t>} ) ( @var{source}   @code{<cairo-pattern-t>} )
+@deffn Function cairo-set-source  (@var{cr}@tie{}@code{<cairo-t>}) (@var{source}@tie{}@code{<cairo-pattern-t>})
 Sets the source pattern within @var{cr} to @var{source}. This pattern will then
 be used for any subsequent drawing operation until a new source pattern is set.
 
@@ -290,11 +272,9 @@ operations.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-source-surface ( @var{cr}   @code{<cairo-t>} ) ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )
+@deffn Function cairo-set-source-surface  (@var{cr}@tie{}@code{<cairo-t>}) (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
 This is a convenience function for creating a pattern from @var{surface} and
 setting it as the source in @var{cr} with @code{cairo-set-source}.
 
@@ -325,11 +305,9 @@ User-space Y coordinate for surface origin
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-source ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-pattern-t>} )
+@deffn Function cairo-get-source  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
 Gets the current source pattern for @var{cr}.
 
 @table @var
@@ -342,11 +320,9 @@ to it, you must call @code{cairo-pattern-reference}.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-antialias ( @var{cr}   @code{<cairo-t>} ) ( @var{antialias}   @code{<cairo-antialias-t>} )
+@deffn Function cairo-set-antialias  (@var{cr}@tie{}@code{<cairo-t>}) (@var{antialias}@tie{}@code{<cairo-antialias-t>})
 Set the antialiasing mode of the rasterizer used for drawing shapes. This value
 is a hint, and a particular backend may or may not support a particular value.
 At the current time, no backend supports @samp{CAIRO_ANTIALIAS_SUBPIXEL} when
@@ -364,11 +340,9 @@ the new antialiasing mode
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-antialias ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-antialias-t>} )
+@deffn Function cairo-get-antialias  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-antialias-t>})
 Gets the current shape antialiasing mode, as set by
 @code{cairo-set-shape-antialias}.
 
@@ -381,11 +355,9 @@ the current shape antialiasing mode.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-dash ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{dashes}   @code{<double>} ) ( @var{num-dashes}   @code{<int>} ) ( @var{offset}   @code{<double>} )
+@deffn Function cairo-set-dash  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{dashes}@tie{}@code{<double>}) (@var{num-dashes}@tie{}@code{<int>}) (@var{offset}@tie{}@code{<double>})
 Sets the dash pattern to be used by @code{cairo-stroke}. A dash pattern is
 specified by @var{dashes}, an array of positive values. Each value provides the
 length of alternate "on" and "off" portions of the stroke. The @var{offset}
@@ -424,11 +396,9 @@ an offset into the dash pattern at which the stroke should start
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-dash-count ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<int>} )
+@deffn Function cairo-get-dash-count  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<int>})
 This function returns the length of the dash array in @var{cr} (0 if dashing is
 not currently in effect).
 
@@ -445,11 +415,9 @@ the length of the dash array, or 0 if no dash array set.
 
 Since 1.4
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-fill-rule ( @var{cr}   @code{<cairo-t>} ) ( @var{fill-rule}   @code{<cairo-fill-rule-t>} )
+@deffn Function cairo-set-fill-rule  (@var{cr}@tie{}@code{<cairo-t>}) (@var{fill-rule}@tie{}@code{<cairo-fill-rule-t>})
 Set the current fill rule within the cairo context. The fill rule is used to
 determine which regions are inside or outside a complex (potentially
 self-intersecting) path. The current fill rule affects both cairo_fill and
@@ -465,11 +433,9 @@ a fill rule, specified as a @code{<cairo-fill-rule-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-fill-rule ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-fill-rule-t>} )
+@deffn Function cairo-get-fill-rule  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-fill-rule-t>})
 Gets the current fill rule, as set by @code{cairo-set-fill-rule}.
 
 @table @var
@@ -481,11 +447,9 @@ the current fill rule.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-line-cap ( @var{cr}   @code{<cairo-t>} ) ( @var{line-cap}   @code{<cairo-line-cap-t>} )
+@deffn Function cairo-set-line-cap  (@var{cr}@tie{}@code{<cairo-t>}) (@var{line-cap}@tie{}@code{<cairo-line-cap-t>})
 Sets the current line cap style within the cairo context. See
 @code{<cairo-line-cap-t>} for details about how the available line cap styles
 are drawn.
@@ -504,11 +468,9 @@ a line cap style
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-line-cap ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-line-cap-t>} )
+@deffn Function cairo-get-line-cap  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-line-cap-t>})
 Gets the current line cap style, as set by @code{cairo-set-line-cap}.
 
 @table @var
@@ -520,11 +482,9 @@ the current line cap style.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-line-join ( @var{cr}   @code{<cairo-t>} ) ( @var{line-join}   @code{<cairo-line-join-t>} )
+@deffn Function cairo-set-line-join  (@var{cr}@tie{}@code{<cairo-t>}) (@var{line-join}@tie{}@code{<cairo-line-join-t>})
 Sets the current line join style within the cairo context. See
 @code{<cairo-line-join-t>} for details about how the available line join styles
 are drawn.
@@ -543,11 +503,9 @@ a line joint style
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-line-join ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-line-join-t>} )
+@deffn Function cairo-get-line-join  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-line-join-t>})
 Gets the current line join style, as set by @code{cairo-set-line-join}.
 
 @table @var
@@ -559,11 +517,9 @@ the current line join style.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-line-width ( @var{cr}   @code{<cairo-t>} ) ( @var{width}   @code{<double>} )
+@deffn Function cairo-set-line-width  (@var{cr}@tie{}@code{<cairo-t>}) (@var{width}@tie{}@code{<double>})
 Sets the current line width within the cairo context. The line width value
 specifies the diameter of a pen that is circular in user space, (though
 device-space pen may be an ellipse in general due to scaling/shear/rotation of
@@ -593,11 +549,9 @@ a line width
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-line-width ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<double>} )
+@deffn Function cairo-get-line-width  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<double>})
 This function returns the current line width value exactly as set by
 @code{cairo-set-line-width}. Note that the value is unchanged even if the CTM
 has changed between the calls to @code{cairo-set-line-width} and
@@ -612,11 +566,9 @@ the current line width.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-miter-limit ( @var{cr}   @code{<cairo-t>} ) ( @var{limit}   @code{<double>} )
+@deffn Function cairo-set-miter-limit  (@var{cr}@tie{}@code{<cairo-t>}) (@var{limit}@tie{}@code{<double>})
 Sets the current miter limit within the cairo context.
 
 If the current line join style is set to @samp{CAIRO_LINE_JOIN_MITER} (see
@@ -639,11 +591,9 @@ miter limit to set
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-miter-limit ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<double>} )
+@deffn Function cairo-get-miter-limit  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<double>})
 Gets the current miter limit, as set by @code{cairo-set-miter-limit}.
 
 @table @var
@@ -655,11 +605,9 @@ the current miter limit.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-operator ( @var{cr}   @code{<cairo-t>} ) ( @var{op}   @code{<cairo-operator-t>} )
+@deffn Function cairo-set-operator  (@var{cr}@tie{}@code{<cairo-t>}) (@var{op}@tie{}@code{<cairo-operator-t>})
 Sets the compositing operator to be used for all drawing operations. See
 @code{<cairo-operator-t>} for details on the semantics of each available
 compositing operator.
@@ -677,11 +625,9 @@ a compositing operator, specified as a @code{<cairo-operator-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-operator ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-operator-t>} )
+@deffn Function cairo-get-operator  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-operator-t>})
 Gets the current compositing operator for a cairo context.
 
 @table @var
@@ -693,11 +639,9 @@ the current compositing operator.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-tolerance ( @var{cr}   @code{<cairo-t>} ) ( @var{tolerance}   @code{<double>} )
+@deffn Function cairo-set-tolerance  (@var{cr}@tie{}@code{<cairo-t>}) (@var{tolerance}@tie{}@code{<double>})
 Sets the tolerance used when converting paths into trapezoids. Curved segments
 of the path will be subdivided until the maximum deviation between the original
 path and the polygonal approximation is less than @var{tolerance}. The default
@@ -714,11 +658,9 @@ the tolerance, in device units (typically pixels)
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-tolerance ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<double>} )
+@deffn Function cairo-get-tolerance  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<double>})
 Gets the current tolerance value, as set by @code{cairo-set-tolerance}.
 
 @table @var
@@ -730,11 +672,9 @@ the current tolerance value.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-clip ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-clip  (@var{cr}@tie{}@code{<cairo-t>})
 Establishes a new clip region by intersecting the current clip region with the
 current path as it would be filled by @code{cairo-fill} and according to the
 current fill rule (see @code{cairo-set-fill-rule}).
@@ -756,11 +696,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-clip-preserve ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-clip-preserve  (@var{cr}@tie{}@code{<cairo-t>})
 Establishes a new clip region by intersecting the current clip region with the
 current path as it would be filled by @code{cairo-fill} and according to the
 current fill rule (see @code{cairo-set-fill-rule}).
@@ -783,11 +721,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-clip-extents ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} ) ( @var{x2}   @code{<double>} ) ( @var{y2}   @code{<double>} )
+@deffn Function cairo-clip-extents  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) (@var{x2}@tie{}@code{<double>}) (@var{y2}@tie{}@code{<double>})
 Computes a bounding box in user coordinates covering the area inside the current
 clip.
 
@@ -811,11 +747,9 @@ bottom of the resulting extents
 
 Since 1.4
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-reset-clip ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-reset-clip  (@var{cr}@tie{}@code{<cairo-t>})
 Reset the current clip region to its original, unrestricted state. That is, set
 the clip region to an infinitely large shape containing the target surface.
 Equivalently, if infinity is too hard to grasp, one can imagine the clip region
@@ -833,11 +767,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-copy-clip-rectangle-list ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{ret}   @code{<cairo-rectangle-list-t>} )
+@deffn Function cairo-copy-clip-rectangle-list  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-rectangle-list-t>})
 Gets the current clip region as a list of rectangles in user coordinates. Never
 returns @samp{@code{#f}}.
 
@@ -859,11 +791,9 @@ the current clip region as a list of rectangles in user coordinates.
 
 Since 1.4
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-fill ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-fill  (@var{cr}@tie{}@code{<cairo-t>})
 A drawing operator that fills the current path according to the current fill
 rule, (each sub-path is implicitly closed before being filled). After
 cairo_fill, the current path will be cleared from the cairo context. See
@@ -875,11 +805,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-fill-preserve ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-fill-preserve  (@var{cr}@tie{}@code{<cairo-t>})
 A drawing operator that fills the current path according to the current fill
 rule, (each sub-path is implicitly closed before being filled). Unlike
 @code{cairo-fill}, cairo_fill_preserve preserves the path within the cairo
@@ -893,11 +821,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-fill-extents ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} ) ( @var{x2}   @code{<double>} ) ( @var{y2}   @code{<double>} )
+@deffn Function cairo-fill-extents  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) (@var{x2}@tie{}@code{<double>}) (@var{y2}@tie{}@code{<double>})
 Computes a bounding box in user coordinates covering the area that would be
 affected by a @code{cairo-fill} operation given the current path and fill
 parameters. If the current path is empty, returns an empty rectangle (0,0, 0,0).
@@ -924,11 +850,9 @@ bottom of the resulting extents
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-in-fill ( @var{cr}   @code{<cairo-t>} ) ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-bool-t>} )
+@deffn Function cairo-in-fill  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
 Tests whether the given point is inside the area that would be affected by a
 @code{cairo-fill} operation given the current path and filling parameters.
 Surface dimensions and clipping are not taken into account.
@@ -951,11 +875,9 @@ A non-zero value if the point is inside, or zero if outside.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-mask ( @var{cr}   @code{<cairo-t>} ) ( @var{pattern}   @code{<cairo-pattern-t>} )
+@deffn Function cairo-mask  (@var{cr}@tie{}@code{<cairo-t>}) (@var{pattern}@tie{}@code{<cairo-pattern-t>})
 A drawing operator that paints the current source using the alpha channel of
 @var{pattern} as a mask. (Opaque areas of @var{pattern} are painted with the
 source, transparent areas are not painted.)
@@ -969,11 +891,9 @@ a @code{<cairo-pattern-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-mask-surface ( @var{cr}   @code{<cairo-t>} ) ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{surface-x}   @code{<double>} ) ( @var{surface-y}   @code{<double>} )
+@deffn Function cairo-mask-surface  (@var{cr}@tie{}@code{<cairo-t>}) (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{surface-x}@tie{}@code{<double>}) (@var{surface-y}@tie{}@code{<double>})
 A drawing operator that paints the current source using the alpha channel of
 @var{surface} as a mask. (Opaque areas of @var{surface} are painted with the
 source, transparent areas are not painted.)
@@ -993,11 +913,9 @@ Y coordinate at which to place the origin of @var{surface}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-paint ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-paint  (@var{cr}@tie{}@code{<cairo-t>})
 A drawing operator that paints the current source everywhere within the current
 clip region.
 
@@ -1007,11 +925,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-paint-with-alpha ( @var{cr}   @code{<cairo-t>} ) ( @var{alpha}   @code{<double>} )
+@deffn Function cairo-paint-with-alpha  (@var{cr}@tie{}@code{<cairo-t>}) (@var{alpha}@tie{}@code{<double>})
 A drawing operator that paints the current source everywhere within the current
 clip region using a mask of constant alpha value @var{alpha}. The effect is
 similar to @code{cairo-paint}, but the drawing is faded out using the alpha
@@ -1026,11 +942,9 @@ alpha value, between 0 (transparent) and 1 (opaque)
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-stroke ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-stroke  (@var{cr}@tie{}@code{<cairo-t>})
 A drawing operator that strokes the current path according to the current line
 width, line join, line cap, and dash settings. After cairo_stroke, the current
 path will be cleared from the cairo context. See @code{cairo-set-line-width},
@@ -1062,11 +976,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-stroke-preserve ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-stroke-preserve  (@var{cr}@tie{}@code{<cairo-t>})
 A drawing operator that strokes the current path according to the current line
 width, line join, line cap, and dash settings. Unlike @code{cairo-stroke},
 cairo_stroke_preserve preserves the path within the cairo context.
@@ -1081,11 +993,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-stroke-extents ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{x1}   @code{<double>} ) ( @var{y1}   @code{<double>} ) ( @var{x2}   @code{<double>} ) ( @var{y2}   @code{<double>} )
+@deffn Function cairo-stroke-extents  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) (@var{x2}@tie{}@code{<double>}) (@var{y2}@tie{}@code{<double>})
 Computes a bounding box in user coordinates covering the area that would be
 affected by a @code{cairo-stroke} operation operation given the current path and
 stroke parameters. If the current path is empty,
@@ -1108,11 +1018,9 @@ bottom of the resulting extents
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-in-stroke ( @var{cr}   @code{<cairo-t>} ) ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-bool-t>} )
+@deffn Function cairo-in-stroke  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
 Tests whether the given point is inside the area that would be affected by a
 @code{cairo-stroke} operation given the current path and stroking parameters.
 Surface dimensions and clipping are not taken into account.
@@ -1136,11 +1044,9 @@ A non-zero value if the point is inside, or zero if outside.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-copy-page ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-copy-page  (@var{cr}@tie{}@code{<cairo-t>})
 Emits the current page for backends that support multiple pages, but doesn't
 clear it, so, the contents of the current page will be retained for the next
 page too. Use @code{cairo-show-page} if you want to get an empty page after the
@@ -1152,11 +1058,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-show-page ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-show-page  (@var{cr}@tie{}@code{<cairo-t>})
 Emits and clears the current page for backends that support multiple pages. Use
 @code{cairo-copy-page} if you don't want to clear the page.
 
@@ -1165,8 +1069,6 @@ Emits and clears the current page for backends that support multiple pages. Use
 a cairo context
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 

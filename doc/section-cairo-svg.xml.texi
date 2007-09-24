@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node SVG Surfaces
-@chapter SVG Surfaces: Rendering SVG documents
+@chapter SVG Surfaces
+Rendering SVG documents
+
 @section Overview
 @section Usage
 @include defuns-cairo-svg.xml.texi

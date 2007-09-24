@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node cairo_t
-@chapter cairo_t: The cairo drawing context
+@chapter cairo_t
+The cairo drawing context
+
 @section Overview
 @code{<cairo-t>} is the main object used when drawing with cairo. To draw with
 cairo, you create a @code{<cairo-t>}, set the target surface, and drawing

@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-translate ( @var{cr}   @code{<cairo-t>} ) ( @var{tx}   @code{<double>} ) ( @var{ty}   @code{<double>} )
+@deffn Function cairo-translate  (@var{cr}@tie{}@code{<cairo-t>}) (@var{tx}@tie{}@code{<double>}) (@var{ty}@tie{}@code{<double>})
 Modifies the current transformation matrix (CTM) by translating the user-space
 origin by (@var{tx}, @var{ty}). This offset is interpreted as a user-space
 coordinate according to the CTM in place before the new call to cairo_translate.
@@ -20,11 +20,9 @@ amount to translate in the Y direction
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-scale ( @var{cr}   @code{<cairo-t>} ) ( @var{sx}   @code{<double>} ) ( @var{sy}   @code{<double>} )
+@deffn Function cairo-scale  (@var{cr}@tie{}@code{<cairo-t>}) (@var{sx}@tie{}@code{<double>}) (@var{sy}@tie{}@code{<double>})
 Modifies the current transformation matrix (CTM) by scaling the X and Y
 user-space axes by @var{sx} and @var{sy} respectively. The scaling of the axes
 takes place after any existing transformation of user space.
@@ -41,11 +39,9 @@ scale factor for the Y dimension
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-rotate ( @var{cr}   @code{<cairo-t>} ) ( @var{angle}   @code{<double>} )
+@deffn Function cairo-rotate  (@var{cr}@tie{}@code{<cairo-t>}) (@var{angle}@tie{}@code{<double>})
 Modifies the current transformation matrix (CTM) by rotating the user-space axes
 by @var{angle} radians. The rotation of the axes takes places after any existing
 transformation of user space. The rotation direction for positive angles is from
@@ -60,11 +56,9 @@ angle (in radians) by which the user-space axes will be rotated
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-transform ( @var{cr}   @code{<cairo-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-transform  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Modifies the current transformation matrix (CTM) by applying @var{matrix} as an
 additional transformation. The new transformation of user space takes place
 after any existing transformation.
@@ -78,11 +72,9 @@ a transformation to be applied to the user-space axes
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-set-matrix ( @var{cr}   @code{<cairo-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-set-matrix  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Modifies the current transformation matrix (CTM) by setting it equal to
 @var{matrix}.
 
@@ -95,11 +87,9 @@ a transformation matrix from user space to device space
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-get-matrix ( @var{cr}   @code{<cairo-t>} ) ( @var{matrix}   @code{<cairo-matrix-t>} )
+@deffn Function cairo-get-matrix  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Stores the current transformation matrix (CTM) into @var{matrix}.
 
 @table @var
@@ -111,11 +101,9 @@ return value for the matrix
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-identity-matrix ( @var{cr}   @code{<cairo-t>} )
+@deffn Function cairo-identity-matrix  (@var{cr}@tie{}@code{<cairo-t>})
 Resets the current transformation matrix (CTM) by setting it equal to the
 identity matrix. That is, the user-space and device-space axes will be aligned
 and one user-space unit will transform to one device-space unit.
@@ -126,11 +114,9 @@ a cairo context
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-user-to-device ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )
+@deffn Function cairo-user-to-device  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
 Transform a coordinate from user space to device space by multiplying the given
 point by the current transformation matrix (CTM).
 
@@ -146,11 +132,9 @@ Y value of coordinate (in/out parameter)
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-user-to-device-distance ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{dx}   @code{<double>} ) ( @var{dy}   @code{<double>} )
+@deffn Function cairo-user-to-device-distance  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{dx}@tie{}@code{<double>}) (@var{dy}@tie{}@code{<double>})
 Transform a distance vector from user space to device space. This function is
 similar to @code{cairo-user-to-device} except that the translation components of
 the CTM will be ignored when transforming (@var{dx},@var{dy}).
@@ -167,11 +151,9 @@ Y component of a distance vector (in/out parameter)
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-device-to-user ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{x}   @code{<double>} ) ( @var{y}   @code{<double>} )
+@deffn Function cairo-device-to-user  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
 Transform a coordinate from device space to user space by multiplying the given
 point by the inverse of the current transformation matrix (CTM).
 
@@ -187,11 +169,9 @@ Y value of coordinate (in/out parameter)
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-device-to-user-distance ( @var{cr}   @code{<cairo-t>} )   @result{} ( @var{dx}   @code{<double>} ) ( @var{dy}   @code{<double>} )
+@deffn Function cairo-device-to-user-distance  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{dx}@tie{}@code{<double>}) (@var{dy}@tie{}@code{<double>})
 Transform a distance vector from device space to user space. This function is
 similar to @code{cairo-device-to-user} except that the translation components of
 the inverse CTM will be ignored when transforming (@var{dx},@var{dy}).
@@ -207,8 +187,6 @@ X component of a distance vector (in/out parameter)
 Y component of a distance vector (in/out parameter)
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 

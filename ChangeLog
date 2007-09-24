@@ -1,3 +1,19 @@
+2007-09-24  Andy Wingo  <wingo@pobox.com>
+
+	* doc/generate-docs.mk: New file, pulled in from guile-gnome.
+
+	* doc/defuns-*.texi: Regenerate, resulting in less extraneous
+	spaces, and no "This documentation was automatically generated",
+	which is tiring to the eye.
+
+	* doc/section-*.texi: Regenerate, resulting in subtitles not on
+	the same line as the @chapter.
+
+	* doc/Makefile.am: Use the generic generate-docs.mk snippet, and
+	adjust to the new gtk-doc.scm interface.
+
+	* TODO: Update.
+
 2007-07-28  Andy Wingo  <wingo@pobox.com>
 
 	* doc/www/template.scm (templatize): 

@@ -21,15 +21,15 @@ clean: clean-www
 guile-cairo-html:
 	makeinfo --html $(srcdir)/guile-cairo.texi
 
+include generate-docs.mk
+
+GUILE = $(top_builddir)/env guile
 cairo_docbook_xml_wildcard = ~/src/gnome2/cairo/doc/public/xml/cairo*.xml
+docbook_xml_files = $(wildcard $(cairo_docbook_xml_wildcard))
+GTK_DOC_DEFUN_HEURISTICS_METHOD = heuristics
+GTK_DOC_DEFUN_HEURISTICS_ARGS = (cairo)
 
-generate-stubs:
-	./generate-doc-stubs $(wildcard $(cairo_docbook_xml_wildcard))
-
-generate-defuns:
-	./generate-doc-defuns $(srcdir)/overrides.texi $(wildcard $(cairo_docbook_xml_wildcard))
-
-EXTRA_DIST = README generate-doc-stubs generate-doc-defuns overrides.texi
+EXTRA_DIST = README overrides.texi generate-docs.mk
 
 info_TEXINFOS=guile-cairo.texi
 guile_cairo_TEXINFOS=$(wildcard section-*.texi) $(wildcard defuns-*.texi)

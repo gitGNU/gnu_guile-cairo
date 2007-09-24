@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node PDF Surfaces
-@chapter PDF Surfaces: Rendering PDF documents
+@chapter PDF Surfaces
+Rendering PDF documents
+
 @section Overview
 @section Usage
 @include defuns-cairo-pdf.xml.texi

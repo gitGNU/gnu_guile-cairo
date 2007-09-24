@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Transformations
-@chapter Transformations: Manipulating the current transformation matrix
+@chapter Transformations
+Manipulating the current transformation matrix
+
 @section Overview
 @section Usage
 @include defuns-cairo-transforms.xml.texi

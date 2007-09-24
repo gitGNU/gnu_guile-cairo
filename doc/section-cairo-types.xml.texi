@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Types
-@chapter Types: Generic data types used in the cairo API
+@chapter Types
+Generic data types used in the cairo API
+
 @section Overview
 @section Usage
 @include defuns-cairo-types.xml.texi

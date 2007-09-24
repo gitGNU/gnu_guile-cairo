@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Font Options
-@chapter Font Options: How a font should be rendered
+@chapter Font Options
+How a font should be rendered
+
 @section Overview
 @section Usage
 @include defuns-cairo-font-options.xml.texi

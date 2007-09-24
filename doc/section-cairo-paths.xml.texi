@@ -2,7 +2,9 @@
 @c %start of fragment
 
 @node Paths
-@chapter Paths: Creating paths and manipulating path data
+@chapter Paths
+Creating paths and manipulating path data
+
 @section Overview
 @section Usage
 @include defuns-cairo-paths.xml.texi

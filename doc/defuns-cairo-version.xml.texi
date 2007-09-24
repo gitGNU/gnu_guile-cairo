@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-version   @result{} ( @var{ret}   @code{<int>} )
+@deffn Function cairo-version  @result{}@tie{} (@var{ret}@tie{}@code{<int>})
 Returns the version of the cairo library encoded in a single integer as per
 CAIRO_VERSION_ENCODE. The encoding ensures that later versions compare greater
 than earlier versions.
@@ -23,11 +23,9 @@ the encoded version.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-version-string   @result{} ( @var{ret}   @code{<char>} )
+@deffn Function cairo-version-string  @result{}@tie{} (@var{ret}@tie{}@code{<char>})
 Returns the version of the cairo library as a human-readable string of the form
 "X.Y.Z".
 
@@ -39,8 +37,6 @@ See also @code{cairo-version} as well as the compile-time equivalents
 a string containing the version.
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 

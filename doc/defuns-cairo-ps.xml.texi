@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-ps-surface-create ( @var{filename}   @code{<char>} ) ( @var{width-in-points}   @code{<double>} ) ( @var{height-in-points}   @code{<double>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-ps-surface-create  (@var{filename}@tie{}@code{<char>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Creates a PostScript surface of the specified size in points to be written to
 @var{filename}. See @code{cairo-ps-surface-create-for-stream} for a more
 flexible mechanism for handling the PostScript output than simply writing it to
@@ -31,11 +31,9 @@ this.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-ps-surface-set-size ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{width-in-points}   @code{<double>} ) ( @var{height-in-points}   @code{<double>} )
+@deffn Function cairo-ps-surface-set-size  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>})
 Changes the size of a PostScript surface for the current (and subsequent) pages.
 
 This function should only be called before any drawing operations have been
@@ -57,11 +55,9 @@ new surface height, in points (1 point == 1/72.0 inch)
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-ps-surface-dsc-comment ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{comment}   @code{<char>} )
+@deffn Function cairo-ps-surface-dsc-comment  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{comment}@tie{}@code{<char>})
 Emit a comment into the PostScript output for the given surface.
 
 The comment is expected to conform to the PostScript Language Document
@@ -151,8 +147,6 @@ a comment string to be emitted into the PostScript output
 @end table
 
 Since 1.2
-
-This documentation was automatically generated.
 
 @end deffn
 

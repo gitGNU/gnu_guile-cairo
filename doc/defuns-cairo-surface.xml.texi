@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-surface-create-similar ( @var{other}   @code{<cairo-surface-t>} ) ( @var{content}   @code{<cairo-content-t>} ) ( @var{width}   @code{<int>} ) ( @var{height}   @code{<int>} )   @result{} ( @var{ret}   @code{<cairo-surface-t>} )
+@deffn Function cairo-surface-create-similar  (@var{other}@tie{}@code{<cairo-surface-t>}) (@var{content}@tie{}@code{<cairo-content-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
 Create a new surface that is as compatible as possible with an existing surface.
 For example the new surface will have the same fallback resolution and font
 options as @var{other}. Generally, the new surface will also use the same
@@ -32,11 +32,9 @@ already in an error state or any other error occurs.
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-finish ( @var{surface}   @code{<cairo-surface-t>} )
+@deffn Function cairo-surface-finish  (@var{surface}@tie{}@code{<cairo-surface-t>})
 This function finishes the surface and drops all references to external
 resources. For example, for the Xlib backend it means that cairo will no longer
 access the drawable, which can be freed. After calling
@@ -55,11 +53,9 @@ the @code{<cairo-surface-t>} to finish
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-flush ( @var{surface}   @code{<cairo-surface-t>} )
+@deffn Function cairo-surface-flush  (@var{surface}@tie{}@code{<cairo-surface-t>})
 Do any pending drawing for the surface and also restore any temporary
 modification's cairo has made to the surface's state. This function must be
 called before switching from drawing on the surface with cairo to drawing on it
@@ -72,11 +68,9 @@ a @code{<cairo-surface-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-get-font-options ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{options}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-surface-get-font-options  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
 Retrieves the default font rendering options for the surface. This allows
 display surfaces to report the correct subpixel order for rendering on them,
 print surfaces to disable hinting of metrics and so forth. The result can then
@@ -92,11 +86,9 @@ options. All existing values are overwritten
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-get-content ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-content-t>} )
+@deffn Function cairo-surface-get-content  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-content-t>})
 This function returns the content type of @var{surface} which indicates whether
 the surface contains color and/or alpha information. See
 @code{<cairo-content-t>}.
@@ -112,11 +104,9 @@ The content type of @var{surface}.
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-mark-dirty ( @var{surface}   @code{<cairo-surface-t>} )
+@deffn Function cairo-surface-mark-dirty  (@var{surface}@tie{}@code{<cairo-surface-t>})
 Tells cairo that drawing has been done to surface using means other than cairo,
 and that cairo should reread any cached areas. Note that you must call
 @code{cairo-surface-flush} before doing such drawing.
@@ -127,11 +117,9 @@ a @code{<cairo-surface-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-mark-dirty-rectangle ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{x}   @code{<int>} ) ( @var{y}   @code{<int>} ) ( @var{width}   @code{<int>} ) ( @var{height}   @code{<int>} )
+@deffn Function cairo-surface-mark-dirty-rectangle  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{x}@tie{}@code{<int>}) (@var{y}@tie{}@code{<int>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>})
 Like @code{cairo-surface-mark-dirty}, but drawing has been done only to the
 specified rectangle, so that cairo can retain cached contents for other parts of
 the surface.
@@ -157,11 +145,9 @@ height of dirty rectangle
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-set-device-offset ( @var{surface}   @code{<cairo-surface-t>} ) ( @var{x-offset}   @code{<double>} ) ( @var{y-offset}   @code{<double>} )
+@deffn Function cairo-surface-set-device-offset  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{x-offset}@tie{}@code{<double>}) (@var{y-offset}@tie{}@code{<double>})
 Sets an offset that is added to the device coordinates determined by the CTM
 when drawing to @var{surface}. One use case for this function is when we want to
 create a @code{<cairo-surface-t>} that redirects drawing for a portion of an
@@ -185,11 +171,9 @@ the offset in the Y direction, in device units
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-get-device-offset ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{x-offset}   @code{<double>} ) ( @var{y-offset}   @code{<double>} )
+@deffn Function cairo-surface-get-device-offset  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{x-offset}@tie{}@code{<double>}) (@var{y-offset}@tie{}@code{<double>})
 This function returns the previous device offset set by
 @code{cairo-surface-set-device-offset}.
 
@@ -207,11 +191,9 @@ the offset in the Y direction, in device units
 
 Since 1.2
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-surface-get-type ( @var{surface}   @code{<cairo-surface-t>} )   @result{} ( @var{ret}   @code{<cairo-surface-type-t>} )
+@deffn Function cairo-surface-get-type  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-type-t>})
 This function returns the type of the backend used to create a surface. See
 @code{<cairo-surface-type-t>} for available types.
 
@@ -225,8 +207,6 @@ The type of @var{surface}.
 @end table
 
 Since 1.2
-
-This documentation was automatically generated.
 
 @end deffn
 

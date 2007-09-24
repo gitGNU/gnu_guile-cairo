@@ -1,24 +1,7 @@
 * Documentation
 
-** Automagic generation
-
-We already have this, but it would be good to be able to override for
-certain functions.
-
-** Online/texinfo docs
-
-Need to figure out how to categorize functions, etc.
-
 ** Type documentation
 
 ** signals, properties
 
 ** inheritance
-
-For me to call cairo docs finished, i'd want sectioned function docs,
-with autoconverted headers.
-
-* Tests
-
-At the very least, a test that ensures that the API stays the same: same
-set of symbols exported.

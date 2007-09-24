@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-font-options-create   @result{} ( @var{ret}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-font-options-create  @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-options-t>})
 Allocates a new font options object with all options initialized to default
 values.
 
@@ -15,11 +15,9 @@ operations on the object do nothing. You can check for this with
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-copy ( @var{original}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-font-options-copy  (@var{original}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-options-t>})
 Allocates a new font options object copying the option values from
 @var{original}.
 
@@ -36,11 +34,9 @@ operations on the object do nothing. You can check for this with
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-merge ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{other}   @code{<cairo-font-options-t>} )
+@deffn Function cairo-font-options-merge  (@var{options}@tie{}@code{<cairo-font-options-t>}) (@var{other}@tie{}@code{<cairo-font-options-t>})
 Merges non-default options from @var{other} into @var{options}, replacing
 existing values. This operation can be thought of as somewhat similar to
 compositing @var{other} onto @var{options} with the operation of
@@ -55,11 +51,9 @@ another @code{<cairo-font-options-t>}
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-hash ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<unsigned long>} )
+@deffn Function cairo-font-options-hash  (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<unsigned long>})
 Compute a hash for the font options object; this value will be useful when
 storing an object containing a cairo_font_options_t in a hash table.
 
@@ -73,11 +67,9 @@ the hash value for the font options object. The return value can be cast to a
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-set-antialias ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{antialias}   @code{<cairo-antialias-t>} )
+@deffn Function cairo-font-options-set-antialias  (@var{options}@tie{}@code{<cairo-font-options-t>}) (@var{antialias}@tie{}@code{<cairo-antialias-t>})
 Sets the antialiasing mode for the font options object. This specifies the type
 of antialiasing to do when rendering text.
 
@@ -90,11 +82,9 @@ the new antialiasing mode
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-get-antialias ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-antialias-t>} )
+@deffn Function cairo-font-options-get-antialias  (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-antialias-t>})
 Gets the antialiasing mode for the font options object.
 
 @table @var
@@ -106,11 +96,9 @@ the antialiasing mode
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-set-hint-style ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{hint-style}   @code{<cairo-hint-style-t>} )
+@deffn Function cairo-font-options-set-hint-style  (@var{options}@tie{}@code{<cairo-font-options-t>}) (@var{hint-style}@tie{}@code{<cairo-hint-style-t>})
 Sets the hint style for font outlines for the font options object. This controls
 whether to fit font outlines to the pixel grid, and if so, whether to optimize
 for fidelity or contrast. See the documentation for @code{<cairo-hint-style-t>}
@@ -125,11 +113,9 @@ the new hint style
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-get-hint-style ( @var{options}   @code{<cairo-font-options-t>} )   @result{} ( @var{ret}   @code{<cairo-hint-style-t>} )
+@deffn Function cairo-font-options-get-hint-style  (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-hint-style-t>})
 Gets the hint style for font outlines for the font options object. See the
 documentation for @code{<cairo-hint-style-t>} for full details.
 
@@ -142,11 +128,9 @@ the hint style for the font options object
 
 @end table
 
-This documentation was automatically generated.
-
 @end deffn
 
-@deffn Function cairo-font-options-set-hint-metrics ( @var{options}   @code{<cairo-font-options-t>} ) ( @var{hint-metrics}   @code{<cairo-hint-metrics-t>} )
+@deffn Function cairo-font-options-set-hint-metrics  (@var{options}@tie{}@code{<cairo-font-options-t>}) (@var{hint-metrics}@tie{}@code{<cairo-hint-metrics-t>})
 Sets the metrics hinting mode for the font options object. This controls whether
 metrics are quantized to integer values in device units. See the documentation
 for @code{<cairo-hint-metrics-t>} for full details.
@@ -159,8 +143,6 @@ a @code{<cairo-font-options-t>}
 the new metrics hinting mode
 
 @end table
-
-This documentation was automatically generated.
 
 @end deffn
 
