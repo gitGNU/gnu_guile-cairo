@@ -30,6 +30,7 @@
 #include <cairo-ps.h>
 #endif  /* CAIRO_HAS_PS_SURFACE */
 
+#include "guile-cairo-compat.h"
 #include "guile-cairo-enum-types.h"
 
 

@@ -24,7 +24,8 @@ AM_CFLAGS = -I$(srcdir) $(WARN_CFLAGS) $(DEBUG_CFLAGS)
 libguile_cairo_la_SOURCES = guile-cairo.c \
 	guile-cairo-smob-types.c \
 	guile-cairo-enum-types.c \
-	guile-cairo-vector-types.c
+	guile-cairo-vector-types.c \
+	guile-cairo-compat.c
 
 libguile_cairo_la_CFLAGS = $(CAIRO_CFLAGS) $(AM_CFLAGS) $(GUILE_CFLAGS)
 
@@ -33,6 +34,12 @@ libguile_cairo_la_LDFLAGS = -export-dynamic
 
 libguile_cairo_la_includedir = $(includedir)/guile-cairo
 libguile_cairo_la_include_HEADERS = $(libguile_cairo_la_SOURCES:.c=.h)
+libguile_cairo_la_include_HEADERS = guile-cairo.h \
+	guile-cairo-smob-types.h \
+	guile-cairo-enum-types.h \
+	guile-cairo-vector-types.h
+
+noinst_HEADERS = guile-cairo-compat.h
 
 ## Snarfing
 

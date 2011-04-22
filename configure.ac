@@ -65,20 +65,22 @@ AC_SUBST(AM_LDFLAGS)
 #
 # Check for Guile
 #
-AC_MSG_CHECKING(for Guile)
-guile-config link > /dev/null || {
-   echo "configure: cannot find guile-config; is Guile installed?" 1>&2
-   exit 1
-}
-GUILE_VERSION=`guile-config info guileversion`
-if test "$GUILE_VERSION" \< 1.6.4; then
-   AC_MSG_ERROR([Guile 1.6.4 or newer is required, but you only have $GUILEVERSION.])
+GUILE_EFFECTIVE_VERSION=no
+all_versions="2.2 2.0 1.8"
+for v in $all_versions; do
+  if test $GUILE_EFFECTIVE_VERSION = no; then
+    AC_MSG_NOTICE([checking for Guile $v.x])
+    PKG_CHECK_MODULES(GUILE, guile-$v, [GUILE_EFFECTIVE_VERSION=$v], [true])
+  fi
+done
+
+AC_SUBST(GUILE_EFFECTIVE_VERSION)
+
+if test $GUILE_EFFECTIVE_VERSION = no; then
+  AC_MSG_ERROR([Failed to find Guile.  Is it installed?])
+else
+  AC_MSG_NOTICE([found Guile $GUILE_EFFECTIVE_VERSION.x])
 fi
-GUILE_CFLAGS="`guile-config compile`"
-GUILE_LIBS="`guile-config link`"
-AC_SUBST(GUILE_CFLAGS)
-AC_SUBST(GUILE_LIBS)
-AC_MSG_RESULT(yes)
 
 PKG_CHECK_MODULES(CAIRO, cairo >= 1.2.0)
 AC_SUBST(CAIRO_LIBS)

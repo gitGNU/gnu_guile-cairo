@@ -34,6 +34,7 @@
 #include <cairo-svg.h>
 #endif  /* CAIRO_HAS_SVG_SURFACE */
 
+#include "guile-cairo-compat.h"
 #include "guile-cairo.h"
 
 /* cairo_t constructor return */

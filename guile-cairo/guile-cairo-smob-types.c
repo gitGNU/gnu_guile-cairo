@@ -22,6 +22,7 @@
 
 #include <cairo.h>
 
+#include "guile-cairo-compat.h"
 #include "guile-cairo-smob-types.h"
 
 

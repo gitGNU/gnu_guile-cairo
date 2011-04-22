@@ -6,6 +6,6 @@ includedir=@includedir@/guile-cairo
 Name: guile-cairo
 Description: Cairo binding for Guile Scheme
 Version: @VERSION@
-Requires: cairo
+Requires: cairo guile-@GUILE_EFFECTIVE_VERSION@
 Libs: -L${libdir} -lguile-cairo
 Cflags: -I${includedir}
