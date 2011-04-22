@@ -4,6 +4,18 @@ Guile-Cairo NEWS
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
+guile-cairo 1.4.1 -- 2011-04-22
+===============================
+
+* Guile-Cairo has moved to git.  See the HACKING file for information on
+  how to access Guile-Cairo.
+
+* Guile-Cairo's license has been upgraded to the LGPL version 3 or
+  later.  This should not cause problems for any users.  See
+  http://www.gnu.org/licenses/gpl-faq.html#AllCompatibility for more
+  information.
+
+
 guile-cairo 1.4.0 -- 2007-07-28
 ===============================
 
@@ -60,7 +72,7 @@ guile-cairo 1.3.90 -- 2007-05-18
 * Initial release.
 
 
-Copyright (C) 2007 Andy Wingo <wingo at pobox dot com>
+Copyright (C) 200, 0117 Andy Wingo <wingo at pobox dot com>
 
 Copying and distribution of this file, with or without modification, are
 permitted in any medium without royalty provided the copyright notice

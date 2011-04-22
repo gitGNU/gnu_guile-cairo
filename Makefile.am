@@ -32,4 +32,16 @@ scm_DATA = cairo.scm
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = guile-cairo.pc
 
+dist-hook: gen-ChangeLog
+
+gen_start_rev = 16429179fee5c3de5f74766232f4068ce75c4fc6
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	if test -d .git; then						\
+	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
+	    $(gen_start_rev)..HEAD > $(distdir)/cl-t;			\
+	  rm -f $(distdir)/ChangeLog;					\
+	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
+	fi
+
 EXTRA_DIST = env.in autogen.sh HACKING COPYING.LESSER COPYING.docs $(scm_DATA)
