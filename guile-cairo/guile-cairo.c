@@ -1416,6 +1416,15 @@ SCM_DEFINE_PUBLIC (scm_cairo_get_current_point, "cairo-get-current-point", 1, 0,
              scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM_DEFINE_PUBLIC (scm_cairo_has_current_point, "cairo-has-current-point", 1, 0, 0,
+                   (SCM ctx),
+                   "")
+{
+  CCHKRET (ctx, scm_from_bool (cairo_has_current_point (scm_to_cairo (ctx))));
+}
+#endif
+
 SCM_DEFINE_PUBLIC (scm_cairo_get_fill_rule, "cairo-get-fill-rule", 1, 0, 0,
 	    (SCM ctx),
 	    "")
@@ -1552,6 +1561,19 @@ SCM_DEFINE_PUBLIC (scm_cairo_path_fold, "cairo-path-fold", 3, 0, 0,
     
     return ret;
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM_DEFINE_PUBLIC (scm_cairo_path_extents, "cairo-path-extents", 1, 0, 0,
+                   (SCM ctx),
+                   "")
+{
+  double x1, y1, x2, y2;
+  cairo_path_extents (scm_to_cairo (ctx), &x1, &y1, &x2, &y2);
+  CCHKRET (ctx,
+           scm_values (scm_list_4 (scm_from_double (x1), scm_from_double (y1),
+                                   scm_from_double (x2), scm_from_double (y2))));
+}
+#endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_copy_path, "cairo-copy-path", 1, 0, 0,
 	    (SCM ctx),
@@ -1721,6 +1743,26 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_set_fallback_resolution, "cairo-surface-set
     SCHKRET (surf, SCM_UNSPECIFIED);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM_DEFINE_PUBLIC (scm_cairo_surface_copy_page, "cairo-surface-copy-page", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+    cairo_surface_copy_page (scm_to_cairo_surface (surf));
+
+    SCHKRET (surf, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_show_page, "cairo-surface-show-page", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+    cairo_surface_show_page (scm_to_cairo_surface (surf));
+
+    SCHKRET (surf, SCM_UNSPECIFIED);
+}
+#endif /* 1.6 */
+
 SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create, "cairo-image-surface-create", 3, 0, 0,
                    (SCM format, SCM x, SCM y),
 	    "")
@@ -1749,6 +1791,16 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_format, "cairo-image-surface-get-
     SCHKRET (surf,
              scm_from_cairo_format (cairo_image_surface_get_format (scm_to_cairo_surface (surf))));
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM_DEFINE_PUBLIC (scm_cairo_format_stride_for_width, "cairo-format-stride-for-width", 2, 0, 0,
+                   (SCM fmt, SCM stride),
+                   "")
+{
+  return scm_from_int (cairo_format_stride_for_width (scm_to_cairo_format (fmt),
+                                                      scm_to_int (stride)));
+}
+#endif
 
 SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_width, "cairo-image-surface-get-width", 1, 0, 0,
                    (SCM surf),
@@ -2294,6 +2346,49 @@ SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_begin_page_setup, "cairo-ps-surface-
     cairo_ps_surface_dsc_begin_page_setup (scm_to_cairo_surface (surf));
     SCHKRET (surf, SCM_UNSPECIFIED);
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM_DEFINE_PUBLIC (scm_cairo_ps_get_levels, "cairo-ps-get-levels", 0, 0, 0,
+                   (),
+                   "")
+{
+  const cairo_ps_level_t *levels;
+  int nlevels;
+  SCM ret = SCM_EOL;
+
+  cairo_ps_get_levels (&levels, &nlevels);
+  
+  while (nlevels--)
+    ret = scm_cons (scm_from_cairo_ps_level (levels[nlevels]), ret);
+
+  return ret;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_restrict_to_level, "cairo-ps-surface-restrict-to-level", 2, 0, 0,
+                   (SCM surf, SCM level),
+	    "")
+{
+  cairo_ps_surface_restrict_to_level (scm_to_cairo_surface (surf),
+                                      scm_to_cairo_ps_level (level));
+  SCHKRET (surf, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_get_eps, "cairo-ps-surface-get-eps", 1, 0, 0,
+                   (SCM surf),
+	    "")
+{
+  SCHKRET (surf, scm_from_bool (cairo_ps_surface_get_eps (scm_to_cairo_surface (surf))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_set_eps, "cairo-ps-surface-set-eps", 2, 0, 0,
+                   (SCM surf, SCM eps),
+	    "")
+{
+  cairo_ps_surface_set_eps (scm_to_cairo_surface (surf), scm_to_bool (eps));
+  SCHKRET (surf, SCM_UNSPECIFIED);
+}
+
+#endif /* 1.6 */
 
 #endif /* CAIRO_HAS_PS_SURFACE */
 

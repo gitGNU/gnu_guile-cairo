@@ -25,6 +25,10 @@
 #include <cairo-svg.h>
 #endif
 
+#if CAIRO_HAS_PS_SURFACE
+#include <cairo-ps.h>
+#endif
+
 
 
 SCM scm_from_cairo_status (cairo_status_t cval);
@@ -88,6 +92,13 @@ cairo_filter_t scm_to_cairo_filter (SCM scm);
 SCM scm_from_cairo_svg_version (cairo_svg_version_t cval);
 cairo_svg_version_t scm_to_cairo_svg_version (SCM scm);
 #endif  /* CAIRO_HAS_SVG_SURFACE */
+
+#if CAIRO_HAS_PS_SURFACE
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+SCM scm_from_cairo_ps_level (cairo_ps_level_t cval);
+cairo_ps_level_t scm_to_cairo_ps_level (SCM scm);
+#endif  /* 1.6 */
+#endif  /* CAIRO_HAS_PS_SURFACE */
 
 
 
