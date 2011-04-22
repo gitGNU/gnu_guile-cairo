@@ -32,5 +32,4 @@ scm_DATA = cairo.scm
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = guile-cairo.pc
 
-EXTRA_DIST = env.in autogen.sh autogen-support.sh HACKING \
-	COPYING.LESSER COPYING.docs $(scm_DATA)
+EXTRA_DIST = env.in autogen.sh HACKING COPYING.LESSER COPYING.docs $(scm_DATA)
