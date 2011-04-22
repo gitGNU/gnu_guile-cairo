@@ -30,6 +30,10 @@
 #include <cairo-ps.h>
 #endif  /* CAIRO_HAS_PS_SURFACE */
 
+#if CAIRO_HAS_PDF_SURFACE
+#include <cairo-pdf.h>
+#endif  /* CAIRO_HAS_PDF_SURFACE */
+
 #include "guile-cairo-compat.h"
 #include "guile-cairo-enum-types.h"
 
@@ -289,6 +293,28 @@ static EnumPair _text_cluster_flags[] = {
 };
 #endif  /* 1.8 */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+static EnumPair _device_type[] = {
+  { CAIRO_DEVICE_TYPE_DRM, "drm" },
+  { CAIRO_DEVICE_TYPE_GL, "gl" },
+  { CAIRO_DEVICE_TYPE_SCRIPT, "script" },
+  { CAIRO_DEVICE_TYPE_XCB, "xcb" },
+  { CAIRO_DEVICE_TYPE_XLIB, "xlib" },
+  { CAIRO_DEVICE_TYPE_XML, "xml" },
+  {0, NULL}
+};
+#endif  /* 1.8 */
+
+#if CAIRO_HAS_PDF_SURFACE
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+static EnumPair _pdf_version[] = {
+  {CAIRO_PDF_VERSION_1_4, "v1.4"},
+  {CAIRO_PDF_VERSION_1_5, "v1.5"},
+  {0, NULL}
+};
+#endif  /* 1.10 */
+#endif  /* CAIRO_HAS_PDF_SURFACE */
+
 SCM scm_from_cairo_status (cairo_status_t cval) { return _scm_from_enum (_status, cval); }
 cairo_status_t scm_to_cairo_status (SCM scm) { return _scm_to_enum (_status, scm); }
 
@@ -416,6 +442,34 @@ cairo_text_cluster_flags_t scm_to_cairo_text_cluster_flags (SCM scm)
 SCM_DEFINE_PUBLIC (scm_cairo_text_cluster_flags_get_values, "cairo-text-cluster-flags-get-values", 0, 0, 0, (void), "")
 { return _get_values (_text_cluster_flags); }
 #endif  /* 1.8 */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_device_type (cairo_device_type_t cval)
+{
+  if (cval)
+    return _scm_from_enum (_device_type, cval);
+  else
+    return SCM_BOOL_F;
+}
+cairo_device_type_t scm_to_cairo_device_type (SCM scm)
+{
+  if (scm_is_true (scm))
+    return _scm_to_enum (_device_type, scm);
+  else
+    return 0;
+}
+SCM_DEFINE_PUBLIC (scm_cairo_device_type_get_values, "cairo-device-type-get-values", 0, 0, 0, (void), "")
+{ return _get_values (_device_type); }
+#endif  /* 1.10 */
+
+#if CAIRO_HAS_PDF_SURFACE
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_pdf_version (cairo_pdf_version_t cval) { return _scm_from_enum (_pdf_version, cval); }
+cairo_pdf_version_t scm_to_cairo_pdf_version (SCM scm) { return _scm_to_enum (_pdf_version, scm); }
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_version_get_values, "cairo-pdf-level-get-values", 0, 0, 0, (void), "")
+{ return _get_values (_pdf_version); }
+#endif  /* 1.10 */
+#endif  /* HAS_PDF_SURFACE */
 
 void
 scm_init_cairo_enum_types (void)

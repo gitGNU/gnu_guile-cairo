@@ -105,6 +105,18 @@ SCM scm_from_cairo_text_cluster_flags (cairo_text_cluster_flags_t cval);
 cairo_text_cluster_flags_t scm_to_cairo_text_cluster_flags (SCM scm);
 #endif  /* 1.8 */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_device_type (cairo_device_type_t cval);
+cairo_device_type_t scm_to_cairo_device_type (SCM scm);
+#endif  /* 1.10 */
+
+#if CAIRO_HAS_PDF_SURFACE
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_pdf_version (cairo_pdf_version_t cval);
+cairo_pdf_version_t scm_to_cairo_pdf_version (SCM scm);
+#endif  /* 1.10 */
+#endif  /* CAIRO_HAS_PS_SURFACE */
+
 
 
 void scm_init_cairo_enum_types (void);

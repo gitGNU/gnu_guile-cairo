@@ -37,6 +37,14 @@
 #include "guile-cairo-compat.h"
 #include "guile-cairo.h"
 
+/* cairo_device_t checking return */
+#define DCHKRET(sdv,ret)                                                \
+  do {SCM _ret = ret;                                                   \
+    scm_c_check_cairo_status (cairo_device_status                       \
+                              (scm_to_cairo_device (sdv)), NULL);       \
+    return _ret;                                                        \
+  } while (0)
+    
 /* cairo_t constructor return */
 #define CCONSRET(cr)                                                    \
   do {cairo_t *_ret = cr;                                               \
@@ -221,6 +229,57 @@ SCM_DEFINE_PUBLIC (scm_cairo_version_string, "cairo-version-string", 0, 0, 0,
 {
   return scm_from_utf8_string (cairo_version_string ());
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM_DEFINE_PUBLIC (scm_cairo_device_get_type, "cairo-device-get-type", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  DCHKRET (dev, scm_from_cairo_device_type
+           (cairo_device_get_type (scm_to_cairo_device (dev))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_device_acquire, "cairo-device-acquire", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  cairo_device_acquire (scm_to_cairo_device (dev));
+  DCHKRET (dev, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_device_release, "cairo-device-release", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  cairo_device_release (scm_to_cairo_device (dev));
+  DCHKRET (dev, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_device_flush, "cairo-device-flush", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  cairo_device_flush (scm_to_cairo_device (dev));
+  DCHKRET (dev, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_device_finish, "cairo-device-finish", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  cairo_device_finish (scm_to_cairo_device (dev));
+  DCHKRET (dev, SCM_UNSPECIFIED);
+}
+
+#ifdef DEBUG_GUILE_CAIRO
+SCM_DEFINE_PUBLIC (scm_cairo_device_get_reference_count, "cairo-device-get-reference-count", 1, 0, 0,
+                   (SCM dev),
+                   "")
+{
+  CCHKRET (dev, scm_from_uint (cairo_device_get_reference_count (scm_to_cairo_device (dev))));
+}
+#endif
+#endif /* 1.10 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
                    (SCM surf),
@@ -875,6 +934,18 @@ SCM_DEFINE_PUBLIC (scm_cairo_copy_clip_rectangle_list, "cairo-copy-clip-rectangl
   return ret;
 }
 #endif /* HAVE_CAIRO_140_API */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM_DEFINE_PUBLIC (scm_cairo_in_clip, "cairo-in-clip", 3, 0, 0,
+                   (SCM ctx, SCM x, SCM y),
+                   "")
+{
+  CCHKRET (ctx,
+           scm_from_bool (cairo_in_clip (scm_to_cairo (ctx),
+                                         scm_to_double (x),
+                                         scm_to_double (y))));
+}
+#endif /* 1.10 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_font_options_create, "cairo-font-options-create", 0, 0, 0,
                    (void),
@@ -2366,6 +2437,33 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface
 
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+/* Recording-surface functions */
+
+SCM_DEFINE_PUBLIC (scm_cairo_recording_surface_create, "cairo-recording-surface-create", 2, 0, 0,
+                   (SCM content, SCM rect),
+                   "")
+{
+  cairo_rectangle_t r;
+  scm_fill_cairo_rectangle (rect, &r);
+  SCONSRET (cairo_recording_surface_create (scm_to_cairo_content (content), &r));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_recording_surface_ink_extents, "cairo-recording-surface-ink-extents", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  double x0, y0, width, height;
+  cairo_recording_surface_ink_extents (scm_to_cairo_surface (surf),
+                                       &x0, &y0, &width, &height);
+  SCHKRET (surf, scm_values (scm_list_4 (scm_from_double (x0),
+                                         scm_from_double (y0),
+                                         scm_from_double (width),
+                                         scm_from_double (height))));
+}
+
+#endif /* 1.10 */
+
 SCM_DEFINE_PUBLIC (scm_cairo_pattern_create_rgb, "cairo-pattern-create-rgb", 3, 0, 0,
                    (SCM r, SCM g, SCM b),
                    "")
@@ -2786,6 +2884,35 @@ SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_set_size, "cairo-pdf-surface-set-size",
                               scm_to_double (sy));
   SCHKRET (surf, SCM_UNSPECIFIED);
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_get_versions, "cairo-pdf-get-versions", 0, 0, 0,
+                   (),
+                   "")
+{
+  const cairo_pdf_version_t *versions;
+  int nversions;
+  SCM ret = SCM_EOL;
+
+  cairo_pdf_get_versions (&versions, &nversions);
+  
+  while (nversions--)
+    ret = scm_cons (scm_from_cairo_pdf_version (versions[nversions]), ret);
+
+  return ret;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_restrict_to_version, "cairo-pdf-surface-restrict-to-version", 2, 0, 0,
+                   (SCM surf, SCM version),
+                   "")
+{
+  cairo_pdf_surface_restrict_to_version (scm_to_cairo_surface (surf),
+                                         scm_to_cairo_pdf_version (version));
+  SCHKRET (surf, SCM_UNSPECIFIED);
+}
+
+#endif /* 1.10 */
 
 #endif /* CAIRO_HAS_PDF_SURFACE */
 

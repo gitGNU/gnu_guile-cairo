@@ -33,6 +33,9 @@ scm_t_bits scm_tc16_cairo_scaled_font_t;
 scm_t_bits scm_tc16_cairo_font_face_t;
 scm_t_bits scm_tc16_cairo_font_options_t;
 scm_t_bits scm_tc16_cairo_path_t;
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+scm_t_bits scm_tc16_cairo_device_t;
+#endif
 
 
 /**********************************************************************
@@ -300,6 +303,40 @@ scm_cairo_path_free (SCM smob)
   return 0;
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+/**********************************************************************
+ * cairo_device_t
+ **********************************************************************/
+
+SCM
+scm_take_cairo_device (cairo_device_t *device)
+{
+  SCM sdevice;
+
+  SCM_NEWSMOB (sdevice, scm_tc16_cairo_device_t, device);
+
+  return sdevice;
+}
+
+cairo_device_t*
+scm_to_cairo_device (SCM scm)
+{
+  scm_assert_smob_type (scm_tc16_cairo_device_t, scm);
+  return (cairo_device_t*)SCM_SMOB_DATA (scm);
+}
+
+static size_t
+scm_cairo_device_free (SCM smob)
+{
+  cairo_device_t *device = (cairo_device_t*)SCM_SMOB_DATA (smob);
+
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_device_destroy (device);
+
+  return 0;
+}
+#endif /* 1.10 */
+
 void
 scm_init_cairo_smob_types (void)
 {
@@ -327,4 +364,9 @@ scm_init_cairo_smob_types (void)
 
   scm_tc16_cairo_path_t = scm_make_smob_type ("cairo-path", 0);
   scm_set_smob_free (scm_tc16_cairo_path_t, scm_cairo_path_free);
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+  scm_tc16_cairo_device_t = scm_make_smob_type ("cairo-device", 0);
+  scm_set_smob_free (scm_tc16_cairo_device_t, scm_cairo_device_free);
+#endif /* 1.10 */
 }
