@@ -100,6 +100,11 @@ cairo_ps_level_t scm_to_cairo_ps_level (SCM scm);
 #endif  /* 1.6 */
 #endif  /* CAIRO_HAS_PS_SURFACE */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+SCM scm_from_cairo_text_cluster_flags (cairo_text_cluster_flags_t cval);
+cairo_text_cluster_flags_t scm_to_cairo_text_cluster_flags (SCM scm);
+#endif  /* 1.8 */
+
 
 
 void scm_init_cairo_enum_types (void);

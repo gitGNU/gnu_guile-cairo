@@ -273,13 +273,21 @@ static EnumPair _svg_version[] = {
 #endif  /* CAIRO_HAS_SVG_SURFACE */
 
 #if CAIRO_HAS_PS_SURFACE
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
 static EnumPair _ps_level[] = {
   {CAIRO_PS_LEVEL_2, "level-2"},
   {CAIRO_PS_LEVEL_3, "level-3"},
   {0, NULL}
 };
+#endif  /* 1.6 */
 #endif  /* CAIRO_HAS_PS_SURFACE */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+static EnumPair _text_cluster_flags[] = {
+  {CAIRO_TEXT_CLUSTER_FLAG_BACKWARD, "backward"},
+  {0, NULL}
+};
+#endif  /* 1.8 */
 
 SCM scm_from_cairo_status (cairo_status_t cval) { return _scm_from_enum (_status, cval); }
 cairo_status_t scm_to_cairo_status (SCM scm) { return _scm_to_enum (_status, scm); }
@@ -389,6 +397,25 @@ SCM_DEFINE_PUBLIC (scm_cairo_ps_level_get_values, "cairo-ps-level-get-values", 0
 { return _get_values (_ps_level); }
 #endif  /* 1.6 */
 #endif  /* CAIRO_HAS_PS_SURFACE */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+SCM scm_from_cairo_text_cluster_flags (cairo_text_cluster_flags_t cval)
+{
+  if (cval)
+    return _scm_from_enum (_text_cluster_flags, cval);
+  else
+    return SCM_BOOL_F;
+}
+cairo_text_cluster_flags_t scm_to_cairo_text_cluster_flags (SCM scm)
+{
+  if (scm_is_true (scm))
+    return _scm_to_enum (_text_cluster_flags, scm);
+  else
+    return 0;
+}
+SCM_DEFINE_PUBLIC (scm_cairo_text_cluster_flags_get_values, "cairo-text-cluster-flags-get-values", 0, 0, 0, (void), "")
+{ return _get_values (_text_cluster_flags); }
+#endif  /* 1.8 */
 
 void
 scm_init_cairo_enum_types (void)

@@ -206,6 +206,47 @@ scm_fill_cairo_font_extents (SCM scm, cairo_font_extents_t *fext)
 #undef GET
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+void
+scm_fill_cairo_text_clusters (SCM str, SCM scm,
+                              cairo_text_cluster_t *clusters)
+{
+  /* scm must be a list, and it should be of pairs:
+
+       ((N-CODEPOINTS . N-GLYPHS) ...)
+  */
+
+  size_t n = 0;
+  
+  for (; scm_is_pair (scm); scm = scm_cdr (scm))
+    {
+      int num_codepoints = scm_to_int (scm_caar (scm));
+      int num_bytes = 0;
+      int num_glyphs = scm_to_int (scm_cdar (scm));
+
+      while (num_codepoints--)
+        {
+          scm_t_wchar c = SCM_CHAR (scm_c_string_ref (str, n++));
+          
+          if (c < 0x80)
+            num_bytes += 1;
+          else if (c < 0x800)
+            num_bytes += 2;
+          else if (c < 0x10000)
+            num_bytes += 3;
+          else if (c < 0x110000)
+            num_bytes += 4;
+          else
+            abort ();
+        }
+
+      clusters->num_bytes = num_bytes;
+      clusters->num_glyphs = num_glyphs;
+      clusters++;
+    }
+}
+#endif
+
 void
 scm_init_cairo_vector_types (void)
 {

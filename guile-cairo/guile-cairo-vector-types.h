@@ -42,6 +42,11 @@ void scm_fill_cairo_text_extents (SCM scm, cairo_text_extents_t *text);
 SCM scm_from_cairo_font_extents (cairo_font_extents_t *fext);
 void scm_fill_cairo_font_extents (SCM scm, cairo_font_extents_t *fext);
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+void scm_fill_cairo_text_clusters (SCM str, SCM scm,
+                                   cairo_text_cluster_t *clusters);
+#endif
+
 
 
 void scm_init_cairo_vector_types (void);

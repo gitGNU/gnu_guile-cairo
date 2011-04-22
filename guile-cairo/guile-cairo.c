@@ -1375,6 +1375,331 @@ SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_options, "cairo-scaled-font-ge
   FOCONSRET (opts);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+
+/* User fonts.  */
+
+enum user_font_func_idx
+{
+  USER_FONT_INIT,
+  USER_FONT_RENDER_GLYPH,
+  USER_FONT_UNICODE_TO_GLYPH,
+  USER_FONT_TEXT_TO_GLYPHS,
+  USER_FONT_N_FUNCS
+};
+
+static cairo_user_data_key_t scm_cairo_key;
+
+#if GUILE_MAJOR_VERSION >= 2
+#define UNPROTECT (cairo_destroy_func_t)scm_gc_unprotect_object
+#else
+/* We can't unprotect an object from within GC, so just leak memory.  */
+#define UNPROTECT NULL
+#endif
+
+static void
+set_user_font_func (cairo_font_face_t *font_face,
+                    enum user_font_func_idx idx, SCM func)
+{
+  void *data = cairo_font_face_get_user_data (font_face, &scm_cairo_key);
+
+  if (!data)
+    {
+      data = SCM2PTR (scm_gc_protect_object
+                      (scm_c_make_vector (USER_FONT_N_FUNCS, SCM_BOOL_F)));
+      cairo_font_face_set_user_data (font_face, &scm_cairo_key,
+                                     data, UNPROTECT);
+    }
+
+  scm_c_vector_set_x (PTR2SCM (data), idx, func);
+}
+
+static SCM
+get_user_font_func (cairo_scaled_font_t *scaled_font,
+                    enum user_font_func_idx idx)
+{
+  void *data = cairo_font_face_get_user_data
+    (cairo_scaled_font_get_font_face (scaled_font), &scm_cairo_key);
+
+  if (!data)
+    return SCM_BOOL_F;
+  else
+    return scm_c_vector_ref (PTR2SCM (data), idx);
+}
+
+struct user_font_data {
+  cairo_status_t ret;
+  enum user_font_func_idx func;
+  cairo_scaled_font_t *scaled_font;
+  cairo_t *cr;
+  cairo_font_extents_t *fexts;
+  cairo_text_extents_t *texts;
+  unsigned long unicode;
+  unsigned long glyph;
+  const char *utf8;
+  int utf8_len;
+  cairo_glyph_t **glyphs;
+  int *num_glyphs;
+  cairo_text_cluster_t **clusters;
+  int *num_clusters;
+  cairo_text_cluster_flags_t *cluster_flags;
+};
+
+static void*
+do_user_font (void *user_data)
+{
+  struct user_font_data *data = user_data;
+  SCM func = get_user_font_func (data->scaled_font, data->func);
+  SCM font = scm_from_cairo_scaled_font (data->scaled_font);
+
+  switch (data->func)
+    {
+    case USER_FONT_INIT:
+      {
+        SCM extents = scm_from_cairo_font_extents (data->fexts);
+        SCM cr = scm_from_cairo (data->cr);
+        scm_call_3 (func, font, cr, extents);
+        scm_fill_cairo_font_extents (extents, data->fexts);
+        data->ret = CAIRO_STATUS_SUCCESS;
+        break;
+      }
+    case USER_FONT_RENDER_GLYPH:
+      {
+        SCM extents = scm_from_cairo_text_extents (data->texts);
+        SCM cr = scm_from_cairo (data->cr);
+        scm_call_4 (func, font, scm_from_ulong (data->glyph), cr, extents);
+        scm_fill_cairo_text_extents (extents, data->texts);
+        data->ret = CAIRO_STATUS_SUCCESS;
+        break;
+      }
+    case USER_FONT_UNICODE_TO_GLYPH:
+      {
+        data->glyph = scm_to_ulong
+          (scm_call_2 (func, font, scm_from_ulong (data->unicode)));
+        data->ret = CAIRO_STATUS_SUCCESS;
+        break;
+      }
+    case USER_FONT_TEXT_TO_GLYPHS:
+      {
+        SCM str, ret, values, glyphs, clusters;
+        int n_glyphs, n_clusters, i;
+        cairo_text_cluster_flags_t flags = 0; /* We only go forwards.  */
+        
+        str = scm_from_utf8_stringn (data->utf8, data->utf8_len),
+        ret = scm_call_3 (func, font, str, scm_from_bool (data->clusters));
+
+        if (data->clusters)
+          {
+            if (!SCM_VALUESP (ret)
+                || scm_ilength ((values = scm_struct_ref (ret, SCM_INUM0))) != 2)
+              scm_error (scm_from_utf8_symbol ("cairo-error"),
+                         NULL,
+                         "Expected two return values (glyphs and clusters): ~S",
+                         scm_list_1 (ret),
+                         SCM_EOL);
+            
+            glyphs = scm_car (values);
+            clusters = scm_cadr (values);
+          }
+        else
+          {
+            if (SCM_VALUESP (ret))
+              scm_error (scm_from_utf8_symbol ("cairo-error"),
+                         NULL,
+                         "Expected one return value (glyphs): ~S",
+                         scm_list_1 (ret),
+                         SCM_EOL);
+            
+            glyphs = ret;
+            clusters = SCM_EOL;
+          }
+
+        n_glyphs = scm_ilength (glyphs);
+        n_clusters = scm_ilength (clusters);
+
+        if (n_glyphs < 0 || n_clusters < 0)
+          scm_error (scm_from_utf8_symbol ("cairo-error"),
+                     NULL,
+                     "Glyphs and clusters should be lists: ~S, ~S",
+                     scm_list_2 (glyphs, clusters),
+                     SCM_EOL);
+
+        if (*data->num_glyphs < n_glyphs)
+          {
+            *data->num_glyphs = n_glyphs;
+            *data->glyphs = cairo_glyph_allocate (n_glyphs);
+          }
+        else
+          *data->num_glyphs = n_glyphs;
+
+        for (i = 0; i < n_glyphs; i++)
+          {
+            scm_fill_cairo_glyph (scm_car (glyphs), *data->glyphs + i);
+            glyphs = scm_cdr (glyphs);
+          }
+
+        if (data->clusters)
+          {
+            if (*data->num_clusters < n_clusters)
+              {
+                *data->num_clusters = n_clusters;
+                *data->clusters = cairo_text_cluster_allocate (n_clusters);
+              }
+            else
+              *data->num_clusters = n_clusters;
+
+            scm_fill_cairo_text_clusters (str, clusters, *data->clusters);
+
+            *data->cluster_flags = flags;
+          }
+
+        data->ret = CAIRO_STATUS_SUCCESS;
+        break;
+      }
+    default:
+      data->ret = CAIRO_STATUS_USER_FONT_ERROR;
+      break;
+    }
+
+  return NULL;
+}
+
+static cairo_status_t
+user_scaled_font_init_func (cairo_scaled_font_t *scaled_font, cairo_t *cr,
+                            cairo_font_extents_t *extents)
+{
+  struct user_font_data data;
+    
+  data.ret = CAIRO_STATUS_USER_FONT_ERROR;
+  data.func = USER_FONT_INIT;
+  data.scaled_font = scaled_font;
+  data.cr = cr;
+  data.fexts = extents;
+  
+  scm_with_guile (do_user_font, &data);
+  
+  return data.ret;
+}
+
+static cairo_status_t
+user_scaled_font_render_glyph_func (cairo_scaled_font_t *scaled_font,
+                                    unsigned long glyph, cairo_t *cr,
+                                    cairo_text_extents_t *extents)
+{
+  struct user_font_data data;
+    
+  data.ret = CAIRO_STATUS_USER_FONT_ERROR;
+  data.func = USER_FONT_RENDER_GLYPH;
+  data.scaled_font = scaled_font;
+  data.glyph = glyph;
+  data.cr = cr;
+  data.texts = extents;
+  
+  scm_with_guile (do_user_font, &data);
+  
+  return data.ret;
+}
+
+static cairo_status_t
+user_scaled_font_text_to_glyphs_func (cairo_scaled_font_t *scaled_font,
+                                      const char *utf8, int utf8_len,
+                                      cairo_glyph_t **glyphs, int *num_glyphs,
+                                      cairo_text_cluster_t **clusters,
+                                      int *num_clusters,
+                                      cairo_text_cluster_flags_t *cluster_flags)
+{
+  struct user_font_data data;
+    
+  data.ret = CAIRO_STATUS_USER_FONT_ERROR;
+  data.func = USER_FONT_TEXT_TO_GLYPHS;
+  data.scaled_font = scaled_font;
+  data.utf8 = utf8;
+  data.utf8_len = utf8_len;
+  data.glyphs = glyphs;
+  data.num_glyphs = num_glyphs;
+  data.clusters = clusters;
+  data.num_clusters = num_clusters;
+  data.cluster_flags = cluster_flags;
+  
+  scm_with_guile (do_user_font, &data);
+  
+  return data.ret;
+}
+
+static cairo_status_t
+user_scaled_font_unicode_to_glyph_func (cairo_scaled_font_t *scaled_font,
+                                        unsigned long unicode,
+                                        unsigned long *glyph_index)
+{
+  struct user_font_data data;
+    
+  data.ret = CAIRO_STATUS_USER_FONT_ERROR;
+  data.func = USER_FONT_UNICODE_TO_GLYPH;
+  data.scaled_font = scaled_font;
+  data.unicode = unicode;
+  
+  scm_with_guile (do_user_font, &data);
+  
+  if (data.ret == CAIRO_STATUS_SUCCESS)
+    *glyph_index = data.glyph;
+
+  return data.ret;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_create, "cairo-user-font-face-create", 0, 0, 0,
+                   (void),
+                   "")
+{
+  return scm_take_cairo_font_face (cairo_user_font_face_create ());
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_init_func, "cairo-user-font-face-set-init-func", 2, 0, 0,
+                   (SCM face, SCM init),
+                   "")
+{
+  set_user_font_func (scm_to_cairo_font_face (face),
+                      USER_FONT_INIT, init);
+  cairo_user_font_face_set_init_func (scm_to_cairo_font_face (face),
+                                      user_scaled_font_init_func);
+  FFCHKRET (face, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_render_glyph_func, "cairo-user-font-face-set-render-glyph-func", 2, 0, 0,
+                   (SCM face, SCM render_glyph),
+                   "")
+{
+  set_user_font_func (scm_to_cairo_font_face (face),
+                      USER_FONT_RENDER_GLYPH, render_glyph);
+  cairo_user_font_face_set_render_glyph_func (scm_to_cairo_font_face (face),
+                                              user_scaled_font_render_glyph_func);
+  FFCHKRET (face, SCM_UNSPECIFIED);
+}
+
+
+SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_unicode_to_glyph_func, "cairo-user-font-face-set-unicode-to-glyph-func", 2, 0, 0,
+                   (SCM face, SCM func),
+                   "")
+{
+  set_user_font_func (scm_to_cairo_font_face (face),
+                      USER_FONT_UNICODE_TO_GLYPH, func);
+  cairo_user_font_face_set_unicode_to_glyph_func (scm_to_cairo_font_face (face),
+                                                  user_scaled_font_unicode_to_glyph_func);
+  FFCHKRET (face, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_text_to_glyphs_func, "cairo-user-font-face-set-text-to-glyphs-func", 2, 0, 0,
+                   (SCM face, SCM ttg),
+                   "")
+{
+  set_user_font_func (scm_to_cairo_font_face (face),
+                      USER_FONT_TEXT_TO_GLYPHS, ttg);
+  cairo_user_font_face_set_text_to_glyphs_func (scm_to_cairo_font_face (face),
+                                                user_scaled_font_text_to_glyphs_func);
+  FFCHKRET (face, SCM_UNSPECIFIED);
+}
+
+#endif /* 1.8 (user fonts) */
+
 SCM_DEFINE_PUBLIC (scm_cairo_get_operator, "cairo-get-operator", 1, 0, 0,
                    (SCM ctx),
                    "")
