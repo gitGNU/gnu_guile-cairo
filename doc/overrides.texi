@@ -1,3 +1,5 @@
+@c See COPYING.docs for copyright information.
+
 @deffn Function cairo-create (@var{target} @code{<cairo-surface-t>}) @result{} (@var{ret} @code{<cairo-t>})
 Creates a new @code{<cairo-t>} with all graphics state parameters set to default
 values and with @var{target} as a target surface. The target surface should be
