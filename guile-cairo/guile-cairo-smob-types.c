@@ -42,35 +42,35 @@ scm_t_bits scm_tc16_cairo_path_t;
 SCM
 scm_take_cairo (cairo_t *ctx)
 {
-    SCM sctx;
+  SCM sctx;
 
-    SCM_NEWSMOB (sctx, scm_tc16_cairo_t, ctx);
+  SCM_NEWSMOB (sctx, scm_tc16_cairo_t, ctx);
 
-    return sctx;
+  return sctx;
 }
 
 SCM
 scm_from_cairo (cairo_t *ctx)
 {
-    return scm_take_cairo (cairo_reference (ctx));
+  return scm_take_cairo (cairo_reference (ctx));
 }
 
 cairo_t*
 scm_to_cairo (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_t, scm);
-    return (cairo_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_t, scm);
+  return (cairo_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_free (SCM smob)
 {
-    cairo_t *ctx = (cairo_t*)SCM_SMOB_DATA (smob);
+  cairo_t *ctx = (cairo_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_destroy (ctx);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_destroy (ctx);
 
-    return 0;
+  return 0;
 }
 
 /**********************************************************************
@@ -80,35 +80,35 @@ scm_cairo_free (SCM smob)
 SCM
 scm_take_cairo_surface (cairo_surface_t *surf)
 {
-    SCM ssurf;
+  SCM ssurf;
 
-    SCM_NEWSMOB (ssurf, scm_tc16_cairo_surface_t, surf);
+  SCM_NEWSMOB (ssurf, scm_tc16_cairo_surface_t, surf);
 
-    return ssurf;
+  return ssurf;
 }
 
 SCM
 scm_from_cairo_surface (cairo_surface_t *surf)
 {
-    return scm_take_cairo_surface (cairo_surface_reference (surf));
+  return scm_take_cairo_surface (cairo_surface_reference (surf));
 }
 
 cairo_surface_t*
 scm_to_cairo_surface (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_surface_t, scm);
-    return (cairo_surface_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_surface_t, scm);
+  return (cairo_surface_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_surface_free (SCM smob)
 {
-    cairo_surface_t *surf = (cairo_surface_t*)SCM_SMOB_DATA (smob);
+  cairo_surface_t *surf = (cairo_surface_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_surface_destroy (surf);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_surface_destroy (surf);
 
-    return 0;
+  return 0;
 }
 
 /**********************************************************************
@@ -118,35 +118,35 @@ scm_cairo_surface_free (SCM smob)
 SCM
 scm_take_cairo_pattern (cairo_pattern_t *pat)
 {
-    SCM spat;
+  SCM spat;
 
-    SCM_NEWSMOB (spat, scm_tc16_cairo_pattern_t, pat);
+  SCM_NEWSMOB (spat, scm_tc16_cairo_pattern_t, pat);
 
-    return spat;
+  return spat;
 }
 
 SCM
 scm_from_cairo_pattern (cairo_pattern_t *pat)
 {
-    return scm_take_cairo_pattern (cairo_pattern_reference (pat));
+  return scm_take_cairo_pattern (cairo_pattern_reference (pat));
 }
 
 cairo_pattern_t*
 scm_to_cairo_pattern (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_pattern_t, scm);
-    return (cairo_pattern_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_pattern_t, scm);
+  return (cairo_pattern_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_pattern_free (SCM smob)
 {
-    cairo_pattern_t *pat = (cairo_pattern_t*)SCM_SMOB_DATA (smob);
+  cairo_pattern_t *pat = (cairo_pattern_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_pattern_destroy (pat);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_pattern_destroy (pat);
 
-    return 0;
+  return 0;
 }
 
 /**********************************************************************
@@ -156,35 +156,35 @@ scm_cairo_pattern_free (SCM smob)
 SCM
 scm_take_cairo_font_face (cairo_font_face_t *pat)
 {
-    SCM spat;
+  SCM spat;
 
-    SCM_NEWSMOB (spat, scm_tc16_cairo_font_face_t, pat);
+  SCM_NEWSMOB (spat, scm_tc16_cairo_font_face_t, pat);
 
-    return spat;
+  return spat;
 }
 
 SCM
 scm_from_cairo_font_face (cairo_font_face_t *pat)
 {
-    return scm_take_cairo_font_face (cairo_font_face_reference (pat));
+  return scm_take_cairo_font_face (cairo_font_face_reference (pat));
 }
 
 cairo_font_face_t*
 scm_to_cairo_font_face (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_font_face_t, scm);
-    return (cairo_font_face_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_font_face_t, scm);
+  return (cairo_font_face_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_font_face_free (SCM smob)
 {
-    cairo_font_face_t *pat = (cairo_font_face_t*)SCM_SMOB_DATA (smob);
+  cairo_font_face_t *pat = (cairo_font_face_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_font_face_destroy (pat);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_font_face_destroy (pat);
 
-    return 0;
+  return 0;
 }
 
 /**********************************************************************
@@ -194,36 +194,36 @@ scm_cairo_font_face_free (SCM smob)
 SCM
 scm_take_cairo_scaled_font (cairo_scaled_font_t *pat)
 {
-    SCM spat;
+  SCM spat;
 
-    cairo_scaled_font_reference (pat);
-    SCM_NEWSMOB (spat, scm_tc16_cairo_scaled_font_t, pat);
+  cairo_scaled_font_reference (pat);
+  SCM_NEWSMOB (spat, scm_tc16_cairo_scaled_font_t, pat);
 
-    return spat;
+  return spat;
 }
 
 SCM
 scm_from_cairo_scaled_font (cairo_scaled_font_t *pat)
 {
-    return scm_take_cairo_scaled_font (cairo_scaled_font_reference (pat));
+  return scm_take_cairo_scaled_font (cairo_scaled_font_reference (pat));
 }
 
 cairo_scaled_font_t*
 scm_to_cairo_scaled_font (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_scaled_font_t, scm);
-    return (cairo_scaled_font_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_scaled_font_t, scm);
+  return (cairo_scaled_font_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_scaled_font_free (SCM smob)
 {
-    cairo_scaled_font_t *pat = (cairo_scaled_font_t*)SCM_SMOB_DATA (smob);
+  cairo_scaled_font_t *pat = (cairo_scaled_font_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_scaled_font_destroy (pat);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_scaled_font_destroy (pat);
 
-    return 0;
+  return 0;
 }
 
 /**********************************************************************
@@ -233,39 +233,39 @@ scm_cairo_scaled_font_free (SCM smob)
 SCM
 scm_take_cairo_font_options (cairo_font_options_t *fopt)
 {
-    SCM sfopt;
+  SCM sfopt;
 
-    SCM_NEWSMOB (sfopt, scm_tc16_cairo_font_options_t, fopt);
+  SCM_NEWSMOB (sfopt, scm_tc16_cairo_font_options_t, fopt);
 
-    return sfopt;
+  return sfopt;
 }
 
 cairo_font_options_t*
 scm_to_cairo_font_options (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_font_options_t, scm);
-    return (cairo_font_options_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_font_options_t, scm);
+  return (cairo_font_options_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_font_options_free (SCM smob)
 {
-    cairo_font_options_t *fopt = (cairo_font_options_t*)SCM_SMOB_DATA (smob);
+  cairo_font_options_t *fopt = (cairo_font_options_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_font_options_destroy (fopt);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_font_options_destroy (fopt);
 
-    return 0;
+  return 0;
 }
 
 static SCM
 scm_cairo_font_options_equalp (SCM this, SCM other)
 {
-    if (cairo_font_options_equal (scm_to_cairo_font_options (this),
-                                  scm_to_cairo_font_options (other)))
-        return SCM_BOOL_T;
-    else
-        return SCM_BOOL_F;
+  if (cairo_font_options_equal (scm_to_cairo_font_options (this),
+                                scm_to_cairo_font_options (other)))
+    return SCM_BOOL_T;
+  else
+    return SCM_BOOL_F;
 }
 
 /**********************************************************************
@@ -275,29 +275,29 @@ scm_cairo_font_options_equalp (SCM this, SCM other)
 SCM
 scm_take_cairo_path (cairo_path_t *path)
 {
-    SCM spath;
+  SCM spath;
 
-    SCM_NEWSMOB (spath, scm_tc16_cairo_path_t, path);
+  SCM_NEWSMOB (spath, scm_tc16_cairo_path_t, path);
 
-    return spath;
+  return spath;
 }
 
 cairo_path_t*
 scm_to_cairo_path (SCM scm)
 {
-    scm_assert_smob_type (scm_tc16_cairo_path_t, scm);
-    return (cairo_path_t*)SCM_SMOB_DATA (scm);
+  scm_assert_smob_type (scm_tc16_cairo_path_t, scm);
+  return (cairo_path_t*)SCM_SMOB_DATA (scm);
 }
 
 static size_t
 scm_cairo_path_free (SCM smob)
 {
-    cairo_path_t *path = (cairo_path_t*)SCM_SMOB_DATA (smob);
+  cairo_path_t *path = (cairo_path_t*)SCM_SMOB_DATA (smob);
 
-    SCM_SET_SMOB_DATA (smob, NULL);
-    cairo_path_destroy (path);
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_path_destroy (path);
 
-    return 0;
+  return 0;
 }
 
 void
@@ -306,25 +306,25 @@ scm_init_cairo_smob_types (void)
 #ifndef SCM_MAGIC_SNARFER
 #include "guile-cairo-smob-types.x"
 #endif
-    scm_tc16_cairo_t = scm_make_smob_type ("cairo-context", 0);
-    scm_set_smob_free (scm_tc16_cairo_t, scm_cairo_free);
+  scm_tc16_cairo_t = scm_make_smob_type ("cairo-context", 0);
+  scm_set_smob_free (scm_tc16_cairo_t, scm_cairo_free);
 
-    scm_tc16_cairo_surface_t = scm_make_smob_type ("cairo-surface", 0);
-    scm_set_smob_free (scm_tc16_cairo_surface_t, scm_cairo_surface_free);
+  scm_tc16_cairo_surface_t = scm_make_smob_type ("cairo-surface", 0);
+  scm_set_smob_free (scm_tc16_cairo_surface_t, scm_cairo_surface_free);
 
-    scm_tc16_cairo_pattern_t = scm_make_smob_type ("cairo-pattern", 0);
-    scm_set_smob_free (scm_tc16_cairo_pattern_t, scm_cairo_pattern_free);
+  scm_tc16_cairo_pattern_t = scm_make_smob_type ("cairo-pattern", 0);
+  scm_set_smob_free (scm_tc16_cairo_pattern_t, scm_cairo_pattern_free);
 
-    scm_tc16_cairo_scaled_font_t = scm_make_smob_type ("cairo-scaled-font", 0);
-    scm_set_smob_free (scm_tc16_cairo_scaled_font_t, scm_cairo_scaled_font_free);
+  scm_tc16_cairo_scaled_font_t = scm_make_smob_type ("cairo-scaled-font", 0);
+  scm_set_smob_free (scm_tc16_cairo_scaled_font_t, scm_cairo_scaled_font_free);
 
-    scm_tc16_cairo_font_face_t = scm_make_smob_type ("cairo-font-face", 0);
-    scm_set_smob_free (scm_tc16_cairo_font_face_t, scm_cairo_font_face_free);
+  scm_tc16_cairo_font_face_t = scm_make_smob_type ("cairo-font-face", 0);
+  scm_set_smob_free (scm_tc16_cairo_font_face_t, scm_cairo_font_face_free);
 
-    scm_tc16_cairo_font_options_t = scm_make_smob_type ("cairo-font-options", 0);
-    scm_set_smob_free (scm_tc16_cairo_font_options_t, scm_cairo_font_options_free);
-    scm_set_smob_equalp (scm_tc16_cairo_font_options_t, scm_cairo_font_options_equalp);
+  scm_tc16_cairo_font_options_t = scm_make_smob_type ("cairo-font-options", 0);
+  scm_set_smob_free (scm_tc16_cairo_font_options_t, scm_cairo_font_options_free);
+  scm_set_smob_equalp (scm_tc16_cairo_font_options_t, scm_cairo_font_options_equalp);
 
-    scm_tc16_cairo_path_t = scm_make_smob_type ("cairo-path", 0);
-    scm_set_smob_free (scm_tc16_cairo_path_t, scm_cairo_path_free);
+  scm_tc16_cairo_path_t = scm_make_smob_type ("cairo-path", 0);
+  scm_set_smob_free (scm_tc16_cairo_path_t, scm_cairo_path_free);
 }

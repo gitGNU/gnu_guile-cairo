@@ -26,10 +26,10 @@
 
 
 #define SCM_ENCODE_VERSION(maj,min,mic) (((maj)<<16)|((min)<<8)|((mic)))
-#define SCM_NEEDS_COMPAT(maj,min,mic)                        \
-  (SCM_ENCODE_VERSION (maj,min,mic)) <                       \
-   SCM_ENCODE_VERSION (SCM_MAJOR_VERSION, SCM_MINOR_VERSION, \
-                       SCM_MICRO_VERSION)
+#define SCM_NEEDS_COMPAT(maj,min,mic)                                   \
+  (SCM_ENCODE_VERSION (maj,min,mic) <                                   \
+   SCM_ENCODE_VERSION (SCM_MAJOR_VERSION, SCM_MINOR_VERSION,            \
+                       SCM_MICRO_VERSION))
 
 
 
