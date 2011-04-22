@@ -39,4 +39,18 @@ scm_to_utf8_string (SCM str)
   return scm_to_locale_string (str);
 }
 
+SCM
+scm_from_utf8_symbol (const char *str)
+{
+  /* Assume the user is in a UTF-8 locale. */
+  return scm_from_locale_symbol (str);
+}
+
+char*
+scm_to_utf8_symbol (SCM str)
+{
+  /* Assume the user is in a UTF-8 locale. */
+  return scm_to_locale_symbol (str);
+}
+
 #endif /* NEEDS_COMPAT (2.0) */

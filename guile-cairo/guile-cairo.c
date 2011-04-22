@@ -192,7 +192,7 @@ scm_c_check_cairo_status (cairo_status_t status, const char *subr)
     if (status == CAIRO_STATUS_SUCCESS)
         return;
 
-    scm_error (scm_from_locale_symbol ("cairo-error"),
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
                subr,
                cairo_status_to_string (status),
                SCM_EOL,
@@ -212,7 +212,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_version_string, "cairo-version-string", 0, 0, 0,
 	    (void),
 	    "Retrieves the version of the cairo library as a string.")
 {
-    return scm_from_locale_string (cairo_version_string ());
+    return scm_from_utf8_string (cairo_version_string ());
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
@@ -981,7 +981,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_select_font_face, "cairo-select-font-face", 4, 0, 0
     char *family;
 
     scm_dynwind_begin (0);
-    family = scm_to_locale_string (sfamily);
+    family = scm_to_utf8_string (sfamily);
     scm_dynwind_free (family);
 
     cairo_select_font_face (scm_to_cairo (ctx), family,
@@ -1088,7 +1088,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_show_text, "cairo-show-text", 2, 0, 0,
     char *text;
 
     scm_dynwind_begin (0); 
-    text = scm_to_locale_string (val);
+    text = scm_to_utf8_string (val);
     scm_dynwind_free (text);
 
     cairo_show_text (scm_to_cairo (ctx), text);
@@ -1130,7 +1130,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_text_path, "cairo-text-path", 2, 0, 0,
     char *text;
 
     scm_dynwind_begin (0); 
-    text = scm_to_locale_string (val);
+    text = scm_to_utf8_string (val);
     scm_dynwind_free (text);
 
     cairo_text_path (scm_to_cairo (ctx), text);
@@ -1174,7 +1174,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_text_extents, "cairo-text-extents", 2, 0, 0,
     cairo_text_extents_t extents;
 
     scm_dynwind_begin (0); 
-    text = scm_to_locale_string (val);
+    text = scm_to_utf8_string (val);
     scm_dynwind_free (text);
 
     cairo_text_extents (scm_to_cairo (ctx), text, &extents);
@@ -1296,7 +1296,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_text_extents, "cairo-scaled-font-text-e
     cairo_text_extents_t extents;
 
     scm_dynwind_begin (0); 
-    text = scm_to_locale_string (val);
+    text = scm_to_utf8_string (val);
     scm_dynwind_free (text);
 
     cairo_scaled_font_text_extents (scm_to_cairo_scaled_font (font), text, &extents);
@@ -1653,7 +1653,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_write_to_png, "cairo-surface-write-to-png",
     if (!SCM_UNBNDP (filename)) {
         char *str;
         scm_dynwind_begin (0);
-        str = scm_to_locale_string (filename);
+        str = scm_to_utf8_string (filename);
         scm_dynwind_free (str);
         
         status = cairo_surface_write_to_png (scm_to_cairo_surface (surf), str);
@@ -1838,7 +1838,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_from_png, "cairo-image-surface
     if (!SCM_UNBNDP (sfilename)) {
         char *filename;
         scm_dynwind_begin (0);
-        filename = scm_to_locale_string (sfilename);
+        filename = scm_to_utf8_string (sfilename);
         scm_dynwind_free (filename);
 
         ret = cairo_image_surface_create_from_png (filename);
@@ -2246,7 +2246,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pdf_surface_create, "cairo-pdf-surface-create", 2, 
     if (!SCM_UNBNDP (sfilename)) {
         char *filename;
         scm_dynwind_begin (0);
-        filename = scm_to_locale_string (sfilename);
+        filename = scm_to_utf8_string (sfilename);
         scm_dynwind_free (filename);
         
         ret = cairo_pdf_surface_create (filename,
@@ -2287,7 +2287,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_create, "cairo-ps-surface-create", 2, 1,
     if (!SCM_UNBNDP (sfilename)) {
         char *filename;
         scm_dynwind_begin (0);
-        filename = scm_to_locale_string (sfilename);
+        filename = scm_to_utf8_string (sfilename);
         scm_dynwind_free (filename);
         
         ret = cairo_ps_surface_create (filename,
@@ -2322,7 +2322,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_ps_surface_dsc_comment, "cairo-ps-surface-dsc-comme
     char *comment;
     
     scm_dynwind_begin (0);
-    comment = scm_to_locale_string (scomment);
+    comment = scm_to_utf8_string (scomment);
     scm_dynwind_free (comment);
 
     cairo_ps_surface_dsc_comment (scm_to_cairo_surface (surf), comment);
@@ -2404,7 +2404,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_svg_surface_create, "cairo-svg-surface-create", 2, 
     if (!SCM_UNBNDP (sfilename)) {
         char *filename;
         scm_dynwind_begin (0);
-        filename = scm_to_locale_string (sfilename);
+        filename = scm_to_utf8_string (sfilename);
         scm_dynwind_free (filename);
         
         ret = cairo_svg_surface_create (filename,

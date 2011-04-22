@@ -38,6 +38,9 @@
 SCM scm_from_utf8_string (const char *str);
 char* scm_to_utf8_string (SCM str);
 
+SCM scm_from_utf8_symbol (const char *str);
+char* scm_to_utf8_symbol (SCM str);
+
 #endif /* NEEDS_COMPAT (2.0) */
 
 

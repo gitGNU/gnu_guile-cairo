@@ -45,7 +45,7 @@ static SCM _scm_from_enum (EnumPair table[], int val)
     int i;
     for (i = 0; table[i].name; i++)
         if (table[i].value == val)
-            return scm_from_locale_symbol (table[i].name);
+            return scm_from_utf8_symbol (table[i].name);
 
     return scm_from_int (val);
 }
@@ -54,10 +54,10 @@ static int _scm_to_enum (EnumPair table[], SCM scm)
 {
     int i;
     for (i = 0; table[i].name; i++)
-        if (scm_is_eq (scm, scm_from_locale_symbol (table[i].name)))
+        if (scm_is_eq (scm, scm_from_utf8_symbol (table[i].name)))
             return table[i].value;
 
-    scm_error (scm_from_locale_symbol ("cairo-error"),
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
                NULL,
                "Unknown enumerated value: ~S",
                scm_list_1 (scm),
@@ -72,7 +72,7 @@ static SCM _get_values (EnumPair table[])
     SCM ret = SCM_EOL;
 
     for (i = 0; table[i].name; i++)
-        ret = scm_cons (scm_from_locale_symbol (table[i].name), ret);
+        ret = scm_cons (scm_from_utf8_symbol (table[i].name), ret);
 
     return scm_reverse_x (ret, SCM_EOL);
 }
