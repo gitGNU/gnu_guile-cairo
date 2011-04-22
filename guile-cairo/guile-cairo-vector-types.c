@@ -207,6 +207,59 @@ scm_fill_cairo_font_extents (SCM scm, cairo_font_extents_t *fext)
 }
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+SCM
+scm_from_cairo_text_clusters (SCM str, cairo_text_cluster_t *clusters,
+                              int n_clusters, cairo_text_cluster_flags_t flags)
+{
+  SCM ret = SCM_EOL;
+  int backwards = flags & CAIRO_TEXT_CLUSTER_FLAG_BACKWARD;
+  int n = 0;
+
+  if (backwards)
+    clusters += n_clusters - 1;
+  
+  while (n_clusters--)
+    {
+      int num_codepoints, num_bytes, num_glyphs;
+
+      num_codepoints = 0;
+      num_bytes = clusters->num_bytes;
+      num_glyphs = clusters->num_glyphs;
+
+      while (num_bytes)
+        {
+          scm_t_wchar c = SCM_CHAR (scm_c_string_ref (str, n++));
+          
+          if (c < 0x80)
+            num_bytes -= 1;
+          else if (c < 0x800)
+            num_bytes -= 2;
+          else if (c < 0x10000)
+            num_bytes -= 3;
+          else if (c < 0x110000)
+            num_bytes -= 4;
+          else
+            abort ();
+
+          if (num_bytes < 0)
+            abort ();
+
+          num_codepoints++;
+        }
+
+      ret = scm_cons (scm_cons (scm_from_int (num_codepoints),
+                                scm_from_int (num_glyphs)),
+                      ret);
+
+      if (backwards)
+        clusters--;
+      else
+        clusters++;
+    }
+
+  return ret;
+}
+
 void
 scm_fill_cairo_text_clusters (SCM str, SCM scm,
                               cairo_text_cluster_t *clusters)

@@ -43,6 +43,11 @@ SCM scm_from_cairo_font_extents (cairo_font_extents_t *fext);
 void scm_fill_cairo_font_extents (SCM scm, cairo_font_extents_t *fext);
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+/* Always returns forward cluster ordering. */
+SCM scm_from_cairo_text_clusters (SCM str, cairo_text_cluster_t *clusters,
+                                  int n_clusters,
+                                  cairo_text_cluster_flags_t flags);
+/* Always fills forward cluster ordering. */
 void scm_fill_cairo_text_clusters (SCM str, SCM scm,
                                    cairo_text_cluster_t *clusters);
 #endif

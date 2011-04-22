@@ -66,6 +66,13 @@
     return _ret;                                                        \
   } while (0)
     
+/* cairo_font_face_t constructor return */
+#define FFCONSRET(ff)                                                   \
+  do {cairo_font_face_t *_ret = ff;                                     \
+    scm_c_check_cairo_status (cairo_font_face_status (_ret), NULL);     \
+    return scm_take_cairo_font_face (_ret);                             \
+  } while (0)
+
 /* cairo_font_face_t checking return */
 #define FFCHKRET(sff,ret)                                               \
   do {SCM _ret = ret;                                                   \
@@ -986,7 +993,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_select_font_face, "cairo-select-font-face", 4, 0, 0
 
   cairo_select_font_face (scm_to_cairo (ctx), family,
                           scm_to_cairo_font_slant (slant),
-                          scm_to_cairo_font_weight (slant));
+                          scm_to_cairo_font_weight (weight));
 
   scm_dynwind_end ();
 
@@ -1098,6 +1105,104 @@ SCM_DEFINE_PUBLIC (scm_cairo_show_text, "cairo-show-text", 2, 0, 0,
   CCHKRET (ctx, SCM_UNSPECIFIED);
 }
 
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+
+SCM_DEFINE_PUBLIC (scm_cairo_show_text_glyphs, "cairo-show-text-glyphs", 4, 0, 0,
+                   (SCM ctx, SCM str, SCM glyphs, SCM clusters),
+                   "")
+{
+  char *utf8;
+  size_t utf8_len;
+  int n_glyphs, n_clusters, i;
+  cairo_glyph_t *glyphv;
+  cairo_text_cluster_t *clusterv;
+
+  scm_dynwind_begin (0); 
+
+  utf8 = scm_to_utf8_stringn (str, &utf8_len);
+  scm_dynwind_free (utf8);
+
+  n_glyphs = scm_ilength (glyphs);
+  if (n_glyphs < 0)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Glyphs should be a list of glyphs: ~S",
+               scm_list_1 (glyphs),
+               SCM_EOL);
+  glyphv = scm_malloc (sizeof (*glyphv) * n_glyphs);
+  scm_dynwind_free (glyphv);
+
+  n_clusters = scm_ilength (clusters);
+  if (n_clusters < 0)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Clusters should be a list of pairs: ~S",
+               scm_list_1 (clusters),
+               SCM_EOL);
+  clusterv = scm_malloc (sizeof (*clusterv) * n_clusters);
+  scm_dynwind_free (clusterv);
+  
+  for (i = 0; scm_is_pair (glyphs); i++, glyphs = scm_cdr (glyphs))
+    scm_fill_cairo_glyph (scm_car (glyphs), &glyphv[i]);
+
+  scm_fill_cairo_text_clusters (str, clusters, clusterv);
+
+  cairo_show_text_glyphs (scm_to_cairo (ctx), utf8, utf8_len,
+                          glyphv, n_glyphs, clusterv, n_clusters, 0);
+
+  scm_dynwind_end ();
+
+  CCHKRET (ctx, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_text_to_glyphs, "cairo-scaled-font-text-to-glyphs", 5, 0, 0,
+                   (SCM sf, SCM x, SCM y, SCM str, SCM clusters_p),
+                   "")
+{
+  char *utf8;
+  size_t utf8_len;
+  int n_glyphs = 0, n_clusters = 0;
+  cairo_glyph_t *glyphv = NULL;
+  cairo_text_cluster_t *clusterv = NULL;
+  cairo_text_cluster_flags_t cluster_flags = 0;
+  cairo_status_t status;
+  SCM glyphs, clusters;
+
+  scm_dynwind_begin (0); 
+
+  utf8 = scm_to_utf8_stringn (str, &utf8_len);
+  scm_dynwind_free (utf8);
+
+  status = cairo_scaled_font_text_to_glyphs
+    (scm_to_cairo_scaled_font (sf),
+     scm_to_double (x), scm_to_double (y),
+     utf8, utf8_len,
+     &glyphv, &n_glyphs,
+     scm_is_true (clusters_p) ? &clusterv : NULL,
+     scm_is_true (clusters_p) ? &n_clusters : NULL,
+     scm_is_true (clusters_p) ? &cluster_flags : NULL);
+
+  scm_dynwind_end ();
+
+  scm_c_check_cairo_status (status, s_scm_cairo_scaled_font_text_to_glyphs);
+
+  glyphs = SCM_EOL;
+  while (n_glyphs--)
+    glyphs = scm_cons (scm_from_cairo_glyph (&glyphv[n_glyphs]), glyphs);
+  cairo_glyph_free (glyphv);
+  
+  if (scm_is_false (clusters_p))
+    return glyphs;
+  
+  clusters = scm_from_cairo_text_clusters (str, clusterv, n_clusters,
+                                           cluster_flags);
+  cairo_text_cluster_free (clusterv);
+  
+  return scm_values (scm_list_2 (glyphs, clusters));
+}
+
+#endif /* 1.8 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_show_glyphs, "cairo-show-glyphs", 2, 0, 0,
                    (SCM ctx, SCM sglyphs),
@@ -1377,6 +1482,21 @@ SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_font_options, "cairo-scaled-font-ge
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
 
+SCM_DEFINE_PUBLIC (scm_cairo_scaled_font_get_scale_matrix, "cairo-scaled-font-get-scale_matrix", 1, 0, 0,
+                   (SCM font),
+                   "")
+{
+  cairo_matrix_t matrix;
+
+  cairo_scaled_font_get_scale_matrix (scm_to_cairo_scaled_font (font), &matrix);
+
+  SFCHKRET (font, scm_from_cairo_matrix (&matrix));
+}
+
+#endif /* 1.8 */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+
 /* User fonts.  */
 
 enum user_font_func_idx
@@ -1650,7 +1770,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_create, "cairo-user-font-face-create
                    (void),
                    "")
 {
-  return scm_take_cairo_font_face (cairo_user_font_face_create ());
+  FFCONSRET (cairo_user_font_face_create ());
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_init_func, "cairo-user-font-face-set-init-func", 2, 0, 0,
@@ -1696,6 +1816,49 @@ SCM_DEFINE_PUBLIC (scm_cairo_user_font_face_set_text_to_glyphs_func, "cairo-user
   cairo_user_font_face_set_text_to_glyphs_func (scm_to_cairo_font_face (face),
                                                 user_scaled_font_text_to_glyphs_func);
   FFCHKRET (face, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_toy_font_face_create, "cairo-toy-font-face-create", 3, 0, 0,
+                   (SCM sfamily, SCM slant, SCM weight),
+                   "")
+{
+  cairo_font_face_t *ret;
+  char *family;
+
+  scm_dynwind_begin (0);
+  family = scm_to_utf8_string (sfamily);
+  scm_dynwind_free (family);
+
+  ret = cairo_toy_font_face_create (family, scm_to_cairo_font_slant (slant),
+                                    scm_to_cairo_font_weight (weight));
+
+  scm_dynwind_end ();
+
+  FFCONSRET (ret);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_toy_font_face_get_family, "cairo-toy-font-face-get-family", 1, 0, 0,
+                   (SCM ff),
+                   "")
+{
+  FFCHKRET (ff, scm_from_utf8_string
+            (cairo_toy_font_face_get_family (scm_to_cairo_font_face (ff))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_toy_font_face_get_slant, "cairo-toy-font-face-get-slant", 1, 0, 0,
+                   (SCM ff),
+                   "")
+{
+  FFCHKRET (ff, scm_from_cairo_font_slant
+            (cairo_toy_font_face_get_slant (scm_to_cairo_font_face (ff))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_toy_font_face_get_weight, "cairo-toy-font-face-get-weight", 1, 0, 0,
+                   (SCM ff),
+                   "")
+{
+  FFCHKRET (ff, scm_from_cairo_font_weight
+            (cairo_toy_font_face_get_weight (scm_to_cairo_font_face (ff))));
 }
 
 #endif /* 1.8 (user fonts) */
@@ -1960,6 +2123,17 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_type, "cairo-surface-get-type", 1, 0, 0
            scm_from_cairo_surface_type (cairo_surface_get_type (scm_to_cairo_surface (surf))));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+SCM_DEFINE_PUBLIC (scm_cairo_surface_has_show_text_glyphs, "cairo-surface-has-show-text-glyphs", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  SCHKRET (surf,
+           scm_from_bool
+           (cairo_surface_has_show_text_glyphs (scm_to_cairo_surface (surf))));
+}
+#endif  /* 1.8 */
+
 SCM_DEFINE_PUBLIC (scm_cairo_surface_get_content, "cairo-surface-get-content", 1, 0, 0,
                    (SCM surf),
                    "")
@@ -2068,6 +2242,20 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_set_fallback_resolution, "cairo-surface-set
     
   SCHKRET (surf, SCM_UNSPECIFIED);
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_fallback_resolution, "cairo-surface-get-fallback-resolution", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  double x, y;
+  
+  cairo_surface_get_fallback_resolution (scm_to_cairo_surface (surf),
+                                         &x, &y);
+    
+  SCHKRET (surf, scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y))));
+}
+#endif
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
 SCM_DEFINE_PUBLIC (scm_cairo_surface_copy_page, "cairo-surface-copy-page", 1, 0, 0,
