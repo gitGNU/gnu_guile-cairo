@@ -1,0 +1,16 @@
+
+@c %start of fragment
+
+@node Regions
+@chapter Regions
+Representing a pixel-aligned area
+
+@section Overview
+Regions are a simple graphical data type representing an area of
+integer-aligned rectangles. They are often used on raster surfaces to
+track areas of interest, such as change or clip areas.
+
+@section Usage
+@include defuns-cairo-region.xml.texi
+
+@c %end of fragment

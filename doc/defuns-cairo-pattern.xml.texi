@@ -11,6 +11,12 @@ corresponding point on the end circle.
 The color is specified in the same way as in
 @code{cairo-set-source-rgb}.
 
+If two (or more) stops are specified with identical offset values, they
+will be sorted according to the order in which the stops are added,
+(stops added earlier will compare less than stops added later). This can
+be useful for reliably making sharp color transitions instead of the
+typical blend.
+
 Note: If the pattern is not a gradient pattern, (eg. a linear or radial
 pattern), then the pattern will be put into an error status with a
 status of @samp{CAIRO_STATUS_PATTERN_TYPE_MISMATCH}.
@@ -44,6 +50,12 @@ to the corresponding point on the end circle.
 
 The color is specified in the same way as in
 @code{cairo-set-source-rgba}.
+
+If two (or more) stops are specified with identical offset values, they
+will be sorted according to the order in which the stops are added,
+(stops added earlier will compare less than stops added later). This can
+be useful for reliably making sharp color transitions instead of the
+typical blend.
 
 Note: If the pattern is not a gradient pattern, (eg. a linear or radial
 pattern), then the pattern will be put into an error status with a
@@ -110,10 +122,10 @@ Since 1.4
 
 @end deffn
 
-@deffn Function cairo-pattern-create-rgb  (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
-Creates a new cairo_pattern_t corresponding to an opaque color. The
-color components are floating point numbers in the range 0 to 1. If the
-values passed in are outside that range, they will be clamped.
+@deffn Function cairo-pattern-create-rgb  (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t >})
+Creates a new @code{<cairo-pattern-t>} corresponding to an opaque color.
+The color components are floating point numbers in the range 0 to 1. If
+the values passed in are outside that range, they will be clamped.
 
 @table @var
 @item red
@@ -137,10 +149,10 @@ pattern use @code{cairo-pattern-status}.
 
 @end deffn
 
-@deffn Function cairo-pattern-create-rgba  (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>}) (@var{alpha}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
-Creates a new cairo_pattern_t corresponding to a translucent color. The
-color components are floating point numbers in the range 0 to 1. If the
-values passed in are outside that range, they will be clamped.
+@deffn Function cairo-pattern-create-rgba  (@var{red}@tie{}@code{<double>}) (@var{green}@tie{}@code{<double>}) (@var{blue}@tie{}@code{<double>}) (@var{alpha}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t >})
+Creates a new @code{<cairo-pattern-t>} corresponding to a translucent
+color. The color components are floating point numbers in the range 0 to
+1. If the values passed in are outside that range, they will be clamped.
 
 @table @var
 @item red
@@ -197,8 +209,8 @@ Since 1.4
 
 @end deffn
 
-@deffn Function cairo-pattern-create-for-surface  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
-Create a new cairo_pattern_t for the given surface.
+@deffn Function cairo-pattern-create-for-surface  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t >})
+Create a new @code{<cairo-pattern-t>} for the given surface.
 
 @table @var
 @item surface
@@ -239,10 +251,10 @@ Since 1.4
 
 @end deffn
 
-@deffn Function cairo-pattern-create-linear  (@var{x0}@tie{}@code{<double>}) (@var{y0}@tie{}@code{<double>}) (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
-Create a new linear gradient cairo_pattern_t along the line defined by
-(x0, y0) and (x1, y1). Before using the gradient pattern, a number of
-color stops should be defined using
+@deffn Function cairo-pattern-create-linear  (@var{x0}@tie{}@code{<double>}) (@var{y0}@tie{}@code{<double>}) (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t >})
+Create a new linear gradient @code{<cairo-pattern-t>} along the line
+defined by (x0, y0) and (x1, y1). Before using the gradient pattern, a
+number of color stops should be defined using
 @code{cairo-pattern-add-color-stop-rgb} or
 @code{cairo-pattern-add-color-stop-rgba}.
 
@@ -309,11 +321,11 @@ Since 1.4
 
 @end deffn
 
-@deffn Function cairo-pattern-create-radial  (@var{cx0}@tie{}@code{<double>}) (@var{cy0}@tie{}@code{<double>}) (@var{radius0}@tie{}@code{<double>}) (@var{cx1}@tie{}@code{<double>}) (@var{cy1}@tie{}@code{<double>}) (@var{radius1}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t>})
-Creates a new radial gradient cairo_pattern_t between the two circles
-defined by (x0, y0, c0) and (x1, y1, c0). Before using the gradient
-pattern, a number of color stops should be defined using
-@code{cairo-pattern-add-color-stop-rgb} or
+@deffn Function cairo-pattern-create-radial  (@var{cx0}@tie{}@code{<double>}) (@var{cy0}@tie{}@code{<double>}) (@var{radius0}@tie{}@code{<double>}) (@var{cx1}@tie{}@code{<double>}) (@var{cy1}@tie{}@code{<double>}) (@var{radius1}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-pattern-t >})
+Creates a new radial gradient @code{<cairo-pattern-t>} between the two
+circles defined by (cx0, cy0, radius0) and (cx1, cy1, radius1). Before
+using the gradient pattern, a number of color stops should be defined
+using @code{cairo-pattern-add-color-stop-rgb} or
 @code{cairo-pattern-add-color-stop-rgba}.
 
 Note: The coordinates here are in pattern space. For a new pattern,
@@ -397,6 +409,9 @@ Sets the mode to be used for drawing outside the area of a pattern. See
 @code{<cairo-extend-t>} for details on the semantics of each extend
 strategy.
 
+The default extend mode is @samp{CAIRO_EXTEND_NONE} for surface patterns
+and @samp{CAIRO_EXTEND_PAD} for gradient patterns.
+
 @table @var
 @item pattern
 a @code{<cairo-pattern-t>}
@@ -427,6 +442,18 @@ the current extend strategy used for drawing the pattern.
 @deffn Function cairo-pattern-set-filter  (@var{pattern}@tie{}@code{<cairo-pattern-t>}) (@var{filter}@tie{}@code{<cairo-filter-t>})
 Sets the filter to be used for resizing when using this pattern. See
 @code{<cairo-filter-t>} for details on each filter.
+
+* Note that you might want to control filtering even when you do not
+have an explicit @code{<cairo-pattern-t>} object, (for example when
+using @code{cairo-set-source-surface}). In these cases, it is convenient
+to use @code{cairo-get-source} to get access to the pattern that cairo
+creates implicitly. For example:
+
+@example 
+
+cairo_set_source_surface (cr, image, x, y);
+cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_NEAREST);
+@end example
 
 @table @var
 @item pattern

@@ -9,7 +9,7 @@ transformation to the coordinates.
 
 @table @var
 @item matrix
-a cairo_matrix_t
+a @code{<cairo-matrix-t>}
 
 @item tx
 amount to translate in the X direction
@@ -22,19 +22,18 @@ amount to translate in the Y direction
 @end deffn
 
 @deffn Function cairo-matrix-invert  (@var{matrix}@tie{}@code{<cairo-matrix-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
-Changes @var{matrix} to be the inverse of it's original value. Not all
+Changes @var{matrix} to be the inverse of its original value. Not all
 transformation matrices have inverses; if the matrix collapses points
 together (it is @dfn{degenerate}), then it has no inverse and this
 function will fail.
-
-Returns: If @var{matrix} has an inverse, modifies @var{matrix} to be the
-inverse matrix and returns @samp{CAIRO_STATUS_SUCCESS}. Otherwise,
 
 @table @var
 @item matrix
 a @code{<cairo-matrix-t>}
 
 @item ret
+If @var{matrix} has an inverse, modifies @var{matrix} to be the inverse
+matrix and returns @samp{CAIRO_STATUS_SUCCESS}. Otherwise, returns
 @samp{CAIRO_STATUS_INVALID_MATRIX}.
 
 @end table

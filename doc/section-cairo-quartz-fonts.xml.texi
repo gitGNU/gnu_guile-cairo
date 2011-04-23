@@ -1,0 +1,16 @@
+
+@c %start of fragment
+
+@node Quartz Fonts
+@chapter Quartz Fonts
+Font support via CGFont on OS X
+
+@section Overview
+The Quartz font backend is primarily used to render text on Apple MacOS
+X systems. The CGFont API is used for the internal implementation of the
+font backend methods.
+
+@section Usage
+@include defuns-cairo-quartz-fonts.xml.texi
+
+@c %end of fragment

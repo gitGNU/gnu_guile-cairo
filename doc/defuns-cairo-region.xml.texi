@@ -1,0 +1,221 @@
+
+@c %start of fragment
+
+@deffn Function cairo-region-create  @result{}@tie{} (@var{ret}@tie{}@code{<cairo-region-t >})
+Allocates a new empty region object.
+
+@table @var
+@item ret
+A newly allocated @code{<cairo-region-t>}. Free with
+@code{cairo-region-destroy}. This function always returns a valid
+pointer; if memory cannot be allocated, then a special error object is
+returned where all operations on the object do nothing. You can check
+for this with @code{cairo-region-status}.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-copy  (@var{original}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-region-t >})
+Allocates a new region object copying the area from @var{original}.
+
+@table @var
+@item original
+a @code{<cairo-region-t>}
+
+@item ret
+A newly allocated @code{<cairo-region-t>}. Free with
+@code{cairo-region-destroy}. This function always returns a valid
+pointer; if memory cannot be allocated, then a special error object is
+returned where all operations on the object do nothing. You can check
+for this with @code{cairo-region-status}.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-get-extents  (@var{region}@tie{}@code{<cairo-region-t>}) (@var{extents}@tie{}@code{<cairo-rectangle-int-t>})
+Gets the bounding rectangle of @var{region} as a
+@code{<cairo-rectangle-int-t>}
+
+@table @var
+@item region
+a @code{<cairo-region-t>}
+
+@item extents
+rectangle into which to store the extents
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-is-empty  (@var{region}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
+Checks whether @var{region} is empty.
+
+@table @var
+@item region
+a @code{<cairo-region-t>}
+
+@item ret
+@samp{@code{#t}} if @var{region} is empty, @samp{@code{#f}} if it isn't.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-contains-point  (@var{region}@tie{}@code{<cairo-region-t>}) (@var{x}@tie{}@code{<int>}) (@var{y}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
+Checks whether (@var{x}, @var{y}) is contained in @var{region}.
+
+@table @var
+@item region
+a @code{<cairo-region-t>}
+
+@item x
+the x coordinate of a point
+
+@item y
+the y coordinate of a point
+
+@item ret
+@samp{@code{#t}} if (@var{x}, @var{y}) is contained in @var{region},
+@samp{@code{#f}} if it is not.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-contains-rectangle  (@var{region}@tie{}@code{<cairo-region-t>}) (@var{rectangle}@tie{}@code{<cairo-rectangle-int-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-region-overlap-t>})
+Checks whether @var{rectangle} is inside, outside or partially contained
+in @var{region}
+
+@table @var
+@item region
+a @code{<cairo-region-t>}
+
+@item rectangle
+a @code{<cairo-rectangle-int-t>}
+
+@item ret
+@samp{CAIRO_REGION_OVERLAP_IN} if @var{rectangle} is entirely inside
+@var{region}, @samp{CAIRO_REGION_OVERLAP_OUT} if @var{rectangle} is
+entirely outside @var{region}, or @samp{CAIRO_REGION_OVERLAP_PART} if
+@var{rectangle} is partially inside and partially outside @var{region}.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-translate  (@var{region}@tie{}@code{<cairo-region-t>}) (@var{dx}@tie{}@code{<int>}) (@var{dy}@tie{}@code{<int>})
+Translates @var{region} by (@var{dx}, @var{dy}).
+
+@table @var
+@item region
+a @code{<cairo-region-t>}
+
+@item dx
+Amount to translate in the x direction
+
+@item dy
+Amount to translate in the y direction
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-intersect  (@var{dst}@tie{}@code{<cairo-region-t>}) (@var{other}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
+Computes the intersection of @var{dst} with @var{other} and places the
+result in @var{dst}
+
+@table @var
+@item dst
+a @code{<cairo-region-t>}
+
+@item other
+another @code{<cairo-region-t>}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} or @samp{CAIRO_STATUS_NO_MEMORY}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-subtract  (@var{dst}@tie{}@code{<cairo-region-t>}) (@var{other}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
+Subtracts @var{other} from @var{dst} and places the result in @var{dst}
+
+@table @var
+@item dst
+a @code{<cairo-region-t>}
+
+@item other
+another @code{<cairo-region-t>}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} or @samp{CAIRO_STATUS_NO_MEMORY}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-union  (@var{dst}@tie{}@code{<cairo-region-t>}) (@var{other}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
+Computes the union of @var{dst} with @var{other} and places the result
+in @var{dst}
+
+@table @var
+@item dst
+a @code{<cairo-region-t>}
+
+@item other
+another @code{<cairo-region-t>}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} or @samp{CAIRO_STATUS_NO_MEMORY}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-region-xor  (@var{dst}@tie{}@code{<cairo-region-t>}) (@var{other}@tie{}@code{<cairo-region-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
+Computes the exclusive difference of @var{dst} with @var{other} and
+places the result in @var{dst}. That is, @var{dst} will be set to
+contain all areas that are either in @var{dst} or in @var{other}, but
+not in both.
+
+@table @var
+@item dst
+a @code{<cairo-region-t>}
+
+@item other
+another @code{<cairo-region-t>}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} or @samp{CAIRO_STATUS_NO_MEMORY}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+
+@c %end of fragment

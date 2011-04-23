@@ -6,6 +6,9 @@
 Creating paths and manipulating path data
 
 @section Overview
+Paths are the most basic drawing tools and are primarily used to
+implicitly generate simple masks.
+
 @section Usage
 @include defuns-cairo-paths.xml.texi
 

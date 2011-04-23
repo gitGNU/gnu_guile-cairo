@@ -6,6 +6,9 @@
 Rendering PostScript documents
 
 @section Overview
+The PostScript surface is used to render cairo graphics to Adobe
+PostScript files and is a multi-page vector surface backend.
+
 @section Usage
 @include defuns-cairo-ps.xml.texi
 

@@ -6,6 +6,9 @@
 Font support for Microsoft Windows
 
 @section Overview
+The Microsoft Windows font backend is primarily used to render text on
+Microsoft Windows systems.
+
 @section Usage
 @include defuns-cairo-win32-fonts.xml.texi
 

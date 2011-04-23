@@ -6,6 +6,9 @@
 Font support for FreeType
 
 @section Overview
+The FreeType font backend is primarily used to render text on GNU/Linux
+systems, but can be used on other platforms too.
+
 @section Usage
 @include defuns-cairo-ft.xml.texi
 

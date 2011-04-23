@@ -1,0 +1,50 @@
+
+@c %start of fragment
+
+@deffn Function cairo-user-font-face-create  @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t >})
+Creates a new user font-face.
+
+Use the setter functions to associate callbacks with the returned user
+font. The only mandatory callback is render_glyph.
+
+After the font-face is created, the user can attach arbitrary data (the
+actual font data) to it using @code{cairo-font-face-set-user-data} and
+access it from the user-font callbacks by using
+@code{cairo-scaled-font-get-font-face} followed by
+@code{cairo-font-face-get-user-data}.
+
+@table @var
+@item ret
+a newly created @code{<cairo-font-face-t>}. Free with
+@code{cairo-font-face-destroy} when you are done using it.
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+@deffn Function cairo-user-font-face-set-init-func  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) (@var{init-func}@tie{}@code{<cairo-user-scaled-font-init-func-t>})
+Sets the scaled-font initialization function of a user-font. See
+@code{<cairo-user-scaled-font-init-func-t>} for details of how the
+callback works.
+
+The font-face should not be immutable or a
+@samp{CAIRO_STATUS_USER_FONT_IMMUTABLE} error will occur. A user
+font-face is immutable as soon as a scaled-font is created from it.
+
+@table @var
+@item font-face
+A user font face
+
+@item init-func
+The init callback, or @samp{@code{#f}}
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+
+@c %end of fragment

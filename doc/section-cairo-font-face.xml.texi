@@ -1,0 +1,22 @@
+
+@c %start of fragment
+
+@node Font Faces
+@chapter Font Faces
+Base class for font faces
+
+@section Overview
+@code{<cairo-font-face>} represents a particular font at a particular
+weight, slant, and other characteristic but no size, transformation, or
+size.
+
+Font faces are created using @dfn{font-backend}-specific constructors,
+typically of the form cairo_@emph{backend}@code{-font-face-create}, or
+implicitly using the @dfn{toy} text API by way of
+@code{cairo-select-font-face}. The resulting face can be accessed using
+@code{cairo-get-font-face}.
+
+@section Usage
+@include defuns-cairo-font-face.xml.texi
+
+@c %end of fragment

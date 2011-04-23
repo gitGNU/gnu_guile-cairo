@@ -1,0 +1,62 @@
+
+@c %start of fragment
+
+@deffn Function cairo-recording-surface-create  (@var{content}@tie{}@code{<cairo-content-t>}) (@var{extents}@tie{}@code{<cairo-rectangle-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t >})
+Creates a recording-surface which can be used to record all drawing
+operations at the highest level (that is, the level of paint, mask,
+stroke, fill and show_text_glyphs). The recording surface can then be
+"replayed" against any target surface by using it as a source to drawing
+operations.
+
+The recording phase of the recording surface is careful to snapshot all
+necessary objects (paths, patterns, etc.), in order to achieve accurate
+replay.
+
+@table @var
+@item content
+the content of the recording surface
+
+@item extents
+the extents to record in pixels, can be @samp{@code{#f}} to record
+unbounded operations.
+
+@item ret
+a pointer to the newly created surface. The caller owns the surface and
+should call @code{cairo-surface-destroy} when done with it.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-recording-surface-ink-extents  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{x0}@tie{}@code{<double>}) (@var{y0}@tie{}@code{<double>}) (@var{width}@tie{}@code{<double>}) (@var{height}@tie{}@code{<double>})
+Measures the extents of the operations stored within the
+recording-surface. This is useful to compute the required size of an
+image surface (or equivalent) into which to replay the full sequence of
+drawing operations.
+
+@table @var
+@item surface
+a @code{<cairo-recording-surface-t>}
+
+@item x0
+the x-coordinate of the top-left of the ink bounding box
+
+@item y0
+the y-coordinate of the top-left of the ink bounding box
+
+@item width
+the width of the ink bounding box
+
+@item height
+the height of the ink bounding box
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+
+@c %end of fragment

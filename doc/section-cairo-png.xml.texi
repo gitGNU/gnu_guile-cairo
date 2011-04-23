@@ -6,6 +6,9 @@
 Reading and writing PNG images
 
 @section Overview
+The PNG functions allow reading PNG images into image surfaces, and
+writing any surface to a PNG file.
+
 @section Usage
 @include defuns-cairo-png.xml.texi
 

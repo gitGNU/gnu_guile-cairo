@@ -51,19 +51,26 @@ version 2.1 or the Mozilla Public License (MPL) version 1.1.
 * Patterns::                    Gradients and filteres sources
 * Transformations::             Manipulating the current
                                 transformation network
+* Regions::                     Representing a pixel-aligned area
 * Text::                        Rendering text and sets of glyphs
 
-* cairo_font_face_t::           Base class for fonts
+* Font Faces::                  Base class for fonts
 * Scaled Fonts::                Caching metrics for a particular font size
 * Font Options::                How a font should be rendered
 * FreeType Fonts::              Font support for FreeType
 * Win32 Fonts::                 Font support for Microsoft Windows
+* Quartz Fonts::                Font support via CGFont on OS X
+* User Fonts::                  Font support with font data provided
+                                by the user
 
+* cairo_device_t::              Interface to underlying rendering
+                                system
 * cairo_surface_t::             Base class for surfaces
 * Image Surfaces::              Rendering to memory buffers
 * PDF Surfaces::                Rendering PDF documents
 * PNG Support::                 Reading and writing PNG images
 * PostScript Surfaces::         Rendering PostScript documents
+* Recording Surfaces::          Records all drawing operations
 * SVG Surfaces::                Rendering SVG documents
 
 * cairo_matrix_t::              Generic matrix operations
@@ -86,23 +93,29 @@ version 2.1 or the Mozilla Public License (MPL) version 1.1.
 @include section-cairo-paths.xml.texi
 @include section-cairo-pattern.xml.texi
 @include section-cairo-transforms.xml.texi
+@include section-cairo-region.xml.texi
 @include section-cairo-text.xml.texi
 
 @c Fonts
-@include section-cairo-font.xml.texi
+@include section-cairo-font-face.xml.texi
 @include section-cairo-scaled-font.xml.texi
 @include section-cairo-font-options.xml.texi
 @include section-cairo-ft.xml.texi
 @include section-cairo-win32-fonts.xml.texi
+@include section-cairo-quartz-fonts.xml.texi
+@include section-cairo-user-fonts.xml.texi
 
 @c Surfaces
+@include section-cairo-device.xml.texi
 @include section-cairo-surface.xml.texi
 @include section-cairo-image.xml.texi
 @include section-cairo-pdf.xml.texi
 @include section-cairo-png.xml.texi
 @include section-cairo-ps.xml.texi
+@include section-cairo-recording.xml.texi
 @c @include section-cairo-win32.xml.texi
 @include section-cairo-svg.xml.texi
+@c @include section-cairo-quartz.xml.texi
 @c @include section-cairo-xlib.xml.texi
 
 @c Utilities

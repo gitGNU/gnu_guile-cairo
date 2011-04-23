@@ -1,11 +1,17 @@
 
 @c %start of fragment
 
-@node XLib/Xrender Backend
-@chapter XLib/Xrender Backend
-
+@node XLib/XRender Backend
+@chapter XLib/XRender Backend
+X Window System rendering using XLib and the X Render extension
 
 @section Overview
+The XLib surface is used to render cairo graphics to X Window System
+windows and pixmaps using the XLib and Xrender libraries.
+
+Note that the XLib surface automatically takes advantage of X Render
+extension if it is available.
+
 @section Usage
 @include defuns-cairo-xlib-xrender.xml.texi
 

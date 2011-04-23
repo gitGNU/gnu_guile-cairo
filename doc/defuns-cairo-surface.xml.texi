@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-surface-create-similar  (@var{other}@tie{}@code{<cairo-surface-t>}) (@var{content}@tie{}@code{<cairo-content-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
+@deffn Function cairo-surface-create-similar  (@var{other}@tie{}@code{<cairo-surface-t>}) (@var{content}@tie{}@code{<cairo-content-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t >})
 Create a new surface that is as compatible as possible with an existing
 surface. For example the new surface will have the same fallback
 resolution and font options as @var{other}. Generally, the new surface
@@ -27,12 +27,57 @@ height of the new surface (in device-space units)
 
 @item ret
 a pointer to the newly allocated surface. The caller owns the surface
-and should call cairo_surface_destroy when done with it. This function
-always returns a valid pointer, but it will return a pointer to a "nil"
-surface if @var{other} is already in an error state or any other error
-occurs.
+and should call @code{cairo-surface-destroy} when done with it. This
+function always returns a valid pointer, but it will return a pointer to
+a "nil" surface if @var{other} is already in an error state or any other
+error occurs.
 
 @end table
+
+@end deffn
+
+@deffn Function cairo-surface-create-for-rectangle  (@var{target}@tie{}@code{<cairo-surface-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>}) (@var{width}@tie{}@code{<double>}) (@var{height}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t >})
+Create a new surface that is a rectangle within the target surface. All
+operations drawn to this surface are then clipped and translated onto
+the target surface. Nothing drawn via this sub-surface outside of its
+bounds is drawn onto the target surface, making this a useful method for
+passing constrained child surfaces to library routines that draw
+directly onto the parent surface, i.e. with no further backend
+allocations, double buffering or copies.
+
+The semantics of subsurfaces have not been finalized yet unless the
+rectangle is in full device units, is contained within the extents of
+the target surface, and the target or subsurface's device transforms are
+not changed.
+
+@table @var
+@item target
+an existing surface for which the sub-surface will point to
+
+@item x
+the x-origin of the sub-surface from the top-left of the target surface
+(in device-space units)
+
+@item y
+the y-origin of the sub-surface from the top-left of the target surface
+(in device-space units)
+
+@item width
+width of the sub-surface (in device-space units)
+
+@item height
+height of the sub-surface (in device-space units)
+
+@item ret
+a pointer to the newly allocated surface. The caller owns the surface
+and should call @code{cairo-surface-destroy} when done with it. This
+function always returns a valid pointer, but it will return a pointer to
+a "nil" surface if @var{other} is already in an error state or any other
+error occurs.
+
+@end table
+
+Since 1.10
 
 @end deffn
 
@@ -41,9 +86,9 @@ This function finishes the surface and drops all references to external
 resources. For example, for the Xlib backend it means that cairo will no
 longer access the drawable, which can be freed. After calling
 @code{cairo-surface-finish} the only valid operations on a surface are
-getting and setting user data and referencing and destroying it. Further
-drawing to the surface will not affect the surface but will instead
-trigger a CAIRO_STATUS_SURFACE_FINISHED error.
+getting and setting user, referencing and destroying, and flushing and
+finishing it. Further drawing to the surface will not affect the surface
+but will instead trigger a @samp{CAIRO_STATUS_SURFACE_FINISHED} error.
 
 When the last call to @code{cairo-surface-destroy} decreases the
 reference count to zero, cairo will call @code{cairo-surface-finish} if
@@ -60,7 +105,7 @@ the @code{<cairo-surface-t>} to finish
 
 @deffn Function cairo-surface-flush  (@var{surface}@tie{}@code{<cairo-surface-t>})
 Do any pending drawing for the surface and also restore any temporary
-modification's cairo has made to the surface's state. This function must
+modifications cairo has made to the surface's state. This function must
 be called before switching from drawing on the surface with cairo to
 drawing on it directly with native APIs. If the surface doesn't support
 direct access, then this function does nothing.
@@ -70,6 +115,24 @@ direct access, then this function does nothing.
 a @code{<cairo-surface-t>}
 
 @end table
+
+@end deffn
+
+@deffn Function cairo-surface-get-device  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-device-t >})
+This function returns the device for a @var{surface}. See
+@code{<cairo-device-t>}.
+
+@table @var
+@item surface
+a @code{<cairo-surface-t>}
+
+@item ret
+The device for @var{surface} or @samp{@code{#f}} if the surface does not
+have an associated device.
+
+@end table
+
+Since 1.10
 
 @end deffn
 
@@ -211,6 +274,69 @@ The type of @var{surface}.
 @end table
 
 Since 1.2
+
+@end deffn
+
+@deffn Function cairo-surface-copy-page  (@var{surface}@tie{}@code{<cairo-surface-t>})
+Emits the current page for backends that support multiple pages, but
+doesn't clear it, so that the contents of the current page will be
+retained for the next page. Use @code{cairo-surface-show-page} if you
+want to get an empty page after the emission.
+
+There is a convenience function for this that takes a @code{<cairo-t>},
+namely @code{cairo-copy-page}.
+
+@table @var
+@item surface
+a @code{<cairo-surface-t>}
+
+@end table
+
+Since 1.6
+
+@end deffn
+
+@deffn Function cairo-surface-show-page  (@var{surface}@tie{}@code{<cairo-surface-t>})
+Emits and clears the current page for backends that support multiple
+pages. Use @code{cairo-surface-copy-page} if you don't want to clear the
+page.
+
+There is a convenience function for this that takes a @code{<cairo-t>},
+namely @code{cairo-show-page}.
+
+@table @var
+@item surface
+a @code{<cairo--surface-t>}
+
+@end table
+
+Since 1.6
+
+@end deffn
+
+@deffn Function cairo-surface-has-show-text-glyphs  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
+Returns whether the surface supports sophisticated
+@code{cairo-show-text-glyphs} operations. That is, whether it actually
+uses the provided text and cluster data to a
+@code{cairo-show-text-glyphs} call.
+
+Note: Even if this function returns @samp{@code{#f}}, a
+@code{cairo-show-text-glyphs} operation targeted at @var{surface} will
+still succeed. It just will act like a @code{cairo-show-glyphs}
+operation. Users can use this function to avoid computing UTF-8 text and
+cluster mapping if the target surface does not use it.
+
+@table @var
+@item surface
+a @code{<cairo-surface-t>}
+
+@item ret
+@samp{@code{#t}} if @var{surface} supports
+@code{cairo-show-text-glyphs}, @samp{@code{#f}} otherwise
+
+@end table
+
+Since 1.8
 
 @end deffn
 

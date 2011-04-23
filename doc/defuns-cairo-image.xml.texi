@@ -1,7 +1,42 @@
 
 @c %start of fragment
 
-@deffn Function cairo-image-surface-create  (@var{format}@tie{}@code{<cairo-format-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
+@deffn Function cairo-format-stride-for-width  (@var{format}@tie{}@code{<cairo-format-t>}) (@var{width}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<int>})
+This function provides a stride value that will respect all alignment
+requirements of the accelerated image-rendering code within cairo.
+Typical usage will be of the form:
+
+@example 
+
+int stride;
+unsigned char *data;
+cairo_surface_t *surface;
+
+stride = cairo_format_stride_for_width (format, width);
+data = malloc (stride * height);
+surface = cairo_image_surface_create_for_data (data, format,
+					  width, height,
+					  stride);
+@end example
+
+@table @var
+@item format
+A @code{<cairo-format-t>} value
+
+@item width
+The desired width of an image surface to be created.
+
+@item ret
+the appropriate stride to use given the desired format and width, or -1
+if either the format is invalid or the width too large.
+
+@end table
+
+Since 1.6
+
+@end deffn
+
+@deffn Function cairo-image-surface-create  (@var{format}@tie{}@code{<cairo-format-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t >})
 Creates an image surface of the specified format and dimensions.
 Initially the surface contents are all 0. (Specifically, within each
 pixel, each color or alpha channel belonging to format will be 0. The
@@ -20,9 +55,9 @@ height of the surface, in pixels
 
 @item ret
 a pointer to the newly created surface. The caller owns the surface and
-should call cairo_surface_destroy when done with it. This function
-always returns a valid pointer, but it will return a pointer to a "nil"
-surface if an error such as out of memory occurs. You can use
+should call @code{cairo-surface-destroy} when done with it. This
+function always returns a valid pointer, but it will return a pointer to
+a "nil" surface if an error such as out of memory occurs. You can use
 @code{cairo-surface-status} to check for this.
 
 @end table

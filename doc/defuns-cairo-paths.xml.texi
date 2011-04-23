@@ -1,14 +1,14 @@
 
 @c %start of fragment
 
-@deffn Function cairo-copy-path  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t>})
+@deffn Function cairo-copy-path  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t >})
 Creates a copy of the current path and returns it to the user as a
 @code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how
 to iterate over the returned data structure.
 
 This function will always return a valid pointer, but the result will
-have no data (@samp{data==NULL} and @samp{num_data==0}), if either of
-the following conditions hold:
+have no data (@samp{data==@samp{@code{#f}}} and @samp{num_data==0}), if
+either of the following conditions hold:
 
 @enumerate 
 @item
@@ -18,10 +18,6 @@ If there is insufficient memory to copy the path. In this
 If @var{cr} is already in an error state. In this case
    @samp{path->status} will contain the same status that
    would be returned by @code{cairo-status}.@end enumerate
-
-In either case, @samp{path->status} will be set to
-@samp{CAIRO_STATUS_NO_MEMORY} (regardless of what the error status in
-@var{cr} might have been).
 
 @table @var
 @item cr
@@ -35,7 +31,7 @@ should call @code{cairo-path-destroy} when finished with it.
 
 @end deffn
 
-@deffn Function cairo-copy-path-flat  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t>})
+@deffn Function cairo-copy-path-flat  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t >})
 Gets a flattened copy of the current path and returns it to the user as
 a @code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how
 to iterate over the returned data structure.
@@ -48,8 +44,8 @@ which will instead be replaced by a series of @samp{CAIRO_PATH_LINE_TO}
 elements.
 
 This function will always return a valid pointer, but the result will
-have no data (@samp{data==NULL} and @samp{num_data==0}), if either of
-the following conditions hold:
+have no data (@samp{data==@samp{@code{#f}}} and @samp{num_data==0}), if
+either of the following conditions hold:
 
 @enumerate 
 @item
@@ -91,21 +87,47 @@ path to be appended
 
 @end deffn
 
+@deffn Function cairo-has-current-point  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-bool-t>})
+Returns whether a current point is defined on the current path. See
+@code{cairo-get-current-point} for details on the current point.
+
+@table @var
+@item cr
+a cairo context
+
+@item ret
+whether a current point is defined.
+
+@end table
+
+Since 1.6
+
+@end deffn
+
 @deffn Function cairo-get-current-point  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
 Gets the current point of the current path, which is conceptually the
 final point reached by the path so far.
 
 The current point is returned in the user-space coordinate system. If
-there is no defined current point then @var{x} and @var{y} will both be
-set to 0.0.
+there is no defined current point or if @var{cr} is in an error status,
+@var{x} and @var{y} will both be set to 0.0. It is possible to check
+this in advance with @code{cairo-has-current-point}.
 
 Most path construction functions alter the current point. See the
 following for details on how they affect the current point:
-
-@code{cairo-new-path}, @code{cairo-move-to}, @code{cairo-line-to},
-@code{cairo-curve-to}, @code{cairo-arc}, @code{cairo-rel-move-to},
+@code{cairo-new-path}, @code{cairo-new-sub-path},
+@code{cairo-append-path}, @code{cairo-close-path}, @code{cairo-move-to},
+@code{cairo-line-to}, @code{cairo-curve-to}, @code{cairo-rel-move-to},
 @code{cairo-rel-line-to}, @code{cairo-rel-curve-to}, @code{cairo-arc},
-@code{cairo-text-path}, @code{cairo-stroke-to-path}
+@code{cairo-arc-negative}, @code{cairo-rectangle},
+@code{cairo-text-path}, @code{cairo-glyph-path},
+@code{cairo-stroke-to-path}.
+
+Some functions use and alter the current point but do not otherwise
+change current path: @code{cairo-show-text}.
+
+Some functions unset the current path and as a result, current point:
+@code{cairo-fill}, @code{cairo-stroke}.
 
 @table @var
 @item cr
@@ -167,11 +189,11 @@ stroking. When a closed sub-path is stroked, there are no caps on the
 ends of the sub-path. Instead, there is a line join connecting the final
 and initial segments of the sub-path.
 
-If there is no current point before the call to cairo_close_path, this
-function will have no effect.
+If there is no current point before the call to @code{cairo-close-path},
+this function will have no effect.
 
-Note: As of cairo version 1.2.4 any call to cairo_close_path will place
-an explicit MOVE_TO element into the path immediately after the
+Note: As of cairo version 1.2.4 any call to @code{cairo-close-path} will
+place an explicit MOVE_TO element into the path immediately after the
 CLOSE_PATH element, (which can be seen in @code{cairo-copy-path} for
 example). This can simplify path processing in some cases as it may not
 be necessary to save the "last move_to point" during processing as the
@@ -193,7 +215,9 @@ If @var{angle2} is less than @var{angle1} it will be progressively
 increased by 2*M_PI until it is greater than @var{angle1}.
 
 If there is a current point, an initial line segment will be added to
-the path to connect the current point to the beginning of the arc.
+the path to connect the current point to the beginning of the arc. If
+this initial line is undesired, it can be avoided by calling
+@code{cairo-new-sub-path} before calling @code{cairo-arc}.
 
 Angles are measured in radians. An angle of 0.0 is in the direction of
 the positive X axis (in user space). An angle of @samp{M_PI}/2.0 radians
@@ -286,8 +310,8 @@ position (@var{x3}, @var{y3}) in user-space coordinates, using
 After this call the current point will be (@var{x3}, @var{y3}).
 
 If there is no current point before the call to @code{cairo-curve-to}
-this function will behave as if preceded by a call to cairo_move_to
-(@var{cr}, @var{x1}, @var{y1}).
+this function will behave as if preceded by a call to
+cairo_move_to(@var{cr}, @var{x1}, @var{y1}).
 
 @table @var
 @item cr
@@ -321,7 +345,7 @@ Adds a line to the path from the current point to position (@var{x},
 will be (@var{x}, @var{y}).
 
 If there is no current point before the call to @code{cairo-line-to}
-this function will behave as cairo_move_to (@var{cr}, @var{x}, @var{y}).
+this function will behave as cairo_move_to(@var{cr}, @var{x}, @var{y}).
 
 @table @var
 @item cr
@@ -423,7 +447,7 @@ final glyph offset by its advance values. This allows for chaining
 multiple calls to to @code{cairo-text-path} without having to set
 current point in between.
 
-NOTE: The @code{cairo-text-path} function call is part of what the cairo
+Note: The @code{cairo-text-path} function call is part of what the cairo
 designers call the "toy" text API. It is convenient for short demos and
 simple programs, but it is not expected to be adequate for serious
 text-using applications. See @code{cairo-glyph-path} for the "real" text
@@ -434,7 +458,7 @@ path API in cairo.
 a cairo context
 
 @item utf8
-a string of text encoded in UTF-8
+a NUL-terminated string of text encoded in UTF-8, or @samp{@code{#f}}
 
 @end table
 
@@ -448,14 +472,14 @@ from the current point to a point offset from the current point by
 and (@var{dx2}, @var{dy2}) as the control points. After this call the
 current point will be offset by (@var{dx3}, @var{dy3}).
 
-Given a current point of (x, y), cairo_rel_curve_to (@var{cr},
-@var{dx1}, @var{dy1}, @var{dx2}, @var{dy2}, @var{dx3}, @var{dy3}) is
-logically equivalent to cairo_curve_to (@var{cr}, x + @var{dx1}, y +
-@var{dy1}, x + @var{dx2}, y + @var{dy2}, x + @var{dx3}, y + @var{dy3}).
+Given a current point of (x, y), cairo_rel_curve_to(@var{cr}, @var{dx1},
+@var{dy1}, @var{dx2}, @var{dy2}, @var{dx3}, @var{dy3}) is logically
+equivalent to cairo_curve_to(@var{cr}, x+@var{dx1}, y+@var{dy1},
+x+@var{dx2}, y+@var{dy2}, x+@var{dx3}, y+@var{dy3}).
 
 It is an error to call this function with no current point. Doing so
 will cause @var{cr} to shutdown with a status of
-CAIRO_STATUS_NO_CURRENT_POINT.
+@samp{CAIRO_STATUS_NO_CURRENT_POINT}.
 
 @table @var
 @item cr
@@ -490,12 +514,12 @@ point by (@var{dx}, @var{dy}) in user space. After this call the current
 point will be offset by (@var{dx}, @var{dy}).
 
 Given a current point of (x, y), cairo_rel_line_to(@var{cr}, @var{dx},
-@var{dy}) is logically equivalent to cairo_line_to (@var{cr}, x +
+@var{dy}) is logically equivalent to cairo_line_to(@var{cr}, x +
 @var{dx}, y + @var{dy}).
 
 It is an error to call this function with no current point. Doing so
 will cause @var{cr} to shutdown with a status of
-CAIRO_STATUS_NO_CURRENT_POINT.
+@samp{CAIRO_STATUS_NO_CURRENT_POINT}.
 
 @table @var
 @item cr
@@ -516,12 +540,12 @@ Begin a new sub-path. After this call the current point will offset by
 (@var{x}, @var{y}).
 
 Given a current point of (x, y), cairo_rel_move_to(@var{cr}, @var{dx},
-@var{dy}) is logically equivalent to cairo_move_to (@var{cr}, x +
+@var{dy}) is logically equivalent to cairo_move_to(@var{cr}, x +
 @var{dx}, y + @var{dy}).
 
 It is an error to call this function with no current point. Doing so
 will cause @var{cr} to shutdown with a status of
-CAIRO_STATUS_NO_CURRENT_POINT.
+@samp{CAIRO_STATUS_NO_CURRENT_POINT}.
 
 @table @var
 @item cr
@@ -534,6 +558,50 @@ the X offset
 the Y offset
 
 @end table
+
+@end deffn
+
+@deffn Function cairo-path-extents  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) (@var{x2}@tie{}@code{<double>}) (@var{y2}@tie{}@code{<double>})
+Computes a bounding box in user-space coordinates covering the points on
+the current path. If the current path is empty, returns an empty
+rectangle ((0,0), (0,0)). Stroke parameters, fill rule, surface
+dimensions and clipping are not taken into account.
+
+Contrast with @code{cairo-fill-extents} and @code{cairo-stroke-extents}
+which return the extents of only the area that would be "inked" by the
+corresponding drawing operations.
+
+The result of @code{cairo-path-extents} is defined as equivalent to the
+limit of @code{cairo-stroke-extents} with @samp{CAIRO_LINE_CAP_ROUND} as
+the line width approaches 0.0, (but never reaching the empty-rectangle
+returned by @code{cairo-stroke-extents} for a line width of 0.0).
+
+Specifically, this means that zero-area sub-paths such as
+@code{cairo-move-to};@code{cairo-line-to} segments, (even degenerate
+cases where the coordinates to both calls are identical), will be
+considered as contributing to the extents. However, a lone
+@code{cairo-move-to} will not contribute to the results of
+@code{cairo-path-extents}.
+
+@table @var
+@item cr
+a cairo context
+
+@item x1
+left of the resulting extents
+
+@item y1
+top of the resulting extents
+
+@item x2
+right of the resulting extents
+
+@item y2
+bottom of the resulting extents
+
+@end table
+
+Since 1.6
 
 @end deffn
 

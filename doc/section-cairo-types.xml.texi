@@ -3,9 +3,11 @@
 
 @node Types
 @chapter Types
-Generic data types used in the cairo API
+Generic data types
 
 @section Overview
+This section lists generic data types used in the cairo API.
+
 @section Usage
 @include defuns-cairo-types.xml.texi
 

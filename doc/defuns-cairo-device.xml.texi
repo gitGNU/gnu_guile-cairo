@@ -1,0 +1,114 @@
+
+@c %start of fragment
+
+@deffn Function cairo-device-finish  (@var{device}@tie{}@code{<cairo-device-t>})
+This function finishes the device and drops all references to external
+resources. All surfaces, fonts and other objects created for this
+@var{device} will be finished, too. Further operations on the
+@var{device} will not affect the @var{device} but will instead trigger a
+@samp{CAIRO_STATUS_DEVICE_FINISHED} error.
+
+When the last call to @code{cairo-device-destroy} decreases the
+reference count to zero, cairo will call @code{cairo-device-finish} if
+it hasn't been called already, before freeing the resources associated
+with the device.
+
+This function may acquire devices.
+
+@table @var
+@item device
+the @code{<cairo-device-t>} to finish
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-device-flush  (@var{device}@tie{}@code{<cairo-device-t>})
+Finish any pending operations for the device and also restore any
+temporary modifications cairo has made to the device's state. This
+function must be called before switching from using the device with
+Cairo to operating on it directly with native APIs. If the device
+doesn't support direct access, then this function does nothing.
+
+This function may acquire devices.
+
+@table @var
+@item device
+a @code{<cairo-device-t>}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-device-get-type  (@var{device}@tie{}@code{<cairo-device-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-device-type-t>})
+This function returns the type of the device. See
+@code{<cairo-device-type-t>} for available types.
+
+@table @var
+@item device
+a @code{<cairo-device-t>}
+
+@item ret
+The type of @var{device}.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-device-acquire  (@var{device}@tie{}@code{<cairo-device-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
+Acquires the @var{device} for the current thread. This function will
+block until no other thread has acquired the device.
+
+If the return value is @samp{CAIRO_STATUS_SUCCESS}, you successfully
+acquired the device. From now on your thread owns the device and no
+other thread will be able to acquire it until a matching call to
+@code{cairo-device-release}. It is allowed to recursively acquire the
+device multiple times from the same thread.
+
+You must never acquire two different devices at the same time unless
+this is explicitly allowed. Otherwise the possibility of deadlocks
+exist.
+
+As various Cairo functions can acquire devices when called, these
+functions may also cause deadlocks when you call them with an acquired
+device. So you must not have a device acquired when calling them. These
+functions are marked in the documentation.
+
+@table @var
+@item device
+a @code{<cairo-device-t>}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} on success or an error code if the device is
+in an error state and could not be acquired. After a successful call to
+@code{cairo-device-acquire}, a matching call to
+@code{cairo-device-release} is required.
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+@deffn Function cairo-device-release  (@var{device}@tie{}@code{<cairo-device-t>})
+Releases a @var{device} previously acquired using
+@code{cairo-device-acquire}. See that function for details.
+
+@table @var
+@item device
+a @code{<cairo-device-t>}
+
+@end table
+
+Since 1.10
+
+@end deffn
+
+
+@c %end of fragment

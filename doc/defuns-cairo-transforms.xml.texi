@@ -5,7 +5,7 @@
 Modifies the current transformation matrix (CTM) by translating the
 user-space origin by (@var{tx}, @var{ty}). This offset is interpreted as
 a user-space coordinate according to the CTM in place before the new
-call to cairo_translate. In other words, the translation of the
+call to @code{cairo-translate}. In other words, the translation of the
 user-space origin takes place after any existing transformation.
 
 @table @var

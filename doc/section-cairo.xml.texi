@@ -6,15 +6,15 @@
 The cairo drawing context
 
 @section Overview
-@code{<cairo-t>} is the main object used when drawing with cairo. To draw with
-cairo, you create a @code{<cairo-t>}, set the target surface, and drawing
-options for the @code{<cairo-t>}, create shapes with functions like
-@code{cairo-move-to} and @code{cairo-line-to}, and then draw shapes with
-@code{cairo-stroke} or @code{cairo-fill}.
+@code{<cairo>} is the main object used when drawing with cairo. To
+draw with cairo, you create a @code{<cairo>}, set the target surface,
+and drawing options for the @code{<cairo>}, create shapes with
+functions like @code{cairo-move-to} and @code{cairo-line-to}, and then
+draw shapes with @code{cairo-stroke} or @code{cairo-fill}.
 
-@code{<cairo-t>}'s can be pushed to a stack via @code{cairo-save}. They may then
-safely be changed, without loosing the current state. Use @code{cairo-restore}
-to restore to the saved state.
+@code{<cairo>}'s can be pushed to a stack via @code{cairo-save}. They
+may then safely be changed, without loosing the current state. Use
+@code{cairo-restore} to restore to the saved state.
 
 @section Usage
 @include defuns-cairo.xml.texi

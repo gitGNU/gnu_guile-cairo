@@ -6,6 +6,16 @@
 Microsoft Windows surface support
 
 @section Overview
+The Microsoft Windows surface is used to render cairo graphics to
+Microsoft Windows windows, bitmaps, and printing device contexts.
+
+The surface returned by @code{cairo-win32-printing-surface-create} is of
+surface type @samp{CAIRO_SURFACE_TYPE_WIN32_PRINTING} and is a
+multi-page vector surface type.
+
+The surface returned by the other win32 constructors is of surface type
+@samp{CAIRO_SURFACE_TYPE_WIN32} and is a raster surface type.
+
 @section Usage
 @include defuns-cairo-win32.xml.texi
 

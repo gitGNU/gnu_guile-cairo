@@ -6,6 +6,45 @@
 Base class for surfaces
 
 @section Overview
+@code{<cairo-surface>} is the abstract type representing all different
+drawing targets that cairo can render to. The actual drawings are
+performed using a cairo @dfn{context}.
+
+A cairo surface is created by using @dfn{backend}-specific constructors,
+typically of the form cairo_@emph{backend}@code{-surface-create}.
+
+Most surface types allow accessing the surface without using Cairo
+functions. If you do this, keep in mind that it is mandatory that you
+call @code{cairo-surface-flush} before reading from or writing to the
+surface and that you must use @code{cairo-surface-mark-dirty} after
+modifying it. Note that for other surface types it might be necessary to
+acquire the surface's device first. See @code{cairo-device-acquire} for
+a discussion of devices.
+
+@c (title "Directly modifying an image surface")
+@example 
+
+void
+modify_image_surface (cairo_surface_t *surface)
+@{
+  unsigned char *data;
+  int width, height, stride;
+
+  // flush to ensure all writing to the image was done
+  cairo_surface_flush (surface);
+
+  // modify the image
+  data = cairo_image_surface_get_data (surface);
+  width = cairo_image_surface_get_width (surface);
+  height = cairo_image_surface_get_height (surface);
+  stride = cairo_image_surface_get_stride (surface);
+  modify_image_data (data, width, height, stride);
+
+  // mark the image dirty so Cairo clears its caches.
+  cairo_surface_mark_dirty (surface);
+@}
+@end example
+
 @section Usage
 @include defuns-cairo-surface.xml.texi
 

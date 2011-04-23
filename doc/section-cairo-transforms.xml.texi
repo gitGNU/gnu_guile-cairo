@@ -6,6 +6,11 @@
 Manipulating the current transformation matrix
 
 @section Overview
+The current transformation matrix, @dfn{ctm}, is a two-dimensional
+affine transformation that maps all coordinates and other drawing
+instruments from the @dfn{user space} into the surface's canonical
+coordinate system, also known as the @dfn{device space}.
+
 @section Usage
 @include defuns-cairo-transforms.xml.texi
 

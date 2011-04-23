@@ -6,6 +6,9 @@
 Rendering SVG documents
 
 @section Overview
+The SVG surface is used to render cairo graphics to SVG files and is a
+multi-page vector surface backend.
+
 @section Usage
 @include defuns-cairo-svg.xml.texi
 

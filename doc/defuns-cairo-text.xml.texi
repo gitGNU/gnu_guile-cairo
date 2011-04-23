@@ -2,12 +2,49 @@
 @c %start of fragment
 
 @deffn Function cairo-select-font-face  (@var{cr}@tie{}@code{<cairo-t>}) (@var{family}@tie{}@code{<char>}) (@var{slant}@tie{}@code{<cairo-font-slant-t>}) (@var{weight}@tie{}@code{<cairo-font-weight-t>})
+Note: The @code{cairo-select-font-face} function call is part of what
+the cairo designers call the "toy" text API. It is convenient for short
+demos and simple programs, but it is not expected to be adequate for
+serious text-using applications.
+
 Selects a family and style of font from a simplified description as a
-family name, slant and weight. This function is meant to be used only
-for applications with simple font needs: Cairo doesn't provide for
-operations such as listing all available fonts on the system, and it is
-expected that most applications will need to use a more comprehensive
-font handling and text layout library in addition to cairo.
+family name, slant and weight. Cairo provides no operation to list
+available family names on the system (this is a "toy", remember), but
+the standard CSS2 generic family names, ("serif", "sans-serif",
+"cursive", "fantasy", "monospace"), are likely to work as expected.
+
+If @var{family} starts with the string "@var{cairo}:", or if no native
+font backends are compiled in, cairo will use an internal font family.
+The internal font family recognizes many modifiers in the @var{family}
+string, most notably, it recognizes the string "monospace". That is, the
+family name "@var{cairo}:monospace" will use the monospace version of
+the internal font family.
+
+For "real" font selection, see the font-backend-specific
+font_face_create functions for the font backend you are using. (For
+example, if you are using the freetype-based cairo-ft font backend, see
+@code{cairo-ft-font-face-create-for-ft-face} or
+@code{cairo-ft-font-face-create-for-pattern}.) The resulting font face
+could then be used with @code{cairo-scaled-font-create} and
+@code{cairo-set-scaled-font}.
+
+Similarly, when using the "real" font support, you can call directly
+into the underlying font system, (such as fontconfig or freetype), for
+operations such as listing available fonts, etc.
+
+It is expected that most applications will need to use a more
+comprehensive font handling and text layout library, (for example,
+pango), in conjunction with cairo.
+
+If text is drawn without a call to @code{cairo-select-font-face}, (nor
+@code{cairo-set-font-face} nor @code{cairo-set-scaled-font}), the
+default family is platform-specific, but is essentially "sans-serif".
+Default slant is @samp{CAIRO_FONT_SLANT_NORMAL}, and default weight is
+@samp{CAIRO_FONT_WEIGHT_NORMAL}.
+
+This function is equivalent to a call to
+@code{cairo-toy-font-face-create} followed by
+@code{cairo-set-font-face}.
 
 @table @var
 @item cr
@@ -33,6 +70,10 @@ or @code{cairo-set-font-matrix}. This results in a font size of
 @var{size} user space units. (More precisely, this matrix will result in
 the font's em-square being a @var{size} by @var{size} square in user
 space.)
+
+If text is drawn without a call to @code{cairo-set-font-size}, (nor
+@code{cairo-set-font-matrix} nor @code{cairo-set-scaled-font}), the
+default font size is 10.0.
 
 @table @var
 @item cr
@@ -133,7 +174,7 @@ default font
 
 @end deffn
 
-@deffn Function cairo-get-font-face  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t>})
+@deffn Function cairo-get-font-face  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t >})
 Gets the current font face for a @code{<cairo-t>}.
 
 @table @var
@@ -142,14 +183,14 @@ a @code{<cairo-t>}
 
 @item ret
 the current font face. This object is owned by cairo. To keep a
-reference to it, you must call cairo_font_face_reference. This function
-never returns @samp{@code{#f}}. If memory cannot be allocated, a special
-"nil" @code{<cairo-font-face-t>} object will be returned on which
-@code{cairo-font-face-status} returns @samp{CAIRO_STATUS_NO_MEMORY}.
-Using this nil object will cause its error state to propagate to other
-objects it is passed to, (for example, calling
-@code{cairo-set-font-face} with a nil font will trigger an error that
-will shutdown the cairo_t object).
+reference to it, you must call @code{cairo-font-face-reference}. This
+function never returns @samp{@code{#f}}. If memory cannot be allocated,
+a special "nil" @code{<cairo-font-face-t>} object will be returned on
+which @code{cairo-font-face-status} returns
+@samp{CAIRO_STATUS_NO_MEMORY}. Using this nil object will cause its
+error state to propagate to other objects it is passed to, (for example,
+calling @code{cairo-set-font-face} with a nil font will trigger an error
+that will shutdown the @code{<cairo-t>} object).
 
 @end table
 
@@ -175,7 +216,7 @@ Since 1.2
 
 @end deffn
 
-@deffn Function cairo-get-scaled-font  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t>})
+@deffn Function cairo-get-scaled-font  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t >})
 Gets the current scaled font for a @code{<cairo-t>}.
 
 @table @var
@@ -191,7 +232,7 @@ which @code{cairo-scaled-font-status} returns
 @samp{CAIRO_STATUS_NO_MEMORY}. Using this nil object will cause its
 error state to propagate to other objects it is passed to, (for example,
 calling @code{cairo-set-scaled-font} with a nil font will trigger an
-error that will shutdown the cairo_t object).
+error that will shutdown the @code{<cairo-t>} object).
 
 @end table
 
@@ -215,7 +256,7 @@ current point will be at the origin of the final glyph offset by its
 advance values. This allows for easy display of a single logical string
 with multiple calls to @code{cairo-show-text}.
 
-NOTE: The @code{cairo-show-text} function call is part of what the cairo
+Note: The @code{cairo-show-text} function call is part of what the cairo
 designers call the "toy" text API. It is convenient for short demos and
 simple programs, but it is not expected to be adequate for serious
 text-using applications. See @code{cairo-show-glyphs} for the "real"
@@ -226,7 +267,7 @@ text display API in cairo.
 a cairo context
 
 @item utf8
-a string of text encoded in UTF-8
+a NUL-terminated string of text encoded in UTF-8, or @samp{@code{#f}}
 
 @end table
 
@@ -234,8 +275,8 @@ a string of text encoded in UTF-8
 
 @deffn Function cairo-show-glyphs  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>})
 A drawing operator that generates the shape from an array of glyphs,
-rendered according to the current font_face, font_size (font_matrix),
-and font_options.
+rendered according to the current font face, font size (font matrix),
+and font options.
 
 @table @var
 @item cr
@@ -248,6 +289,59 @@ array of glyphs to show
 number of glyphs to show
 
 @end table
+
+@end deffn
+
+@deffn Function cairo-show-text-glyphs  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>}) (@var{utf8-len}@tie{}@code{<int>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{clusters}@tie{}@code{<cairo-text-cluster-t>}) (@var{num-clusters}@tie{}@code{<int>}) (@var{cluster-flags}@tie{}@code{<cairo-text-cluster-flags-t>})
+This operation has rendering effects similar to @code{cairo-show-glyphs}
+but, if the target surface supports it, uses the provided text and
+cluster mapping to embed the text for the glyphs shown in the output. If
+the target does not support the extended attributes, this function acts
+like the basic @code{cairo-show-glyphs} as if it had been passed
+@var{glyphs} and @var{num-glyphs}.
+
+The mapping between @var{utf8} and @var{glyphs} is provided by an array
+of @dfn{clusters}. Each cluster covers a number of text bytes and
+glyphs, and neighboring clusters cover neighboring areas of @var{utf8}
+and @var{glyphs}. The clusters should collectively cover @var{utf8} and
+@var{glyphs} in entirety.
+
+The first cluster always covers bytes from the beginning of @var{utf8}.
+If @var{cluster-flags} do not have the
+@samp{CAIRO_TEXT_CLUSTER_FLAG_BACKWARD} set, the first cluster also
+covers the beginning of @var{glyphs}, otherwise it covers the end of the
+@var{glyphs} array and following clusters move backward.
+
+See @code{<cairo-text-cluster-t>} for constraints on valid clusters.
+
+@table @var
+@item cr
+a cairo context
+
+@item utf8
+a string of text encoded in UTF-8
+
+@item utf8-len
+length of @var{utf8} in bytes, or -1 if it is NUL-terminated
+
+@item glyphs
+array of glyphs to show
+
+@item num-glyphs
+number of glyphs to show
+
+@item clusters
+array of cluster mapping information
+
+@item num-clusters
+number of clusters in the mapping
+
+@item cluster-flags
+cluster mapping flags
+
+@end table
+
+Since 1.8
 
 @end deffn
 
@@ -285,7 +379,7 @@ y_advance values.
 a @code{<cairo-t>}
 
 @item utf8
-a string of text, encoded in UTF-8
+a NUL-terminated string of text encoded in UTF-8, or @samp{@code{#f}}
 
 @item extents
 a @code{<cairo-text-extents-t>} object into which the results will be
@@ -300,7 +394,7 @@ Gets the extents for an array of glyphs. The extents describe a
 user-space rectangle that encloses the "inked" portion of the glyphs,
 (as they would be drawn by @code{cairo-show-glyphs}). Additionally, the
 x_advance and y_advance values indicate the amount by which the current
-point would be advanced by cairo_show_glyphs.
+point would be advanced by @code{cairo-show-glyphs}.
 
 Note that whitespace glyphs do not contribute to the size of the
 rectangle (extents.width and extents.height).
@@ -320,6 +414,88 @@ a @code{<cairo-text-extents-t>} object into which the results will be
 stored
 
 @end table
+
+@end deffn
+
+@deffn Function cairo-toy-font-face-create  (@var{family}@tie{}@code{<char>}) (@var{slant}@tie{}@code{<cairo-font-slant-t>}) (@var{weight}@tie{}@code{<cairo-font-weight-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t >})
+Creates a font face from a triplet of family, slant, and weight. These
+font faces are used in implementation of the the @code{<cairo-t>} "toy"
+font API.
+
+If @var{family} is the zero-length string "", the platform-specific
+default family is assumed. The default family then can be queried using
+@code{cairo-toy-font-face-get-family}.
+
+The @code{cairo-select-font-face} function uses this to create font
+faces. See that function for limitations and other details of toy font
+faces.
+
+@table @var
+@item family
+a font family name, encoded in UTF-8
+
+@item slant
+the slant for the font
+
+@item weight
+the weight for the font
+
+@item ret
+a newly created @code{<cairo-font-face-t>}. Free with
+@code{cairo-font-face-destroy} when you are done using it.
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+@deffn Function cairo-toy-font-face-get-family  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<char >})
+Gets the familly name of a toy font.
+
+@table @var
+@item font-face
+A toy font face
+
+@item ret
+The family name. This string is owned by the font face and remains valid
+as long as the font face is alive (referenced).
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+@deffn Function cairo-toy-font-face-get-slant  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-slant-t>})
+Gets the slant a toy font.
+
+@table @var
+@item font-face
+A toy font face
+
+@item ret
+The slant value
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+@deffn Function cairo-toy-font-face-get-weight  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-weight-t>})
+Gets the weight a toy font.
+
+@table @var
+@item font-face
+A toy font face
+
+@item ret
+The weight value
+
+@end table
+
+Since 1.8
 
 @end deffn
 

@@ -3,9 +3,12 @@
 
 @node Scaled Fonts
 @chapter Scaled Fonts
-Caching metrics for a particular font size
+Font face at particular size and options
 
 @section Overview
+@code{<cairo-scaled-font>} represents a realization of a font face at
+a particular size and transformation and a certain set of font options.
+
 @section Usage
 @include defuns-cairo-scaled-font.xml.texi
 

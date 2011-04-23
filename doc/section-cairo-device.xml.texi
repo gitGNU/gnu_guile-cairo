@@ -1,0 +1,62 @@
+
+@c %start of fragment
+
+@node cairo_device_t
+@chapter cairo_device_t
+interface to underlying rendering system
+
+@section Overview
+Devices are the abstraction Cairo employs for the rendering system used
+by a @code{<cairo-surface>}. You can get the device of a surface using
+@code{cairo-surface-get-device}.
+
+Devices are created using custom functions specific to the rendering
+system you want to use. See the documentation for the surface types for
+those functions.
+
+An important function that devices fulfill is sharing access to the
+rendering system between Cairo and your application. If you want to
+access a device directly that you used to draw to with Cairo, you must
+first call @code{cairo-device-flush} to ensure that Cairo finishes all
+operations on the device and resets it to a clean state.
+
+Cairo also provides the functions @code{cairo-device-acquire} and
+@code{cairo-device-release} to synchronize access to the rendering
+system in a multithreaded environment. This is done internally, but can
+also be used by applications.
+
+Putting this all together, a function that works with devices should
+look something like this:
+
+@example 
+
+void
+my_device_modifying_function (cairo_device_t *device)
+@{
+  cairo_status_t status;
+
+  // Ensure the device is properly reset
+  cairo_device_flush (device);
+  // Try to acquire the device
+  status = cairo_device_acquire (device);
+  if (status != CAIRO_STATUS_SUCCESS) @{
+    printf ("Failed to acquire the device: %s\n", cairo_status_to_string (status));
+    return;
+  @}
+
+  // Do the custom operations on the device here.
+  // But do not call any Cairo functions that might acquire devices.
+  
+  // Release the device when done.
+  cairo_device_release (device);
+@}
+@end example
+
+Please refer to the documentation of each backend for additional usage
+requirements, guarantees provided, and interactions with existing
+surface API of the device functions for surfaces of that type.
+
+@section Usage
+@include defuns-cairo-device.xml.texi
+
+@c %end of fragment

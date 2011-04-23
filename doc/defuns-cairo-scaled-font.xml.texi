@@ -1,7 +1,7 @@
 
 @c %start of fragment
 
-@deffn Function cairo-scaled-font-create  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) (@var{font-matrix}@tie{}@code{<cairo-matrix-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t>})
+@deffn Function cairo-scaled-font-create  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) (@var{font-matrix}@tie{}@code{<cairo-matrix-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t >})
 Creates a @code{<cairo-scaled-font-t>} object from a font face and
 matrices that describe the size of the font and the environment in which
 it will be used.
@@ -65,7 +65,7 @@ y_advance values.
 a @code{<cairo-scaled-font-t>}
 
 @item utf8
-a string of text, encoded in UTF-8
+a NUL-terminated string of text, encoded in UTF-8
 
 @item extents
 a @code{<cairo-text-extents-t>} which to store the retrieved extents.
@@ -83,7 +83,7 @@ user-space rectangle that encloses the "inked" portion of the glyphs,
 graphics state were set to the same font_face, font_matrix, ctm, and
 font_options as @var{scaled-font}). Additionally, the x_advance and
 y_advance values indicate the amount by which the current point would be
-advanced by cairo_show_glyphs.
+advanced by @code{cairo-show-glyphs}.
 
 Note that whitespace glyphs do not contribute to the size of the
 rectangle (extents.width and extents.height).
@@ -105,8 +105,179 @@ a @code{<cairo-text-extents-t>} which to store the retrieved extents.
 
 @end deffn
 
-@deffn Function cairo-scaled-font-get-font-face  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t>})
-Gets the font face that this scaled font was created for.
+@deffn Function cairo-scaled-font-text-to-glyphs  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>}) (@var{utf8}@tie{}@code{<char>}) (@var{utf8-len}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t*>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{clusters}@tie{}@code{<cairo-text-cluster-t*>}) (@var{num-clusters}@tie{}@code{<int>}) (@var{cluster-flags}@tie{}@code{<cairo-text-cluster-flags-t>})
+Converts UTF-8 text to an array of glyphs, optionally with cluster
+mapping, that can be used to render later using @var{scaled-font}.
+
+If @var{glyphs} initially points to a non-@samp{@code{#f}} value, that
+array is used as a glyph buffer, and @var{num-glyphs} should point to
+the number of glyph entries available there. If the provided glyph array
+is too short for the conversion, a new glyph array is allocated using
+@code{cairo-glyph-allocate} and placed in @var{glyphs}. Upon return,
+@var{num-glyphs} always contains the number of generated glyphs. If the
+value @var{glyphs} points to has changed after the call, the user is
+responsible for freeing the allocated glyph array using
+@code{cairo-glyph-free}. This may happen even if the provided array was
+large enough.
+
+If @var{clusters} is not @samp{@code{#f}}, @var{num-clusters} and
+@var{cluster-flags} should not be @samp{@code{#f}}, and cluster mapping
+will be computed. The semantics of how cluster array allocation works is
+similar to the glyph array. That is, if @var{clusters} initially points
+to a non-@samp{@code{#f}} value, that array is used as a cluster buffer,
+and @var{num-clusters} should point to the number of cluster entries
+available there. If the provided cluster array is too short for the
+conversion, a new cluster array is allocated using
+@code{cairo-text-cluster-allocate} and placed in @var{clusters}. Upon
+return, @var{num-clusters} always contains the number of generated
+clusters. If the value @var{clusters} points at has changed after the
+call, the user is responsible for freeing the allocated cluster array
+using @code{cairo-text-cluster-free}. This may happen even if the
+provided array was large enough.
+
+In the simplest case, @var{glyphs} and @var{clusters} can point to
+@samp{@code{#f}} initially and a suitable array will be allocated. In
+code:
+
+@example 
+
+cairo_status_t status;
+
+cairo_glyph_t *glyphs = NULL;
+int num_glyphs;
+cairo_text_cluster_t *clusters = NULL;
+int num_clusters;
+cairo_text_cluster_flags_t cluster_flags;
+
+status = cairo_scaled_font_text_to_glyphs (scaled_font,
+                                           x, y,
+                                           utf8, utf8_len,
+                                           &glyphs, &num_glyphs,
+                                           &clusters, &num_clusters, &cluster_flags);
+
+if (status == CAIRO_STATUS_SUCCESS) @{
+    cairo_show_text_glyphs (cr,
+                            utf8, utf8_len,
+                            glyphs, num_glyphs,
+                            clusters, num_clusters, cluster_flags);
+
+    cairo_glyph_free (glyphs);
+    cairo_text_cluster_free (clusters);
+@}
+@end example
+
+If no cluster mapping is needed:
+
+@example 
+
+cairo_status_t status;
+
+cairo_glyph_t *glyphs = NULL;
+int num_glyphs;
+
+status = cairo_scaled_font_text_to_glyphs (scaled_font,
+                                           x, y,
+                                           utf8, utf8_len,
+                                           &glyphs, &num_glyphs,
+                                           NULL, NULL,
+                                           NULL);
+
+if (status == CAIRO_STATUS_SUCCESS) @{
+    cairo_show_glyphs (cr, glyphs, num_glyphs);
+    cairo_glyph_free (glyphs);
+@}
+@end example
+
+If stack-based glyph and cluster arrays are to be used for small arrays:
+
+@example 
+
+cairo_status_t status;
+
+cairo_glyph_t stack_glyphs[40];
+cairo_glyph_t *glyphs = stack_glyphs;
+int num_glyphs = sizeof (stack_glyphs) / sizeof (stack_glyphs[0]);
+cairo_text_cluster_t stack_clusters[40];
+cairo_text_cluster_t *clusters = stack_clusters;
+int num_clusters = sizeof (stack_clusters) / sizeof (stack_clusters[0]);
+cairo_text_cluster_flags_t cluster_flags;
+
+status = cairo_scaled_font_text_to_glyphs (scaled_font,
+                                           x, y,
+                                           utf8, utf8_len,
+                                           &glyphs, &num_glyphs,
+                                           &clusters, &num_clusters, &cluster_flags);
+
+if (status == CAIRO_STATUS_SUCCESS) @{
+    cairo_show_text_glyphs (cr,
+                            utf8, utf8_len,
+                            glyphs, num_glyphs,
+                            clusters, num_clusters, cluster_flags);
+
+    if (glyphs != stack_glyphs)
+        cairo_glyph_free (glyphs);
+    if (clusters != stack_clusters)
+        cairo_text_cluster_free (clusters);
+@}
+@end example
+
+For details of how @var{clusters}, @var{num-clusters}, and
+@var{cluster-flags} map input UTF-8 text to the output glyphs see
+@code{cairo-show-text-glyphs}.
+
+The output values can be readily passed to
+@code{cairo-show-text-glyphs}@code{cairo-show-glyphs}, or related
+functions, assuming that the exact same @var{scaled-font} is used for
+the operation.
+
+@table @var
+@item scaled-font
+a @code{<cairo-scaled-font-t>}
+
+@item x
+X position to place first glyph
+
+@item y
+Y position to place first glyph
+
+@item utf8
+a string of text encoded in UTF-8
+
+@item utf8-len
+length of @var{utf8} in bytes, or -1 if it is NUL-terminated
+
+@item glyphs
+pointer to array of glyphs to fill
+
+@item num-glyphs
+pointer to number of glyphs
+
+@item clusters
+pointer to array of cluster mapping information to fill, or
+@samp{@code{#f}}
+
+@item num-clusters
+pointer to number of clusters, or @samp{@code{#f}}
+
+@item cluster-flags
+pointer to location to store cluster flags corresponding to the output
+@var{clusters}, or @samp{@code{#f}}
+
+@item ret
+@samp{CAIRO_STATUS_SUCCESS} upon success, or an error status if the
+input values are wrong or if conversion failed. If the input values are
+correct but the conversion failed, the error status is also set on
+@var{scaled-font}.
+
+@end table
+
+Since 1.8
+
+@end deffn
+
+@deffn Function cairo-scaled-font-get-font-face  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-face-t >})
+Gets the font face that this scaled font uses. This is the font face
+passed to @code{cairo-scaled-font-create}.
 
 @table @var
 @item scaled-font
@@ -157,6 +328,9 @@ Since 1.2
 
 @deffn Function cairo-scaled-font-get-ctm  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>})
 Stores the CTM with which @var{scaled-font} was created into @var{ctm}.
+Note that the translation offsets (x0, y0) of the CTM are ignored by
+@code{cairo-scaled-font-create}. So, the matrix this function returns
+always has 0,0 as x0,y0.
 
 @table @var
 @item scaled-font
@@ -173,7 +347,8 @@ Since 1.2
 
 @deffn Function cairo-scaled-font-get-type  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-type-t>})
 This function returns the type of the backend used to create a scaled
-font. See @code{<cairo-font-type-t>} for available types.
+font. See @code{<cairo-font-type-t>} for available types. However, this
+function never returns @samp{CAIRO_FONT_TYPE_TOY}.
 
 @table @var
 @item scaled-font

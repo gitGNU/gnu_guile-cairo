@@ -1,0 +1,17 @@
+
+@c %start of fragment
+
+@node User Fonts
+@chapter User Fonts
+Font support with font data provided by the user
+
+@section Overview
+The user-font feature allows the cairo user to provide drawings for
+glyphs in a font. This is most useful in implementing fonts in
+non-standard formats, like SVG fonts and Flash fonts, but can also be
+used by games and other application to draw "funky" fonts.
+
+@section Usage
+@include defuns-cairo-user-fonts.xml.texi
+
+@c %end of fragment
