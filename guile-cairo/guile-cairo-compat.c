@@ -26,17 +26,29 @@
 #if SCM_NEEDS_COMPAT (2, 0, 0)
 
 SCM
-scm_from_utf8_string (const char *str)
+scm_from_utf8_stringn (const char *str, size_t n)
 {
   /* Assume the user is in a UTF-8 locale. */
-  return scm_from_locale_string (str);
+  return scm_from_locale_stringn (str, n);
+}
+
+char*
+scm_to_utf8_stringn (SCM str, size_t *n)
+{
+  /* Assume the user is in a UTF-8 locale. */
+  return scm_to_locale_stringn (str, n);
+}
+
+SCM
+scm_from_utf8_string (const char *str)
+{
+  return scm_from_utf8_stringn (str, -1);
 }
 
 char*
 scm_to_utf8_string (SCM str)
 {
-  /* Assume the user is in a UTF-8 locale. */
-  return scm_to_locale_string (str);
+  return scm_to_utf8_stringn (str, NULL);
 }
 
 SCM
@@ -47,10 +59,10 @@ scm_from_utf8_symbol (const char *str)
 }
 
 char*
-scm_to_utf8_symbol (SCM str)
+scm_to_utf8_symbol (SCM sym)
 {
   /* Assume the user is in a UTF-8 locale. */
-  return scm_to_locale_symbol (str);
+  return scm_to_locale_string (scm_symbol_to_string (sym));
 }
 
 #endif /* NEEDS_COMPAT (2.0) */

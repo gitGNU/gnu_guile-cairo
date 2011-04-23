@@ -25,15 +25,17 @@
 
 
 
-#define SCM_ENCODE_VERSION(maj,min,mic) (((maj)<<16)|((min)<<8)|((mic)))
 #define SCM_NEEDS_COMPAT(maj,min,mic)                                   \
-  (SCM_ENCODE_VERSION (maj,min,mic) <                                   \
-   SCM_ENCODE_VERSION (SCM_MAJOR_VERSION, SCM_MINOR_VERSION,            \
-                       SCM_MICRO_VERSION))
+  (maj > SCM_MAJOR_VERSION                                              \
+   || (maj == SCM_MAJOR_VERSION                                         \
+       && (min > SCM_MINOR_VERSION                                      \
+           || (min == SCM_MINOR_VERSION && mic > SCM_MINOR_VERSION))))
 
 
 
 #if SCM_NEEDS_COMPAT (2, 0, 0)
+SCM scm_from_utf8_stringn (const char *str, size_t len);
+char* scm_to_utf8_stringn (SCM str, size_t *len);
 
 SCM scm_from_utf8_string (const char *str);
 char* scm_to_utf8_string (SCM str);

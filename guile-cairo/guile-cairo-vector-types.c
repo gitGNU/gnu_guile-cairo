@@ -213,7 +213,9 @@ scm_from_cairo_text_clusters (SCM str, cairo_text_cluster_t *clusters,
 {
   SCM ret = SCM_EOL;
   int backwards = flags & CAIRO_TEXT_CLUSTER_FLAG_BACKWARD;
+#if ! SCM_NEEDS_COMPAT (2, 0, 0)
   int n = 0;
+#endif
 
   if (backwards)
     clusters += n_clusters - 1;
@@ -228,6 +230,9 @@ scm_from_cairo_text_clusters (SCM str, cairo_text_cluster_t *clusters,
 
       while (num_bytes)
         {
+#if SCM_NEEDS_COMPAT (2, 0, 0)
+          num_bytes--;
+#else
           scm_t_wchar c = SCM_CHAR (scm_c_string_ref (str, n++));
           
           if (c < 0x80)
@@ -240,6 +245,7 @@ scm_from_cairo_text_clusters (SCM str, cairo_text_cluster_t *clusters,
             num_bytes -= 4;
           else
             abort ();
+#endif
 
           if (num_bytes < 0)
             abort ();
@@ -269,7 +275,9 @@ scm_fill_cairo_text_clusters (SCM str, SCM scm,
        ((N-CODEPOINTS . N-GLYPHS) ...)
   */
 
+#if ! SCM_NEEDS_COMPAT (2, 0, 0)
   size_t n = 0;
+#endif
   
   for (; scm_is_pair (scm); scm = scm_cdr (scm))
     {
@@ -279,6 +287,9 @@ scm_fill_cairo_text_clusters (SCM str, SCM scm,
 
       while (num_codepoints--)
         {
+#if SCM_NEEDS_COMPAT (2, 0, 0)
+          num_bytes++;
+#else
           scm_t_wchar c = SCM_CHAR (scm_c_string_ref (str, n++));
           
           if (c < 0x80)
@@ -291,6 +302,7 @@ scm_fill_cairo_text_clusters (SCM str, SCM scm,
             num_bytes += 4;
           else
             abort ();
+#endif
         }
 
       clusters->num_bytes = num_bytes;
