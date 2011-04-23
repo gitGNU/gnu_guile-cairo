@@ -4,14 +4,14 @@
 @settitle Guile-Cairo
 @c %**end of header
 
-@set VERSION 1.4
-@set UPDATED 17 July 2007
+@set VERSION 1.10
+@set UPDATED 23 April 2011
 
 @copying 
 This manual is for Guile-Cairo (version @value{VERSION}, updated
 @value{UPDATED})
 
-Copyright 2002-2007 Carl Worth and others
+Copyright 2002-2011 Carl Worth and others
 
 @quotation 
 @c For more information, see COPYING.docs in the guile-cairo
