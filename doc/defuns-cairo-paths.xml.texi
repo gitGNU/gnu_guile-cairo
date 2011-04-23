@@ -3,12 +3,12 @@
 
 @deffn Function cairo-copy-path  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t>})
 Creates a copy of the current path and returns it to the user as a
-@code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how to
-iterate over the returned data structure.
+@code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how
+to iterate over the returned data structure.
 
-This function will always return a valid pointer, but the result will have no
-data (@samp{data==NULL} and @samp{num_data==0}), if either of the following
-conditions hold:
+This function will always return a valid pointer, but the result will
+have no data (@samp{data==NULL} and @samp{num_data==0}), if either of
+the following conditions hold:
 
 @enumerate 
 @item
@@ -19,35 +19,37 @@ If @var{cr} is already in an error state. In this case
    @samp{path->status} will contain the same status that
    would be returned by @code{cairo-status}.@end enumerate
 
-In either case, @samp{path->status} will be set to @samp{CAIRO_STATUS_NO_MEMORY}
-(regardless of what the error status in @var{cr} might have been).
+In either case, @samp{path->status} will be set to
+@samp{CAIRO_STATUS_NO_MEMORY} (regardless of what the error status in
+@var{cr} might have been).
 
 @table @var
 @item cr
 a cairo context
 
 @item ret
-the copy of the current path. The caller owns the returned object and should
-call @code{cairo-path-destroy} when finished with it.
+the copy of the current path. The caller owns the returned object and
+should call @code{cairo-path-destroy} when finished with it.
 
 @end table
 
 @end deffn
 
 @deffn Function cairo-copy-path-flat  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-path-t>})
-Gets a flattened copy of the current path and returns it to the user as a
-@code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how to
-iterate over the returned data structure.
+Gets a flattened copy of the current path and returns it to the user as
+a @code{<cairo-path-t>}. See @code{<cairo-path-data-t>} for hints on how
+to iterate over the returned data structure.
 
-This function is like @code{cairo-copy-path} except that any curves in the path
-will be approximated with piecewise-linear approximations, (accurate to within
-the current tolerance value). That is, the result is guaranteed to not have any
-elements of type @samp{CAIRO_PATH_CURVE_TO} which will instead be replaced by a
-series of @samp{CAIRO_PATH_LINE_TO} elements.
+This function is like @code{cairo-copy-path} except that any curves in
+the path will be approximated with piecewise-linear approximations,
+(accurate to within the current tolerance value). That is, the result is
+guaranteed to not have any elements of type @samp{CAIRO_PATH_CURVE_TO}
+which will instead be replaced by a series of @samp{CAIRO_PATH_LINE_TO}
+elements.
 
-This function will always return a valid pointer, but the result will have no
-data (@samp{data==NULL} and @samp{num_data==0}), if either of the following
-conditions hold:
+This function will always return a valid pointer, but the result will
+have no data (@samp{data==NULL} and @samp{num_data==0}), if either of
+the following conditions hold:
 
 @enumerate 
 @item
@@ -63,19 +65,20 @@ If @var{cr} is already in an error state. In this case
 a cairo context
 
 @item ret
-the copy of the current path. The caller owns the returned object and should
-call @code{cairo-path-destroy} when finished with it.
+the copy of the current path. The caller owns the returned object and
+should call @code{cairo-path-destroy} when finished with it.
 
 @end table
 
 @end deffn
 
 @deffn Function cairo-append-path  (@var{cr}@tie{}@code{<cairo-t>}) (@var{path}@tie{}@code{<cairo-path-t>})
-Append the @var{path} onto the current path. The @var{path} may be either the
-return value from one of @code{cairo-copy-path} or @code{cairo-copy-path-flat}
-or it may be constructed manually. See @code{<cairo-path-t>} for details on how
-the path data structure should be initialized, and note that @samp{path->status}
-must be initialized to @samp{CAIRO_STATUS_SUCCESS}.
+Append the @var{path} onto the current path. The @var{path} may be
+either the return value from one of @code{cairo-copy-path} or
+@code{cairo-copy-path-flat} or it may be constructed manually. See
+@code{<cairo-path-t>} for details on how the path data structure should
+be initialized, and note that @samp{path->status} must be initialized to
+@samp{CAIRO_STATUS_SUCCESS}.
 
 @table @var
 @item cr
@@ -89,14 +92,15 @@ path to be appended
 @end deffn
 
 @deffn Function cairo-get-current-point  (@var{cr}@tie{}@code{<cairo-t>}) @result{}@tie{} (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
-Gets the current point of the current path, which is conceptually the final
-point reached by the path so far.
+Gets the current point of the current path, which is conceptually the
+final point reached by the path so far.
 
-The current point is returned in the user-space coordinate system. If there is
-no defined current point then @var{x} and @var{y} will both be set to 0.0.
+The current point is returned in the user-space coordinate system. If
+there is no defined current point then @var{x} and @var{y} will both be
+set to 0.0.
 
-Most path construction functions alter the current point. See the following for
-details on how they affect the current point:
+Most path construction functions alter the current point. See the
+following for details on how they affect the current point:
 
 @code{cairo-new-path}, @code{cairo-move-to}, @code{cairo-line-to},
 @code{cairo-curve-to}, @code{cairo-arc}, @code{cairo-rel-move-to},
@@ -118,8 +122,8 @@ return value for Y coordinate of the current point
 @end deffn
 
 @deffn Function cairo-new-path  (@var{cr}@tie{}@code{<cairo-t>})
-Clears the current path. After this call there will be no path and no current
-point.
+Clears the current path. After this call there will be no path and no
+current point.
 
 @table @var
 @item cr
@@ -130,16 +134,16 @@ a cairo context
 @end deffn
 
 @deffn Function cairo-new-sub-path  (@var{cr}@tie{}@code{<cairo-t>})
-Begin a new sub-path. Note that the existing path is not affected. After this
-call there will be no current point.
+Begin a new sub-path. Note that the existing path is not affected. After
+this call there will be no current point.
 
-In many cases, this call is not needed since new sub-paths are frequently
-started with @code{cairo-move-to}.
+In many cases, this call is not needed since new sub-paths are
+frequently started with @code{cairo-move-to}.
 
-A call to @code{cairo-new-sub-path} is particularly useful when beginning a new
-sub-path with one of the @code{cairo-arc} calls. This makes things easier as it
-is no longer necessary to manually compute the arc's initial coordinates for a
-call to @code{cairo-move-to}.
+A call to @code{cairo-new-sub-path} is particularly useful when
+beginning a new sub-path with one of the @code{cairo-arc} calls. This
+makes things easier as it is no longer necessary to manually compute the
+arc's initial coordinates for a call to @code{cairo-move-to}.
 
 @table @var
 @item cr
@@ -152,26 +156,26 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-close-path  (@var{cr}@tie{}@code{<cairo-t>})
-Adds a line segment to the path from the current point to the beginning of the
-current sub-path, (the most recent point passed to @code{cairo-move-to}), and
-closes this sub-path. After this call the current point will be at the joined
-endpoint of the sub-path.
+Adds a line segment to the path from the current point to the beginning
+of the current sub-path, (the most recent point passed to
+@code{cairo-move-to}), and closes this sub-path. After this call the
+current point will be at the joined endpoint of the sub-path.
 
 The behavior of @code{cairo-close-path} is distinct from simply calling
-@code{cairo-line-to} with the equivalent coordinate in the case of stroking.
-When a closed sub-path is stroked, there are no caps on the ends of the
-sub-path. Instead, there is a line join connecting the final and initial
-segments of the sub-path.
+@code{cairo-line-to} with the equivalent coordinate in the case of
+stroking. When a closed sub-path is stroked, there are no caps on the
+ends of the sub-path. Instead, there is a line join connecting the final
+and initial segments of the sub-path.
 
-If there is no current point before the call to cairo_close_path, this function
-will have no effect.
+If there is no current point before the call to cairo_close_path, this
+function will have no effect.
 
-Note: As of cairo version 1.2.4 any call to cairo_close_path will place an
-explicit MOVE_TO element into the path immediately after the CLOSE_PATH element,
-(which can be seen in @code{cairo-copy-path} for example). This can simplify
-path processing in some cases as it may not be necessary to save the "last
-move_to point" during processing as the MOVE_TO immediately after the CLOSE_PATH
-will provide that point.
+Note: As of cairo version 1.2.4 any call to cairo_close_path will place
+an explicit MOVE_TO element into the path immediately after the
+CLOSE_PATH element, (which can be seen in @code{cairo-copy-path} for
+example). This can simplify path processing in some cases as it may not
+be necessary to save the "last move_to point" during processing as the
+MOVE_TO immediately after the CLOSE_PATH will provide that point.
 
 @table @var
 @item cr
@@ -182,31 +186,33 @@ a cairo context
 @end deffn
 
 @deffn Function cairo-arc  (@var{cr}@tie{}@code{<cairo-t>}) (@var{xc}@tie{}@code{<double>}) (@var{yc}@tie{}@code{<double>}) (@var{radius}@tie{}@code{<double>}) (@var{angle1}@tie{}@code{<double>}) (@var{angle2}@tie{}@code{<double>})
-Adds a circular arc of the given @var{radius} to the current path. The arc is
-centered at (@var{xc}, @var{yc}), begins at @var{angle1} and proceeds in the
-direction of increasing angles to end at @var{angle2}. If @var{angle2} is less
-than @var{angle1} it will be progressively increased by 2*M_PI until it is
-greater than @var{angle1}.
+Adds a circular arc of the given @var{radius} to the current path. The
+arc is centered at (@var{xc}, @var{yc}), begins at @var{angle1} and
+proceeds in the direction of increasing angles to end at @var{angle2}.
+If @var{angle2} is less than @var{angle1} it will be progressively
+increased by 2*M_PI until it is greater than @var{angle1}.
 
-If there is a current point, an initial line segment will be added to the path
-to connect the current point to the beginning of the arc.
+If there is a current point, an initial line segment will be added to
+the path to connect the current point to the beginning of the arc.
 
-Angles are measured in radians. An angle of 0.0 is in the direction of the
-positive X axis (in user space). An angle of @samp{M_PI}/2.0 radians (90
-degrees) is in the direction of the positive Y axis (in user space). Angles
-increase in the direction from the positive X axis toward the positive Y axis.
-So with the default transformation matrix, angles increase in a clockwise
-direction.
+Angles are measured in radians. An angle of 0.0 is in the direction of
+the positive X axis (in user space). An angle of @samp{M_PI}/2.0 radians
+(90 degrees) is in the direction of the positive Y axis (in user space).
+Angles increase in the direction from the positive X axis toward the
+positive Y axis. So with the default transformation matrix, angles
+increase in a clockwise direction.
 
-(To convert from degrees to radians, use @samp{degrees * (M_PI / 180.)}.)
+(To convert from degrees to radians, use @samp{degrees * (M_PI /
+180.)}.)
 
 This function gives the arc in the direction of increasing angles; see
-@code{cairo-arc-negative} to get the arc in the direction of decreasing angles.
+@code{cairo-arc-negative} to get the arc in the direction of decreasing
+angles.
 
-The arc is circular in user space. To achieve an elliptical arc, you can scale
-the current transformation matrix by different amounts in the X and Y
-directions. For example, to draw an ellipse in the box given by @var{x},
-@var{y}, @var{width}, @var{height}:
+The arc is circular in user space. To achieve an elliptical arc, you can
+scale the current transformation matrix by different amounts in the X
+and Y directions. For example, to draw an ellipse in the box given by
+@var{x}, @var{y}, @var{width}, @var{height}:
 
 @example 
 
@@ -241,11 +247,11 @@ the end angle, in radians
 @end deffn
 
 @deffn Function cairo-arc-negative  (@var{cr}@tie{}@code{<cairo-t>}) (@var{xc}@tie{}@code{<double>}) (@var{yc}@tie{}@code{<double>}) (@var{radius}@tie{}@code{<double>}) (@var{angle1}@tie{}@code{<double>}) (@var{angle2}@tie{}@code{<double>})
-Adds a circular arc of the given @var{radius} to the current path. The arc is
-centered at (@var{xc}, @var{yc}), begins at @var{angle1} and proceeds in the
-direction of decreasing angles to end at @var{angle2}. If @var{angle2} is
-greater than @var{angle1} it will be progressively decreased by 2*M_PI until it
-is less than @var{angle1}.
+Adds a circular arc of the given @var{radius} to the current path. The
+arc is centered at (@var{xc}, @var{yc}), begins at @var{angle1} and
+proceeds in the direction of decreasing angles to end at @var{angle2}.
+If @var{angle2} is greater than @var{angle1} it will be progressively
+decreased by 2*M_PI until it is less than @var{angle1}.
 
 See @code{cairo-arc} for more details. This function differs only in the
 direction of the arc between the two angles.
@@ -274,14 +280,14 @@ the end angle, in radians
 @end deffn
 
 @deffn Function cairo-curve-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x1}@tie{}@code{<double>}) (@var{y1}@tie{}@code{<double>}) (@var{x2}@tie{}@code{<double>}) (@var{y2}@tie{}@code{<double>}) (@var{x3}@tie{}@code{<double>}) (@var{y3}@tie{}@code{<double>})
-Adds a cubic Bézier spline to the path from the current point to position
-(@var{x3}, @var{y3}) in user-space coordinates, using (@var{x1}, @var{y1}) and
-(@var{x2}, @var{y2}) as the control points. After this call the current point
-will be (@var{x3}, @var{y3}).
+Adds a cubic Bézier spline to the path from the current point to
+position (@var{x3}, @var{y3}) in user-space coordinates, using
+(@var{x1}, @var{y1}) and (@var{x2}, @var{y2}) as the control points.
+After this call the current point will be (@var{x3}, @var{y3}).
 
-If there is no current point before the call to @code{cairo-curve-to} this
-function will behave as if preceded by a call to cairo_move_to (@var{cr},
-@var{x1}, @var{y1}).
+If there is no current point before the call to @code{cairo-curve-to}
+this function will behave as if preceded by a call to cairo_move_to
+(@var{cr}, @var{x1}, @var{y1}).
 
 @table @var
 @item cr
@@ -310,12 +316,12 @@ the Y coordinate of the end of the curve
 @end deffn
 
 @deffn Function cairo-line-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
-Adds a line to the path from the current point to position (@var{x}, @var{y}) in
-user-space coordinates. After this call the current point will be (@var{x},
-@var{y}).
+Adds a line to the path from the current point to position (@var{x},
+@var{y}) in user-space coordinates. After this call the current point
+will be (@var{x}, @var{y}).
 
-If there is no current point before the call to @code{cairo-line-to} this
-function will behave as cairo_move_to (@var{cr}, @var{x}, @var{y}).
+If there is no current point before the call to @code{cairo-line-to}
+this function will behave as cairo_move_to (@var{cr}, @var{x}, @var{y}).
 
 @table @var
 @item cr
@@ -332,8 +338,8 @@ the Y coordinate of the end of the new line
 @end deffn
 
 @deffn Function cairo-move-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>})
-Begin a new sub-path. After this call the current point will be (@var{x},
-@var{y}).
+Begin a new sub-path. After this call the current point will be
+(@var{x}, @var{y}).
 
 @table @var
 @item cr
@@ -350,8 +356,8 @@ the Y coordinate of the new position
 @end deffn
 
 @deffn Function cairo-rectangle  (@var{cr}@tie{}@code{<cairo-t>}) (@var{x}@tie{}@code{<double>}) (@var{y}@tie{}@code{<double>}) (@var{width}@tie{}@code{<double>}) (@var{height}@tie{}@code{<double>})
-Adds a closed sub-path rectangle of the given size to the current path at
-position (@var{x}, @var{y}) in user-space coordinates.
+Adds a closed sub-path rectangle of the given size to the current path
+at position (@var{x}, @var{y}) in user-space coordinates.
 
 This function is logically equivalent to:
 
@@ -385,8 +391,9 @@ the height of the rectangle
 @end deffn
 
 @deffn Function cairo-glyph-path  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>})
-Adds closed paths for the glyphs to the current path. The generated path if
-filled, achieves an effect similar to that of @code{cairo-show-glyphs}.
+Adds closed paths for the glyphs to the current path. The generated path
+if filled, achieves an effect similar to that of
+@code{cairo-show-glyphs}.
 
 @table @var
 @item cr
@@ -403,21 +410,24 @@ number of glyphs to show
 @end deffn
 
 @deffn Function cairo-text-path  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>})
-Adds closed paths for text to the current path. The generated path if filled,
-achieves an effect similar to that of @code{cairo-show-text}.
+Adds closed paths for text to the current path. The generated path if
+filled, achieves an effect similar to that of @code{cairo-show-text}.
 
-Text conversion and positioning is done similar to @code{cairo-show-text}.
+Text conversion and positioning is done similar to
+@code{cairo-show-text}.
 
-Like @code{cairo-show-text}, After this call the current point is moved to the
-origin of where the next glyph would be placed in this same progression. That
-is, the current point will be at the origin of the final glyph offset by its
-advance values. This allows for chaining multiple calls to to
-@code{cairo-text-path} without having to set current point in between.
+Like @code{cairo-show-text}, After this call the current point is moved
+to the origin of where the next glyph would be placed in this same
+progression. That is, the current point will be at the origin of the
+final glyph offset by its advance values. This allows for chaining
+multiple calls to to @code{cairo-text-path} without having to set
+current point in between.
 
 NOTE: The @code{cairo-text-path} function call is part of what the cairo
-designers call the "toy" text API. It is convenient for short demos and simple
-programs, but it is not expected to be adequate for serious text-using
-applications. See @code{cairo-glyph-path} for the "real" text path API in cairo.
+designers call the "toy" text API. It is convenient for short demos and
+simple programs, but it is not expected to be adequate for serious
+text-using applications. See @code{cairo-glyph-path} for the "real" text
+path API in cairo.
 
 @table @var
 @item cr
@@ -431,20 +441,21 @@ a string of text encoded in UTF-8
 @end deffn
 
 @deffn Function cairo-rel-curve-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{dx1}@tie{}@code{<double>}) (@var{dy1}@tie{}@code{<double>}) (@var{dx2}@tie{}@code{<double>}) (@var{dy2}@tie{}@code{<double>}) (@var{dx3}@tie{}@code{<double>}) (@var{dy3}@tie{}@code{<double>})
-Relative-coordinate version of @code{cairo-curve-to}. All offsets are relative
-to the current point. Adds a cubic Bézier spline to the path from the current
-point to a point offset from the current point by (@var{dx3}, @var{dy3}), using
-points offset by (@var{dx1}, @var{dy1}) and (@var{dx2}, @var{dy2}) as the
-control points. After this call the current point will be offset by (@var{dx3},
-@var{dy3}).
+Relative-coordinate version of @code{cairo-curve-to}. All offsets are
+relative to the current point. Adds a cubic Bézier spline to the path
+from the current point to a point offset from the current point by
+(@var{dx3}, @var{dy3}), using points offset by (@var{dx1}, @var{dy1})
+and (@var{dx2}, @var{dy2}) as the control points. After this call the
+current point will be offset by (@var{dx3}, @var{dy3}).
 
-Given a current point of (x, y), cairo_rel_curve_to (@var{cr}, @var{dx1},
-@var{dy1}, @var{dx2}, @var{dy2}, @var{dx3}, @var{dy3}) is logically equivalent
-to cairo_curve_to (@var{cr}, x + @var{dx1}, y + @var{dy1}, x + @var{dx2}, y +
-@var{dy2}, x + @var{dx3}, y + @var{dy3}).
+Given a current point of (x, y), cairo_rel_curve_to (@var{cr},
+@var{dx1}, @var{dy1}, @var{dx2}, @var{dy2}, @var{dx3}, @var{dy3}) is
+logically equivalent to cairo_curve_to (@var{cr}, x + @var{dx1}, y +
+@var{dy1}, x + @var{dx2}, y + @var{dy2}, x + @var{dx3}, y + @var{dy3}).
 
-It is an error to call this function with no current point. Doing so will cause
-@var{cr} to shutdown with a status of CAIRO_STATUS_NO_CURRENT_POINT.
+It is an error to call this function with no current point. Doing so
+will cause @var{cr} to shutdown with a status of
+CAIRO_STATUS_NO_CURRENT_POINT.
 
 @table @var
 @item cr
@@ -473,16 +484,18 @@ the Y offset to the end of the curve
 @end deffn
 
 @deffn Function cairo-rel-line-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{dx}@tie{}@code{<double>}) (@var{dy}@tie{}@code{<double>})
-Relative-coordinate version of @code{cairo-line-to}. Adds a line to the path
-from the current point to a point that is offset from the current point by
-(@var{dx}, @var{dy}) in user space. After this call the current point will be
-offset by (@var{dx}, @var{dy}).
+Relative-coordinate version of @code{cairo-line-to}. Adds a line to the
+path from the current point to a point that is offset from the current
+point by (@var{dx}, @var{dy}) in user space. After this call the current
+point will be offset by (@var{dx}, @var{dy}).
 
-Given a current point of (x, y), cairo_rel_line_to(@var{cr}, @var{dx}, @var{dy})
-is logically equivalent to cairo_line_to (@var{cr}, x + @var{dx}, y + @var{dy}).
+Given a current point of (x, y), cairo_rel_line_to(@var{cr}, @var{dx},
+@var{dy}) is logically equivalent to cairo_line_to (@var{cr}, x +
+@var{dx}, y + @var{dy}).
 
-It is an error to call this function with no current point. Doing so will cause
-@var{cr} to shutdown with a status of CAIRO_STATUS_NO_CURRENT_POINT.
+It is an error to call this function with no current point. Doing so
+will cause @var{cr} to shutdown with a status of
+CAIRO_STATUS_NO_CURRENT_POINT.
 
 @table @var
 @item cr
@@ -499,14 +512,16 @@ the Y offset to the end of the new line
 @end deffn
 
 @deffn Function cairo-rel-move-to  (@var{cr}@tie{}@code{<cairo-t>}) (@var{dx}@tie{}@code{<double>}) (@var{dy}@tie{}@code{<double>})
-Begin a new sub-path. After this call the current point will offset by (@var{x},
-@var{y}).
+Begin a new sub-path. After this call the current point will offset by
+(@var{x}, @var{y}).
 
-Given a current point of (x, y), cairo_rel_move_to(@var{cr}, @var{dx}, @var{dy})
-is logically equivalent to cairo_move_to (@var{cr}, x + @var{dx}, y + @var{dy}).
+Given a current point of (x, y), cairo_rel_move_to(@var{cr}, @var{dx},
+@var{dy}) is logically equivalent to cairo_move_to (@var{cr}, x +
+@var{dx}, y + @var{dy}).
 
-It is an error to call this function with no current point. Doing so will cause
-@var{cr} to shutdown with a status of CAIRO_STATUS_NO_CURRENT_POINT.
+It is an error to call this function with no current point. Doing so
+will cause @var{cr} to shutdown with a status of
+CAIRO_STATUS_NO_CURRENT_POINT.
 
 @table @var
 @item cr

@@ -2,10 +2,11 @@
 @c %start of fragment
 
 @deffn Function cairo-image-surface-create  (@var{format}@tie{}@code{<cairo-format-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
-Creates an image surface of the specified format and dimensions. Initially the
-surface contents are all 0. (Specifically, within each pixel, each color or
-alpha channel belonging to format will be 0. The contents of bits within a
-pixel, but not belonging to the given format are undefined).
+Creates an image surface of the specified format and dimensions.
+Initially the surface contents are all 0. (Specifically, within each
+pixel, each color or alpha channel belonging to format will be 0. The
+contents of bits within a pixel, but not belonging to the given format
+are undefined).
 
 @table @var
 @item format
@@ -18,11 +19,11 @@ width of the surface, in pixels
 height of the surface, in pixels
 
 @item ret
-a pointer to the newly created surface. The caller owns the surface and should
-call cairo_surface_destroy when done with it. This function always returns a
-valid pointer, but it will return a pointer to a "nil" surface if an error such
-as out of memory occurs. You can use @code{cairo-surface-status} to check for
-this.
+a pointer to the newly created surface. The caller owns the surface and
+should call cairo_surface_destroy when done with it. This function
+always returns a valid pointer, but it will return a pointer to a "nil"
+surface if an error such as out of memory occurs. You can use
+@code{cairo-surface-status} to check for this.
 
 @end table
 
@@ -80,9 +81,9 @@ Get the stride of the image surface in bytes
 a @code{<cairo-image-surface-t>}
 
 @item ret
-the stride of the image surface in bytes (or 0 if @var{surface} is not an image
-surface). The stride is the distance in bytes from the beginning of one row of
-the image data to the beginning of the next row.
+the stride of the image surface in bytes (or 0 if @var{surface} is not
+an image surface). The stride is the distance in bytes from the
+beginning of one row of the image data to the beginning of the next row.
 
 @end table
 

@@ -2,12 +2,12 @@
 @c %start of fragment
 
 @deffn Function cairo-select-font-face  (@var{cr}@tie{}@code{<cairo-t>}) (@var{family}@tie{}@code{<char>}) (@var{slant}@tie{}@code{<cairo-font-slant-t>}) (@var{weight}@tie{}@code{<cairo-font-weight-t>})
-Selects a family and style of font from a simplified description as a family
-name, slant and weight. This function is meant to be used only for applications
-with simple font needs: Cairo doesn't provide for operations such as listing all
-available fonts on the system, and it is expected that most applications will
-need to use a more comprehensive font handling and text layout library in
-addition to cairo.
+Selects a family and style of font from a simplified description as a
+family name, slant and weight. This function is meant to be used only
+for applications with simple font needs: Cairo doesn't provide for
+operations such as listing all available fonts on the system, and it is
+expected that most applications will need to use a more comprehensive
+font handling and text layout library in addition to cairo.
 
 @table @var
 @item cr
@@ -27,11 +27,12 @@ the weight for the font
 @end deffn
 
 @deffn Function cairo-set-font-size  (@var{cr}@tie{}@code{<cairo-t>}) (@var{size}@tie{}@code{<double>})
-Sets the current font matrix to a scale by a factor of @var{size}, replacing any
-font matrix previously set with @code{cairo-set-font-size} or
-@code{cairo-set-font-matrix}. This results in a font size of @var{size} user
-space units. (More precisely, this matrix will result in the font's em-square
-being a @var{size} by @var{size} square in user space.)
+Sets the current font matrix to a scale by a factor of @var{size},
+replacing any font matrix previously set with @code{cairo-set-font-size}
+or @code{cairo-set-font-matrix}. This results in a font size of
+@var{size} user space units. (More precisely, this matrix will result in
+the font's em-square being a @var{size} by @var{size} square in user
+space.)
 
 @table @var
 @item cr
@@ -46,18 +47,18 @@ the new font size, in user space units
 
 @deffn Function cairo-set-font-matrix  (@var{cr}@tie{}@code{<cairo-t>}) (@var{matrix}@tie{}@code{<cairo-matrix-t>})
 Sets the current font matrix to @var{matrix}. The font matrix gives a
-transformation from the design space of the font (in this space, the em-square
-is 1 unit by 1 unit) to user space. Normally, a simple scale is used (see
-@code{cairo-set-font-size}), but a more complex font matrix can be used to shear
-the font or stretch it unequally along the two axes
+transformation from the design space of the font (in this space, the
+em-square is 1 unit by 1 unit) to user space. Normally, a simple scale
+is used (see @code{cairo-set-font-size}), but a more complex font matrix
+can be used to shear the font or stretch it unequally along the two axes
 
 @table @var
 @item cr
 a @code{<cairo-t>}
 
 @item matrix
-a @code{<cairo-matrix-t>} describing a transform to be applied to the current
-font.
+a @code{<cairo-matrix-t>} describing a transform to be applied to the
+current font.
 
 @end table
 
@@ -79,10 +80,11 @@ return value for the matrix
 @end deffn
 
 @deffn Function cairo-set-font-options  (@var{cr}@tie{}@code{<cairo-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
-Sets a set of custom font rendering options for the @code{<cairo-t>}. Rendering
-options are derived by merging these options with the options derived from
-underlying surface; if the value in @var{options} has a default value (like
-@samp{CAIRO_ANTIALIAS_DEFAULT}), then the value from the surface is used.
+Sets a set of custom font rendering options for the @code{<cairo-t>}.
+Rendering options are derived by merging these options with the options
+derived from underlying surface; if the value in @var{options} has a
+default value (like @samp{CAIRO_ANTIALIAS_DEFAULT}), then the value from
+the surface is used.
 
 @table @var
 @item cr
@@ -96,9 +98,10 @@ font options to use
 @end deffn
 
 @deffn Function cairo-get-font-options  (@var{cr}@tie{}@code{<cairo-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
-Retrieves font rendering options set via @code{<cairo-set-font-options>}. Note
-that the returned options do not include any options derived from the underlying
-surface; they are literally the options passed to @code{cairo-set-font-options}.
+Retrieves font rendering options set via
+@code{<cairo-set-font-options>}. Note that the returned options do not
+include any options derived from the underlying surface; they are
+literally the options passed to @code{cairo-set-font-options}.
 
 @table @var
 @item cr
@@ -113,16 +116,18 @@ options. All existing values are overwritten
 @end deffn
 
 @deffn Function cairo-set-font-face  (@var{cr}@tie{}@code{<cairo-t>}) (@var{font-face}@tie{}@code{<cairo-font-face-t>})
-Replaces the current @code{<cairo-font-face-t>} object in the @code{<cairo-t>}
-with @var{font-face}. The replaced font face in the @code{<cairo-t>} will be
-destroyed if there are no other references to it.
+Replaces the current @code{<cairo-font-face-t>} object in the
+@code{<cairo-t>} with @var{font-face}. The replaced font face in the
+@code{<cairo-t>} will be destroyed if there are no other references to
+it.
 
 @table @var
 @item cr
 a @code{<cairo-t>}
 
 @item font-face
-a @code{<cairo-font-face-t>}, or @samp{@code{#f}} to restore to the default font
+a @code{<cairo-font-face-t>}, or @samp{@code{#f}} to restore to the
+default font
 
 @end table
 
@@ -136,14 +141,15 @@ Gets the current font face for a @code{<cairo-t>}.
 a @code{<cairo-t>}
 
 @item ret
-the current font face. This object is owned by cairo. To keep a reference to it,
-you must call cairo_font_face_reference. This function never returns
-@samp{@code{#f}}. If memory cannot be allocated, a special "nil"
-@code{<cairo-font-face-t>} object will be returned on which
-@code{cairo-font-face-status} returns @samp{CAIRO_STATUS_NO_MEMORY}. Using this
-nil object will cause its error state to propagate to other objects it is passed
-to, (for example, calling @code{cairo-set-font-face} with a nil font will
-trigger an error that will shutdown the cairo_t object).
+the current font face. This object is owned by cairo. To keep a
+reference to it, you must call cairo_font_face_reference. This function
+never returns @samp{@code{#f}}. If memory cannot be allocated, a special
+"nil" @code{<cairo-font-face-t>} object will be returned on which
+@code{cairo-font-face-status} returns @samp{CAIRO_STATUS_NO_MEMORY}.
+Using this nil object will cause its error state to propagate to other
+objects it is passed to, (for example, calling
+@code{cairo-set-font-face} with a nil font will trigger an error that
+will shutdown the cairo_t object).
 
 @end table
 
@@ -151,10 +157,10 @@ trigger an error that will shutdown the cairo_t object).
 
 @deffn Function cairo-set-scaled-font  (@var{cr}@tie{}@code{<cairo-t>}) (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>})
 Replaces the current font face, font matrix, and font options in the
-@code{<cairo-t>} with those of the @code{<cairo-scaled-font-t>}. Except for some
-translation, the current CTM of the @code{<cairo-t>} should be the same as that
-of the @code{<cairo-scaled-font-t>}, which can be accessed using
-@code{cairo-scaled-font-get-ctm}.
+@code{<cairo-t>} with those of the @code{<cairo-scaled-font-t>}. Except
+for some translation, the current CTM of the @code{<cairo-t>} should be
+the same as that of the @code{<cairo-scaled-font-t>}, which can be
+accessed using @code{cairo-scaled-font-get-ctm}.
 
 @table @var
 @item cr
@@ -177,14 +183,15 @@ Gets the current scaled font for a @code{<cairo-t>}.
 a @code{<cairo-t>}
 
 @item ret
-the current scaled font. This object is owned by cairo. To keep a reference to
-it, you must call @code{cairo-scaled-font-reference}. This function never
-returns @samp{@code{#f}}. If memory cannot be allocated, a special "nil"
-@code{<cairo-scaled-font-t>} object will be returned on which
-@code{cairo-scaled-font-status} returns @samp{CAIRO_STATUS_NO_MEMORY}. Using
-this nil object will cause its error state to propagate to other objects it is
-passed to, (for example, calling @code{cairo-set-scaled-font} with a nil font
-will trigger an error that will shutdown the cairo_t object).
+the current scaled font. This object is owned by cairo. To keep a
+reference to it, you must call @code{cairo-scaled-font-reference}. This
+function never returns @samp{@code{#f}}. If memory cannot be allocated,
+a special "nil" @code{<cairo-scaled-font-t>} object will be returned on
+which @code{cairo-scaled-font-status} returns
+@samp{CAIRO_STATUS_NO_MEMORY}. Using this nil object will cause its
+error state to propagate to other objects it is passed to, (for example,
+calling @code{cairo-set-scaled-font} with a nil font will trigger an
+error that will shutdown the cairo_t object).
 
 @end table
 
@@ -193,26 +200,26 @@ Since 1.4
 @end deffn
 
 @deffn Function cairo-show-text  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>})
-A drawing operator that generates the shape from a string of UTF-8 characters,
-rendered according to the current font_face, font_size (font_matrix), and
-font_options.
+A drawing operator that generates the shape from a string of UTF-8
+characters, rendered according to the current font_face, font_size
+(font_matrix), and font_options.
 
-This function first computes a set of glyphs for the string of text. The first
-glyph is placed so that its origin is at the current point. The origin of each
-subsequent glyph is offset from that of the previous glyph by the advance values
-of the previous glyph.
+This function first computes a set of glyphs for the string of text. The
+first glyph is placed so that its origin is at the current point. The
+origin of each subsequent glyph is offset from that of the previous
+glyph by the advance values of the previous glyph.
 
-After this call the current point is moved to the origin of where the next glyph
-would be placed in this same progression. That is, the current point will be at
-the origin of the final glyph offset by its advance values. This allows for easy
-display of a single logical string with multiple calls to
-@code{cairo-show-text}.
+After this call the current point is moved to the origin of where the
+next glyph would be placed in this same progression. That is, the
+current point will be at the origin of the final glyph offset by its
+advance values. This allows for easy display of a single logical string
+with multiple calls to @code{cairo-show-text}.
 
 NOTE: The @code{cairo-show-text} function call is part of what the cairo
-designers call the "toy" text API. It is convenient for short demos and simple
-programs, but it is not expected to be adequate for serious text-using
-applications. See @code{cairo-show-glyphs} for the "real" text display API in
-cairo.
+designers call the "toy" text API. It is convenient for short demos and
+simple programs, but it is not expected to be adequate for serious
+text-using applications. See @code{cairo-show-glyphs} for the "real"
+text display API in cairo.
 
 @table @var
 @item cr
@@ -226,8 +233,9 @@ a string of text encoded in UTF-8
 @end deffn
 
 @deffn Function cairo-show-glyphs  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>})
-A drawing operator that generates the shape from an array of glyphs, rendered
-according to the current font_face, font_size (font_matrix), and font_options.
+A drawing operator that generates the shape from an array of glyphs,
+rendered according to the current font_face, font_size (font_matrix),
+and font_options.
 
 @table @var
 @item cr
@@ -251,7 +259,8 @@ Gets the font extents for the currently selected font.
 a @code{<cairo-t>}
 
 @item extents
-a @code{<cairo-font-extents-t>} object into which the results will be stored.
+a @code{<cairo-font-extents-t>} object into which the results will be
+stored.
 
 @end table
 
@@ -259,16 +268,17 @@ a @code{<cairo-font-extents-t>} object into which the results will be stored.
 
 @deffn Function cairo-text-extents  (@var{cr}@tie{}@code{<cairo-t>}) (@var{utf8}@tie{}@code{<char>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for a string of text. The extents describe a user-space
-rectangle that encloses the "inked" portion of the text, (as it would be drawn
-by @code{cairo-show-text}). Additionally, the x_advance and y_advance values
-indicate the amount by which the current point would be advanced by
-@code{cairo-show-text}.
+rectangle that encloses the "inked" portion of the text, (as it would be
+drawn by @code{cairo-show-text}). Additionally, the x_advance and
+y_advance values indicate the amount by which the current point would be
+advanced by @code{cairo-show-text}.
 
-Note that whitespace characters do not directly contribute to the size of the
-rectangle (extents.width and extents.height). They do contribute indirectly by
-changing the position of non-whitespace characters. In particular, trailing
-whitespace characters are likely to not affect the size of the rectangle, though
-they will affect the x_advance and y_advance values.
+Note that whitespace characters do not directly contribute to the size
+of the rectangle (extents.width and extents.height). They do contribute
+indirectly by changing the position of non-whitespace characters. In
+particular, trailing whitespace characters are likely to not affect the
+size of the rectangle, though they will affect the x_advance and
+y_advance values.
 
 @table @var
 @item cr
@@ -278,21 +288,22 @@ a @code{<cairo-t>}
 a string of text, encoded in UTF-8
 
 @item extents
-a @code{<cairo-text-extents-t>} object into which the results will be stored
+a @code{<cairo-text-extents-t>} object into which the results will be
+stored
 
 @end table
 
 @end deffn
 
 @deffn Function cairo-glyph-extents  (@var{cr}@tie{}@code{<cairo-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
-Gets the extents for an array of glyphs. The extents describe a user-space
-rectangle that encloses the "inked" portion of the glyphs, (as they would be
-drawn by @code{cairo-show-glyphs}). Additionally, the x_advance and y_advance
-values indicate the amount by which the current point would be advanced by
-cairo_show_glyphs.
+Gets the extents for an array of glyphs. The extents describe a
+user-space rectangle that encloses the "inked" portion of the glyphs,
+(as they would be drawn by @code{cairo-show-glyphs}). Additionally, the
+x_advance and y_advance values indicate the amount by which the current
+point would be advanced by cairo_show_glyphs.
 
-Note that whitespace glyphs do not contribute to the size of the rectangle
-(extents.width and extents.height).
+Note that whitespace glyphs do not contribute to the size of the
+rectangle (extents.width and extents.height).
 
 @table @var
 @item cr
@@ -305,7 +316,8 @@ an array of @code{<cairo-glyph-t>} objects
 the number of elements in @var{glyphs}
 
 @item extents
-a @code{<cairo-text-extents-t>} object into which the results will be stored
+a @code{<cairo-text-extents-t>} object into which the results will be
+stored
 
 @end table
 

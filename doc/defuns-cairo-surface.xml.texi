@@ -2,11 +2,12 @@
 @c %start of fragment
 
 @deffn Function cairo-surface-create-similar  (@var{other}@tie{}@code{<cairo-surface-t>}) (@var{content}@tie{}@code{<cairo-content-t>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
-Create a new surface that is as compatible as possible with an existing surface.
-For example the new surface will have the same fallback resolution and font
-options as @var{other}. Generally, the new surface will also use the same
-backend as @var{other}, unless that is not possible for some reason. The type of
-the returned surface may be examined with @code{cairo-surface-get-type}.
+Create a new surface that is as compatible as possible with an existing
+surface. For example the new surface will have the same fallback
+resolution and font options as @var{other}. Generally, the new surface
+will also use the same backend as @var{other}, unless that is not
+possible for some reason. The type of the returned surface may be
+examined with @code{cairo-surface-get-type}.
 
 Initially the surface contents are all 0 (transparent if contents have
 transparency, black otherwise.)
@@ -25,10 +26,11 @@ width of the new surface, (in device-space units)
 height of the new surface (in device-space units)
 
 @item ret
-a pointer to the newly allocated surface. The caller owns the surface and should
-call cairo_surface_destroy when done with it. This function always returns a
-valid pointer, but it will return a pointer to a "nil" surface if @var{other} is
-already in an error state or any other error occurs.
+a pointer to the newly allocated surface. The caller owns the surface
+and should call cairo_surface_destroy when done with it. This function
+always returns a valid pointer, but it will return a pointer to a "nil"
+surface if @var{other} is already in an error state or any other error
+occurs.
 
 @end table
 
@@ -36,16 +38,17 @@ already in an error state or any other error occurs.
 
 @deffn Function cairo-surface-finish  (@var{surface}@tie{}@code{<cairo-surface-t>})
 This function finishes the surface and drops all references to external
-resources. For example, for the Xlib backend it means that cairo will no longer
-access the drawable, which can be freed. After calling
-@code{cairo-surface-finish} the only valid operations on a surface are getting
-and setting user data and referencing and destroying it. Further drawing to the
-surface will not affect the surface but will instead trigger a
-CAIRO_STATUS_SURFACE_FINISHED error.
+resources. For example, for the Xlib backend it means that cairo will no
+longer access the drawable, which can be freed. After calling
+@code{cairo-surface-finish} the only valid operations on a surface are
+getting and setting user data and referencing and destroying it. Further
+drawing to the surface will not affect the surface but will instead
+trigger a CAIRO_STATUS_SURFACE_FINISHED error.
 
-When the last call to @code{cairo-surface-destroy} decreases the reference count
-to zero, cairo will call @code{cairo-surface-finish} if it hasn't been called
-already, before freeing the resources associated with the surface.
+When the last call to @code{cairo-surface-destroy} decreases the
+reference count to zero, cairo will call @code{cairo-surface-finish} if
+it hasn't been called already, before freeing the resources associated
+with the surface.
 
 @table @var
 @item surface
@@ -57,10 +60,10 @@ the @code{<cairo-surface-t>} to finish
 
 @deffn Function cairo-surface-flush  (@var{surface}@tie{}@code{<cairo-surface-t>})
 Do any pending drawing for the surface and also restore any temporary
-modification's cairo has made to the surface's state. This function must be
-called before switching from drawing on the surface with cairo to drawing on it
-directly with native APIs. If the surface doesn't support direct access, then
-this function does nothing.
+modification's cairo has made to the surface's state. This function must
+be called before switching from drawing on the surface with cairo to
+drawing on it directly with native APIs. If the surface doesn't support
+direct access, then this function does nothing.
 
 @table @var
 @item surface
@@ -71,10 +74,10 @@ a @code{<cairo-surface-t>}
 @end deffn
 
 @deffn Function cairo-surface-get-font-options  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>})
-Retrieves the default font rendering options for the surface. This allows
-display surfaces to report the correct subpixel order for rendering on them,
-print surfaces to disable hinting of metrics and so forth. The result can then
-be used with @code{cairo-scaled-font-create}.
+Retrieves the default font rendering options for the surface. This
+allows display surfaces to report the correct subpixel order for
+rendering on them, print surfaces to disable hinting of metrics and so
+forth. The result can then be used with @code{cairo-scaled-font-create}.
 
 @table @var
 @item surface
@@ -89,8 +92,8 @@ options. All existing values are overwritten
 @end deffn
 
 @deffn Function cairo-surface-get-content  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-content-t>})
-This function returns the content type of @var{surface} which indicates whether
-the surface contains color and/or alpha information. See
+This function returns the content type of @var{surface} which indicates
+whether the surface contains color and/or alpha information. See
 @code{<cairo-content-t>}.
 
 @table @var
@@ -107,9 +110,9 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-surface-mark-dirty  (@var{surface}@tie{}@code{<cairo-surface-t>})
-Tells cairo that drawing has been done to surface using means other than cairo,
-and that cairo should reread any cached areas. Note that you must call
-@code{cairo-surface-flush} before doing such drawing.
+Tells cairo that drawing has been done to surface using means other than
+cairo, and that cairo should reread any cached areas. Note that you must
+call @code{cairo-surface-flush} before doing such drawing.
 
 @table @var
 @item surface
@@ -120,12 +123,12 @@ a @code{<cairo-surface-t>}
 @end deffn
 
 @deffn Function cairo-surface-mark-dirty-rectangle  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{x}@tie{}@code{<int>}) (@var{y}@tie{}@code{<int>}) (@var{width}@tie{}@code{<int>}) (@var{height}@tie{}@code{<int>})
-Like @code{cairo-surface-mark-dirty}, but drawing has been done only to the
-specified rectangle, so that cairo can retain cached contents for other parts of
-the surface.
+Like @code{cairo-surface-mark-dirty}, but drawing has been done only to
+the specified rectangle, so that cairo can retain cached contents for
+other parts of the surface.
 
-Any cached clip set on the surface will be reset by this function, to make sure
-that future cairo calls have the clip set that they expect.
+Any cached clip set on the surface will be reset by this function, to
+make sure that future cairo calls have the clip set that they expect.
 
 @table @var
 @item surface
@@ -148,16 +151,17 @@ height of dirty rectangle
 @end deffn
 
 @deffn Function cairo-surface-set-device-offset  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{x-offset}@tie{}@code{<double>}) (@var{y-offset}@tie{}@code{<double>})
-Sets an offset that is added to the device coordinates determined by the CTM
-when drawing to @var{surface}. One use case for this function is when we want to
-create a @code{<cairo-surface-t>} that redirects drawing for a portion of an
-onscreen surface to an offscreen surface in a way that is completely invisible
-to the user of the cairo API. Setting a transformation via
-@code{cairo-translate} isn't sufficient to do this, since functions like
-@code{cairo-device-to-user} will expose the hidden offset.
+Sets an offset that is added to the device coordinates determined by the
+CTM when drawing to @var{surface}. One use case for this function is
+when we want to create a @code{<cairo-surface-t>} that redirects drawing
+for a portion of an onscreen surface to an offscreen surface in a way
+that is completely invisible to the user of the cairo API. Setting a
+transformation via @code{cairo-translate} isn't sufficient to do this,
+since functions like @code{cairo-device-to-user} will expose the hidden
+offset.
 
-Note that the offset affects drawing to the surface as well as using the surface
-in a source pattern.
+Note that the offset affects drawing to the surface as well as using the
+surface in a source pattern.
 
 @table @var
 @item surface
@@ -194,8 +198,8 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-surface-get-type  (@var{surface}@tie{}@code{<cairo-surface-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-type-t>})
-This function returns the type of the backend used to create a surface. See
-@code{<cairo-surface-type-t>} for available types.
+This function returns the type of the backend used to create a surface.
+See @code{<cairo-surface-type-t>} for available types.
 
 @table @var
 @item surface

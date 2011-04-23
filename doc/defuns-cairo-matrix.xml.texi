@@ -3,9 +3,9 @@
 
 @deffn Function cairo-matrix-translate  (@var{matrix}@tie{}@code{<cairo-matrix-t>}) (@var{tx}@tie{}@code{<double>}) (@var{ty}@tie{}@code{<double>})
 Applies a translation by @var{tx}, @var{ty} to the transformation in
-@var{matrix}. The effect of the new transformation is to first translate the
-coordinates by @var{tx} and @var{ty}, then apply the original transformation to
-the coordinates.
+@var{matrix}. The effect of the new transformation is to first translate
+the coordinates by @var{tx} and @var{ty}, then apply the original
+transformation to the coordinates.
 
 @table @var
 @item matrix
@@ -23,11 +23,12 @@ amount to translate in the Y direction
 
 @deffn Function cairo-matrix-invert  (@var{matrix}@tie{}@code{<cairo-matrix-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-status-t>})
 Changes @var{matrix} to be the inverse of it's original value. Not all
-transformation matrices have inverses; if the matrix collapses points together
-(it is @dfn{degenerate}), then it has no inverse and this function will fail.
+transformation matrices have inverses; if the matrix collapses points
+together (it is @dfn{degenerate}), then it has no inverse and this
+function will fail.
 
-Returns: If @var{matrix} has an inverse, modifies @var{matrix} to be the inverse
-matrix and returns @samp{CAIRO_STATUS_SUCCESS}. Otherwise,
+Returns: If @var{matrix} has an inverse, modifies @var{matrix} to be the
+inverse matrix and returns @samp{CAIRO_STATUS_SUCCESS}. Otherwise,
 
 @table @var
 @item matrix
@@ -41,12 +42,14 @@ a @code{<cairo-matrix-t>}
 @end deffn
 
 @deffn Function cairo-matrix-multiply  (@var{result}@tie{}@code{<cairo-matrix-t>}) (@var{a}@tie{}@code{<cairo-matrix-t>}) (@var{b}@tie{}@code{<cairo-matrix-t>})
-Multiplies the affine transformations in @var{a} and @var{b} together and stores
-the result in @var{result}. The effect of the resulting transformation is to
-first apply the transformation in @var{a} to the coordinates and then apply the
-transformation in @var{b} to the coordinates.
+Multiplies the affine transformations in @var{a} and @var{b} together
+and stores the result in @var{result}. The effect of the resulting
+transformation is to first apply the transformation in @var{a} to the
+coordinates and then apply the transformation in @var{b} to the
+coordinates.
 
-It is allowable for @var{result} to be identical to either @var{a} or @var{b}.
+It is allowable for @var{result} to be identical to either @var{a} or
+@var{b}.
 
 @table @var
 @item result
@@ -63,10 +66,10 @@ a @code{<cairo-matrix-t>}
 @end deffn
 
 @deffn Function cairo-matrix-transform-distance  (@var{matrix}@tie{}@code{<cairo-matrix-t>}) @result{}@tie{} (@var{dx}@tie{}@code{<double>}) (@var{dy}@tie{}@code{<double>})
-Transforms the distance vector (@var{dx},@var{dy}) by @var{matrix}. This is
-similar to @code{cairo-matrix-transform-point} except that the translation
-components of the transformation are ignored. The calculation of the returned
-vector is as follows:
+Transforms the distance vector (@var{dx},@var{dy}) by @var{matrix}. This
+is similar to @code{cairo-matrix-transform-point} except that the
+translation components of the transformation are ignored. The
+calculation of the returned vector is as follows:
 
 @example 
 
@@ -76,9 +79,9 @@ dy2 = dx1 * b + dy1 * d;
 
 Affine transformations are position invariant, so the same vector always
 transforms to the same vector. If (@var{x1},@var{y1}) transforms to
-(@var{x2},@var{y2}) then (@var{x1}+@var{dx1},@var{y1}+@var{dy1}) will transform
-to (@var{x1}+@var{dx2},@var{y1}+@var{dy2}) for all values of @var{x1} and
-@var{x2}.
+(@var{x2},@var{y2}) then (@var{x1}+@var{dx1},@var{y1}+@var{dy1}) will
+transform to (@var{x1}+@var{dx2},@var{y1}+@var{dy2}) for all values of
+@var{x1} and @var{x2}.
 
 @table @var
 @item matrix

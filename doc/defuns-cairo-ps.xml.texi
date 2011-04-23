@@ -2,13 +2,13 @@
 @c %start of fragment
 
 @deffn Function cairo-ps-surface-create  (@var{filename}@tie{}@code{<char>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-surface-t>})
-Creates a PostScript surface of the specified size in points to be written to
-@var{filename}. See @code{cairo-ps-surface-create-for-stream} for a more
-flexible mechanism for handling the PostScript output than simply writing it to
-a named file.
+Creates a PostScript surface of the specified size in points to be
+written to @var{filename}. See @code{cairo-ps-surface-create-for-stream}
+for a more flexible mechanism for handling the PostScript output than
+simply writing it to a named file.
 
-Note that the size of individual pages of the PostScript output can vary. See
-@code{cairo-ps-surface-set-size}.
+Note that the size of individual pages of the PostScript output can
+vary. See @code{cairo-ps-surface-set-size}.
 
 @table @var
 @item filename
@@ -21,11 +21,11 @@ width of the surface, in points (1 point == 1/72.0 inch)
 height of the surface, in points (1 point == 1/72.0 inch)
 
 @item ret
-a pointer to the newly created surface. The caller owns the surface and should
-call cairo_surface_destroy when done with it. This function always returns a
-valid pointer, but it will return a pointer to a "nil" surface if an error such
-as out of memory occurs. You can use @code{cairo-surface-status} to check for
-this.
+a pointer to the newly created surface. The caller owns the surface and
+should call cairo_surface_destroy when done with it. This function
+always returns a valid pointer, but it will return a pointer to a "nil"
+surface if an error such as out of memory occurs. You can use
+@code{cairo-surface-status} to check for this.
 
 @end table
 
@@ -34,12 +34,14 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-ps-surface-set-size  (@var{surface}@tie{}@code{<cairo-surface-t>}) (@var{width-in-points}@tie{}@code{<double>}) (@var{height-in-points}@tie{}@code{<double>})
-Changes the size of a PostScript surface for the current (and subsequent) pages.
+Changes the size of a PostScript surface for the current (and
+subsequent) pages.
 
-This function should only be called before any drawing operations have been
-performed on the current page. The simplest way to do this is to call this
-function immediately after creating the surface or immediately after completing
-a page with either @code{cairo-show-page} or @code{cairo-copy-page}.
+This function should only be called before any drawing operations have
+been performed on the current page. The simplest way to do this is to
+call this function immediately after creating the surface or immediately
+after completing a page with either @code{cairo-show-page} or
+@code{cairo-copy-page}.
 
 @table @var
 @item surface
@@ -62,48 +64,53 @@ Emit a comment into the PostScript output for the given surface.
 
 The comment is expected to conform to the PostScript Language Document
 Structuring Conventions (DSC). Please see that manual for details on the
-available comments and their meanings. In particular, the %@samp{IncludeFeature}
-comment allows a device-independent means of controlling printer device
-features. So the PostScript Printer Description Files Specification will also be
-a useful reference.
+available comments and their meanings. In particular, the
+%@samp{IncludeFeature} comment allows a device-independent means of
+controlling printer device features. So the PostScript Printer
+Description Files Specification will also be a useful reference.
 
-The comment string must begin with a percent character (%) and the total length
-of the string (including any initial percent characters) must not exceed 255
-characters. Violating either of these conditions will place @var{surface} into
-an error state. But beyond these two conditions, this function will not enforce
-conformance of the comment with any particular specification.
+The comment string must begin with a percent character (%) and the total
+length of the string (including any initial percent characters) must not
+exceed 255 characters. Violating either of these conditions will place
+@var{surface} into an error state. But beyond these two conditions, this
+function will not enforce conformance of the comment with any particular
+specification.
 
 The comment string should not have a trailing newline.
 
-The DSC specifies different sections in which particular comments can appear.
-This function provides for comments to be emitted within three sections: the
-header, the Setup section, and the PageSetup section. Comments appearing in the
-first two sections apply to the entire document while comments in the
-BeginPageSetup section apply only to a single page.
+The DSC specifies different sections in which particular comments can
+appear. This function provides for comments to be emitted within three
+sections: the header, the Setup section, and the PageSetup section.
+Comments appearing in the first two sections apply to the entire
+document while comments in the BeginPageSetup section apply only to a
+single page.
 
-For comments to appear in the header section, this function should be called
-after the surface is created, but before a call to
+For comments to appear in the header section, this function should be
+called after the surface is created, but before a call to
 @code{cairo-ps-surface-begin-setup}.
 
-For comments to appear in the Setup section, this function should be called
-after a call to @code{cairo-ps-surface-begin-setup} but before a call to
-@code{cairo-ps-surface-begin-page-setup}.
+For comments to appear in the Setup section, this function should be
+called after a call to @code{cairo-ps-surface-begin-setup} but before a
+call to @code{cairo-ps-surface-begin-page-setup}.
 
-For comments to appear in the PageSetup section, this function should be called
-after a call to @code{cairo-ps-surface-begin-page-setup}.
+For comments to appear in the PageSetup section, this function should be
+called after a call to @code{cairo-ps-surface-begin-page-setup}.
 
-Note that it is only necessary to call @code{cairo-ps-surface-begin-page-setup}
-for the first page of any surface. After a call to @code{cairo-show-page} or
-@code{cairo-copy-page} comments are unambiguously directed to the PageSetup
-section of the current page. But it doesn't hurt to call this function at the
-beginning of every page as that consistency may make the calling code simpler.
+Note that it is only necessary to call
+@code{cairo-ps-surface-begin-page-setup} for the first page of any
+surface. After a call to @code{cairo-show-page} or
+@code{cairo-copy-page} comments are unambiguously directed to the
+PageSetup section of the current page. But it doesn't hurt to call this
+function at the beginning of every page as that consistency may make the
+calling code simpler.
 
-As a final note, cairo automatically generates several comments on its own. As
-such, applications must not manually generate any of the following comments:
+As a final note, cairo automatically generates several comments on its
+own. As such, applications must not manually generate any of the
+following comments:
 
 Header section: %!PS-Adobe-3.0, %@samp{Creator}, %@samp{CreationDate},
-%@samp{Pages}, %@samp{BoundingBox}, %@samp{DocumentData}, %@samp{LanguageLevel},
-%@samp{EndComments}.
+%@samp{Pages}, %@samp{BoundingBox}, %@samp{DocumentData},
+%@samp{LanguageLevel}, %@samp{EndComments}.
 
 Setup section: %@samp{BeginSetup}, %@samp{EndSetup}
 

@@ -2,18 +2,19 @@
 @c %start of fragment
 
 @deffn Function cairo-scaled-font-create  (@var{font-face}@tie{}@code{<cairo-font-face-t>}) (@var{font-matrix}@tie{}@code{<cairo-matrix-t>}) (@var{ctm}@tie{}@code{<cairo-matrix-t>}) (@var{options}@tie{}@code{<cairo-font-options-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-scaled-font-t>})
-Creates a @code{<cairo-scaled-font-t>} object from a font face and matrices that
-describe the size of the font and the environment in which it will be used.
+Creates a @code{<cairo-scaled-font-t>} object from a font face and
+matrices that describe the size of the font and the environment in which
+it will be used.
 
 @table @var
 @item font-face
 a @code{<cairo-font-face-t>}
 
 @item font-matrix
-font space to user space transformation matrix for the font. In the simplest
-case of a N point font, this matrix is just a scale by N, but it can also be
-used to shear the font or stretch it unequally along the two axes. See
-@code{cairo-set-font-matrix}.
+font space to user space transformation matrix for the font. In the
+simplest case of a N point font, this matrix is just a scale by N, but
+it can also be used to shear the font or stretch it unequally along the
+two axes. See @code{cairo-set-font-matrix}.
 
 @item ctm
 user to device transformation matrix with which the font will be used.
@@ -45,18 +46,19 @@ a @code{<cairo-font-extents-t>} which to store the retrieved extents.
 
 @deffn Function cairo-scaled-font-text-extents  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{utf8}@tie{}@code{<char>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
 Gets the extents for a string of text. The extents describe a user-space
-rectangle that encloses the "inked" portion of the text drawn at the origin
-(0,0) (as it would be drawn by @code{cairo-show-text} if the cairo graphics
-state were set to the same font_face, font_matrix, ctm, and font_options as
-@var{scaled-font}). Additionally, the x_advance and y_advance values indicate
-the amount by which the current point would be advanced by
-@code{cairo-show-text}.
+rectangle that encloses the "inked" portion of the text drawn at the
+origin (0,0) (as it would be drawn by @code{cairo-show-text} if the
+cairo graphics state were set to the same font_face, font_matrix, ctm,
+and font_options as @var{scaled-font}). Additionally, the x_advance and
+y_advance values indicate the amount by which the current point would be
+advanced by @code{cairo-show-text}.
 
-Note that whitespace characters do not directly contribute to the size of the
-rectangle (extents.width and extents.height). They do contribute indirectly by
-changing the position of non-whitespace characters. In particular, trailing
-whitespace characters are likely to not affect the size of the rectangle, though
-they will affect the x_advance and y_advance values.
+Note that whitespace characters do not directly contribute to the size
+of the rectangle (extents.width and extents.height). They do contribute
+indirectly by changing the position of non-whitespace characters. In
+particular, trailing whitespace characters are likely to not affect the
+size of the rectangle, though they will affect the x_advance and
+y_advance values.
 
 @table @var
 @item scaled-font
@@ -75,15 +77,16 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-scaled-font-glyph-extents  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) (@var{glyphs}@tie{}@code{<cairo-glyph-t>}) (@var{num-glyphs}@tie{}@code{<int>}) (@var{extents}@tie{}@code{<cairo-text-extents-t>})
-Gets the extents for an array of glyphs. The extents describe a user-space
-rectangle that encloses the "inked" portion of the glyphs, (as they would be
-drawn by @code{cairo-show-glyphs} if the cairo graphics state were set to the
-same font_face, font_matrix, ctm, and font_options as @var{scaled-font}).
-Additionally, the x_advance and y_advance values indicate the amount by which
-the current point would be advanced by cairo_show_glyphs.
+Gets the extents for an array of glyphs. The extents describe a
+user-space rectangle that encloses the "inked" portion of the glyphs,
+(as they would be drawn by @code{cairo-show-glyphs} if the cairo
+graphics state were set to the same font_face, font_matrix, ctm, and
+font_options as @var{scaled-font}). Additionally, the x_advance and
+y_advance values indicate the amount by which the current point would be
+advanced by cairo_show_glyphs.
 
-Note that whitespace glyphs do not contribute to the size of the rectangle
-(extents.width and extents.height).
+Note that whitespace glyphs do not contribute to the size of the
+rectangle (extents.width and extents.height).
 
 @table @var
 @item scaled-font
@@ -169,8 +172,8 @@ Since 1.2
 @end deffn
 
 @deffn Function cairo-scaled-font-get-type  (@var{scaled-font}@tie{}@code{<cairo-scaled-font-t>}) @result{}@tie{} (@var{ret}@tie{}@code{<cairo-font-type-t>})
-This function returns the type of the backend used to create a scaled font. See
-@code{<cairo-font-type-t>} for available types.
+This function returns the type of the backend used to create a scaled
+font. See @code{<cairo-font-type-t>} for available types.
 
 @table @var
 @item scaled-font
