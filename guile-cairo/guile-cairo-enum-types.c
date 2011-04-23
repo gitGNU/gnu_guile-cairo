@@ -106,6 +106,24 @@ static EnumPair _status[] = {
   {CAIRO_STATUS_INVALID_INDEX, "invalid-index"},
   {CAIRO_STATUS_CLIP_NOT_REPRESENTABLE, "clip-not-representable"},
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+  {CAIRO_STATUS_INVALID_STRIDE, "invalid-stride"},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+  {CAIRO_STATUS_FONT_TYPE_MISMATCH, "font-type-mismatch"},
+  {CAIRO_STATUS_USER_FONT_IMMUTABLE, "user-font-immutable"},
+  {CAIRO_STATUS_USER_FONT_ERROR, "user-font-error"},
+  {CAIRO_STATUS_NEGATIVE_COUNT, "negative-count"},
+  {CAIRO_STATUS_INVALID_CLUSTERS, "invalid-clusters"},
+  {CAIRO_STATUS_INVALID_SLANT, "invalid-slant"},
+  {CAIRO_STATUS_INVALID_WEIGHT, "invalid-weight"},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+  {CAIRO_STATUS_INVALID_SIZE, "invalid-index"},
+  {CAIRO_STATUS_USER_FONT_NOT_IMPLEMENTED, "user-font-not-implemented"},
+  {CAIRO_STATUS_DEVICE_TYPE_MISMATCH, "device-type-mismatch"},
+  {CAIRO_STATUS_DEVICE_ERROR, "device-error"},
+#endif
   {0, NULL}
 };
 
@@ -204,7 +222,13 @@ static EnumPair _font_type[] = {
   {CAIRO_FONT_TYPE_TOY, "toy"},
   {CAIRO_FONT_TYPE_FT, "ft"},
   {CAIRO_FONT_TYPE_WIN32, "win32"},
-  {CAIRO_FONT_TYPE_ATSUI, "atsui"},
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+  {CAIRO_FONT_TYPE_QUARTZ, "quartz"},
+#endif
+  {CAIRO_FONT_TYPE_ATSUI, "atsui"}, /* actually the same as quartz */
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+  {CAIRO_FONT_TYPE_USER, "user"},
+#endif
   {0, NULL}
 };
 
@@ -230,6 +254,24 @@ static EnumPair _surface_type[] = {
   {CAIRO_SURFACE_TYPE_SVG, "svg"},
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
   {CAIRO_SURFACE_TYPE_OS2, "os2"},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+  {CAIRO_SURFACE_TYPE_WIN32_PRINTING, "win32-printing"},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,8,0)
+  {CAIRO_SURFACE_TYPE_QUARTZ_IMAGE, "quartz-image"},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+  {CAIRO_SURFACE_TYPE_SCRIPT, "script"},
+  {CAIRO_SURFACE_TYPE_QT, "qt"},
+  {CAIRO_SURFACE_TYPE_RECORDING, "recording"},
+  {CAIRO_SURFACE_TYPE_VG, "vg"},
+  {CAIRO_SURFACE_TYPE_GL, "gl"},
+  {CAIRO_SURFACE_TYPE_DRM, "drm"},
+  {CAIRO_SURFACE_TYPE_TEE, "tee"},
+  {CAIRO_SURFACE_TYPE_XML, "xml"},
+  {CAIRO_SURFACE_TYPE_SKIA, "skia"},
+  {CAIRO_SURFACE_TYPE_SUBSURFACE, "subsurface"},
 #endif
   {0, NULL}
 };
