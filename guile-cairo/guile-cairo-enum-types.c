@@ -368,6 +368,8 @@ static EnumPair _region_overlap[] = {
 
 SCM scm_from_cairo_status (cairo_status_t cval) { return _scm_from_enum (_status, cval); }
 cairo_status_t scm_to_cairo_status (SCM scm) { return _scm_to_enum (_status, scm); }
+SCM_DEFINE_PUBLIC (scm_cairo_status_get_values, "cairo-status-get-values", 0, 0, 0, (void), "")
+{ return _get_values (_status); }
 
 SCM scm_from_cairo_content (cairo_content_t cval) { return _scm_from_enum (_content, cval); }
 cairo_content_t scm_to_cairo_content (SCM scm) { return _scm_to_enum (_content, scm); }
