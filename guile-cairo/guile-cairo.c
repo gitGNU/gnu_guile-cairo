@@ -111,6 +111,20 @@
     return scm_take_cairo_path (_ret);                                  \
   } while (0)
 
+/* cairo_region_t constructor return */
+#define RCONSRET(r)                                                     \
+  do {cairo_region_t *_ret = r;                                         \
+    scm_c_check_cairo_status (cairo_region_status (_ret), NULL);        \
+    return scm_take_cairo_region (_ret);                                \
+  } while (0)
+
+/* cairo_region_t checking return */
+#define RCHKRET(sr,exp)                                                 \
+  do {SCM _ret = exp;                                                   \
+    scm_c_check_cairo_status (cairo_region_status (scm_to_cairo_region (sr)), NULL); \
+    return _ret;                                                        \
+  } while (0)
+    
 /* cairo_surface_t constructor return */
 #define SCONSRET(s)                                                     \
   do {cairo_surface_t *_ret = s;                                        \
@@ -2167,6 +2181,30 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_create_similar, "cairo-surface-create-simil
                                           scm_to_int (h)));
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM_DEFINE_PUBLIC (scm_cairo_surface_create_for_rectangle, "cairo-surface-create-for-rectangle", 5, 0, 0,
+                   (SCM other, SCM x0, SCM y0, SCM w, SCM h),
+                   "")
+{
+  SCONSRET (cairo_surface_create_for_rectangle (scm_to_cairo_surface (other),
+                                                scm_to_double (x0),
+                                                scm_to_double (y0),
+                                                scm_to_double (w),
+                                                scm_to_double (h)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device, "cairo-surface-get-device", 5, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  SCM dev = scm_from_cairo_device (cairo_surface_get_device (scm_to_cairo_surface (surf)));
+  DCHKRET (dev, dev);
+}
+#endif  /* 1.10 */
+
+/* Not implementing cairo_surface_set_mime_data currently, as I don't know when
+ * or how to use it.  */
+
 SCM_DEFINE_PUBLIC (scm_cairo_surface_finish, "cairo-surface-finish", 1, 0, 0,
                    (SCM surf),
                    "")
@@ -2845,6 +2883,191 @@ SCM_DEFINE_PUBLIC (scm_cairo_matrix_transform_point, "cairo-matrix-transform-poi
 
   return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
 }
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM_DEFINE_PUBLIC (scm_cairo_region_create, "cairo-region-create", 0, 1, 0,
+                   (SCM int_rectangle),
+                   "")
+{
+  if (SCM_UNBNDP (int_rectangle))
+    {
+      RCONSRET (cairo_region_create ());
+    }
+  else
+    {
+      cairo_rectangle_int_t rect;
+      scm_fill_cairo_rectangle_int (int_rectangle, &rect);
+      RCONSRET (cairo_region_create_rectangle (&rect));
+    }
+}
+
+/* Not wrapping create_rectangles; you can do the fold yourself. */
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_copy, "cairo-region-copy", 1, 0, 0,
+                   (SCM region),
+                   "")
+{
+  RCONSRET (cairo_region_copy (scm_to_cairo_region (region)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_get_extents, "cairo-region-get-extents", 1, 0, 0,
+                   (SCM region),
+                   "")
+{
+  cairo_rectangle_int_t rect;
+  cairo_region_get_extents (scm_to_cairo_region (region), &rect);
+  RCHKRET (region, scm_from_cairo_rectangle_int (&rect));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_get_rectangles, "cairo-region-get-rectangles", 1, 0, 0,
+                   (SCM region),
+                   "")
+{
+  SCM ret = SCM_EOL;
+  int n = cairo_region_num_rectangles (scm_to_cairo_region (region));
+  
+  while (n--)
+    {
+      cairo_rectangle_int_t rect;
+      cairo_region_get_rectangle (scm_to_cairo_region (region), n, &rect);
+      ret = scm_cons (scm_from_cairo_rectangle_int (&rect), ret);
+    }
+  
+  RCHKRET (region, ret);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_is_empty, "cairo-region-is-empty", 1, 0, 0,
+                   (SCM region),
+                   "")
+{
+  RCHKRET (region, scm_from_bool (cairo_region_is_empty (scm_to_cairo_region (region))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_contains_rectangle, "cairo-region-contains-rectangle", 2, 0, 0,
+                   (SCM region, SCM rectangle),
+                   "")
+{
+  cairo_rectangle_int_t rect;
+  scm_fill_cairo_rectangle_int (rectangle, &rect);
+  RCHKRET (region, scm_from_cairo_region_overlap
+           (cairo_region_contains_rectangle (scm_to_cairo_region (region), &rect)));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_contains_point, "cairo-region-contains-point", 3, 0, 0,
+                   (SCM region, SCM x, SCM y),
+                   "")
+{
+  RCHKRET (region, scm_from_bool
+           (cairo_region_contains_point (scm_to_cairo_region (region),
+                                         scm_to_int (x), scm_to_int (y))));
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_translate, "cairo-region-translate", 3, 0, 0,
+                   (SCM region, SCM dx, SCM dy),
+                   "")
+{
+  cairo_region_translate (scm_to_cairo_region (region),
+                          scm_to_int (dx), scm_to_int (dy));
+
+  RCHKRET (region, SCM_UNSPECIFIED);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_subtract, "cairo-region-subtract", 2, 0, 0,
+                   (SCM region, SCM other),
+                   "")
+{
+  cairo_status_t status;
+
+  if (scm_is_vector (other))
+    {
+      cairo_rectangle_int_t rect;
+      scm_fill_cairo_rectangle_int (other, &rect);
+      status = cairo_region_subtract_rectangle (scm_to_cairo_region (region),
+                                                &rect);
+    }
+  else
+    status = cairo_region_subtract (scm_to_cairo_region (region),
+                                    scm_to_cairo_region (other));
+  scm_c_check_cairo_status (status, s_scm_cairo_region_subtract);
+  return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_intersect, "cairo-region-intersect", 2, 0, 0,
+                   (SCM region, SCM other),
+                   "")
+{
+  cairo_status_t status;
+
+  if (scm_is_vector (other))
+    {
+      cairo_rectangle_int_t rect;
+      scm_fill_cairo_rectangle_int (other, &rect);
+      status = cairo_region_intersect_rectangle (scm_to_cairo_region (region),
+                                                 &rect);
+    }
+  else
+    status = cairo_region_intersect (scm_to_cairo_region (region),
+                                     scm_to_cairo_region (other));
+  scm_c_check_cairo_status (status, s_scm_cairo_region_intersect);
+  return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_union, "cairo-region-union", 2, 0, 0,
+                   (SCM region, SCM other),
+                   "")
+{
+  cairo_status_t status;
+
+  if (scm_is_vector (other))
+    {
+      cairo_rectangle_int_t rect;
+      scm_fill_cairo_rectangle_int (other, &rect);
+      status = cairo_region_union_rectangle (scm_to_cairo_region (region),
+                                             &rect);
+    }
+  else
+    status = cairo_region_union (scm_to_cairo_region (region),
+                                 scm_to_cairo_region (other));
+  scm_c_check_cairo_status (status, s_scm_cairo_region_union);
+  return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region_xor, "cairo-region-xor", 2, 0, 0,
+                   (SCM region, SCM other),
+                   "")
+{
+  cairo_status_t status;
+
+  if (scm_is_vector (other))
+    {
+      cairo_rectangle_int_t rect;
+      scm_fill_cairo_rectangle_int (other, &rect);
+      status = cairo_region_xor_rectangle (scm_to_cairo_region (region),
+                                           &rect);
+    }
+  else
+    status = cairo_region_xor (scm_to_cairo_region (region),
+                               scm_to_cairo_region (other));
+  scm_c_check_cairo_status (status, s_scm_cairo_region_xor);
+  return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_region, "cairo-matrix-transform-point", 3, 0, 0,
+                   (SCM smatrix, SCM sx, SCM sy),
+                   "")
+{
+  cairo_matrix_t matrix;
+  double x, y;
+    
+  scm_fill_cairo_matrix (smatrix, &matrix);
+  x = scm_to_double (sx);
+  y = scm_to_double (sy);
+    
+  cairo_matrix_transform_point (&matrix, &x, &y);
+
+  return scm_values (scm_list_2 (scm_from_double (x), scm_from_double (y)));
+}
+#endif /* 1.10 */
 
 #if CAIRO_HAS_PDF_SURFACE
 

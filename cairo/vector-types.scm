@@ -45,6 +45,9 @@
 (define-vector-type cairo rectangle f64vector
   x y width height)
 
+(define-vector-type cairo rectangle-int s32vector
+  x y width height)
+
 (define-vector-type cairo glyph vector
   index x y)
 

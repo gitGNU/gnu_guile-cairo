@@ -52,6 +52,11 @@ void scm_fill_cairo_text_clusters (SCM str, SCM scm,
                                    cairo_text_cluster_t *clusters);
 #endif
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_rectangle_int (cairo_rectangle_int_t *rect);
+void scm_fill_cairo_rectangle_int (SCM scm, cairo_rectangle_int_t *rect);
+#endif
+
 
 
 void scm_init_cairo_vector_types (void);

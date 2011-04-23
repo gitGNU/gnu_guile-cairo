@@ -35,6 +35,7 @@ scm_t_bits scm_tc16_cairo_font_options_t;
 scm_t_bits scm_tc16_cairo_path_t;
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
 scm_t_bits scm_tc16_cairo_device_t;
+scm_t_bits scm_tc16_cairo_region_t;
 #endif
 
 
@@ -335,6 +336,46 @@ scm_cairo_device_free (SCM smob)
 
   return 0;
 }
+
+
+/**********************************************************************
+ * cairo_region_t
+ **********************************************************************/
+
+SCM
+scm_take_cairo_region (cairo_region_t *region)
+{
+  SCM sregion;
+
+  SCM_NEWSMOB (sregion, scm_tc16_cairo_region_t, region);
+
+  return sregion;
+}
+
+cairo_region_t*
+scm_to_cairo_region (SCM scm)
+{
+  scm_assert_smob_type (scm_tc16_cairo_region_t, scm);
+  return (cairo_region_t*)SCM_SMOB_DATA (scm);
+}
+
+static size_t
+scm_cairo_region_free (SCM smob)
+{
+  cairo_region_t *region = (cairo_region_t*)SCM_SMOB_DATA (smob);
+
+  SCM_SET_SMOB_DATA (smob, NULL);
+  cairo_region_destroy (region);
+
+  return 0;
+}
+
+static SCM
+scm_cairo_region_equalp (SCM this, SCM other)
+{
+  return scm_from_bool (cairo_region_equal (scm_to_cairo_region (this),
+                                            scm_to_cairo_region (other)));
+}
 #endif /* 1.10 */
 
 void
@@ -368,5 +409,9 @@ scm_init_cairo_smob_types (void)
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
   scm_tc16_cairo_device_t = scm_make_smob_type ("cairo-device", 0);
   scm_set_smob_free (scm_tc16_cairo_device_t, scm_cairo_device_free);
+
+  scm_tc16_cairo_region_t = scm_make_smob_type ("cairo-region", 0);
+  scm_set_smob_free (scm_tc16_cairo_region_t, scm_cairo_region_free);
+  scm_set_smob_equalp (scm_tc16_cairo_region_t, scm_cairo_region_equalp);
 #endif /* 1.10 */
 }

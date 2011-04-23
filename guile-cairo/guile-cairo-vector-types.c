@@ -300,6 +300,33 @@ scm_fill_cairo_text_clusters (SCM str, SCM scm,
 }
 #endif
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+/**********************************************************************
+ * cairo_rectangle_int_t
+ **********************************************************************/
+
+SCM
+scm_from_cairo_rectangle_int (cairo_rectangle_int_t *rect)
+{
+  return scm_s32vector (scm_list_4 (scm_from_int (rect->x),
+                                    scm_from_int (rect->y),
+                                    scm_from_int (rect->width),
+                                    scm_from_int (rect->height)));
+}
+
+void
+scm_fill_cairo_rectangle_int (SCM scm, cairo_rectangle_int_t *rect)
+{
+#define GET(v,i) scm_to_int (scm_s32vector_ref (v, scm_from_int (i)))
+
+  rect->x = GET (scm, 0);
+  rect->y = GET (scm, 1);
+  rect->width = GET (scm, 2);
+  rect->height = GET (scm, 3);
+#undef GET
+}
+#endif /* 1.10 */
+
 void
 scm_init_cairo_vector_types (void)
 {

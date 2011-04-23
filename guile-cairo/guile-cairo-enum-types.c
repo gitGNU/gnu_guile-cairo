@@ -306,7 +306,7 @@ static EnumPair _device_type[] = {
 #endif  /* 1.8 */
 
 #if CAIRO_HAS_PDF_SURFACE
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
 static EnumPair _pdf_version[] = {
   {CAIRO_PDF_VERSION_1_4, "v1.4"},
   {CAIRO_PDF_VERSION_1_5, "v1.5"},
@@ -314,6 +314,15 @@ static EnumPair _pdf_version[] = {
 };
 #endif  /* 1.10 */
 #endif  /* CAIRO_HAS_PDF_SURFACE */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+static EnumPair _region_overlap[] = {
+  {CAIRO_REGION_OVERLAP_IN, "in"},
+  {CAIRO_REGION_OVERLAP_OUT, "out"},
+  {CAIRO_REGION_OVERLAP_PART, "part"},
+  {0, NULL}
+};
+#endif  /* 1.10 */
 
 SCM scm_from_cairo_status (cairo_status_t cval) { return _scm_from_enum (_status, cval); }
 cairo_status_t scm_to_cairo_status (SCM scm) { return _scm_to_enum (_status, scm); }
@@ -470,6 +479,13 @@ SCM_DEFINE_PUBLIC (scm_cairo_pdf_version_get_values, "cairo-pdf-level-get-values
 { return _get_values (_pdf_version); }
 #endif  /* 1.10 */
 #endif  /* HAS_PDF_SURFACE */
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_region_overlap (cairo_region_overlap_t cval) { return _scm_from_enum (_region_overlap, cval); }
+cairo_region_overlap_t scm_to_cairo_region_overlap (SCM scm) { return _scm_to_enum (_region_overlap, scm); }
+SCM_DEFINE_PUBLIC (scm_cairo_region_overlap_get_values, "cairo-region-overlap-get-values", 0, 0, 0, (void), "")
+{ return _get_values (_region_overlap); }
+#endif  /* 1.10 */
 
 void
 scm_init_cairo_enum_types (void)

@@ -117,6 +117,11 @@ cairo_pdf_version_t scm_to_cairo_pdf_version (SCM scm);
 #endif  /* 1.10 */
 #endif  /* CAIRO_HAS_PS_SURFACE */
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_from_cairo_region_overlap (cairo_region_overlap_t cval);
+cairo_region_overlap_t scm_to_cairo_region_overlap (SCM scm);
+#endif  /* 1.10 */
+
 
 
 void scm_init_cairo_enum_types (void);
