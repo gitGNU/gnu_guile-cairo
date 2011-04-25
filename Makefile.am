@@ -44,4 +44,4 @@ gen-ChangeLog:
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
 	fi
 
-EXTRA_DIST = env.in autogen.sh HACKING COPYING.LESSER COPYING.docs $(scm_DATA)
+EXTRA_DIST = env.in autogen.sh HACKING COPYING.LESSER $(scm_DATA)

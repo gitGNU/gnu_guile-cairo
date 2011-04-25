@@ -46,7 +46,7 @@ docbook_xml_files = $(wildcard $(cairo_docbook_xml_wildcard))
 GTK_DOC_DEFUN_HEURISTICS_METHOD = heuristics
 GTK_DOC_DEFUN_HEURISTICS_ARGS = (cairo)
 
-EXTRA_DIST = README overrides.texi generate-docs.mk
+EXTRA_DIST = README overrides.texi generate-docs.mk COPYING.docs COPYING.LGPL-2.1 COPYING.MPL-1.1
 
 info_TEXINFOS=guile-cairo.texi
 guile_cairo_TEXINFOS=$(wildcard section-*.texi) $(wildcard defuns-*.texi)
