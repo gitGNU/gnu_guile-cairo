@@ -2,8 +2,13 @@ Guile-Cairo's documentation is largely derived from Cairo's
 documentation, which like Cairo's source code is dual-licensed, under
 the LGPL version 2.1 and the MPL version 1.1.
 
+Cairo's documentation is Copyright 2002-2011 Carl Worth and others.
+
 Guile-Cairo's modifications to the Cairo documentation are also licensed
 under those terms, to facilitate contribution to upstream docs.
+
+Guile-Cairo's modifications to that documentation are
+Copyright 2007,2011 Andy Wingo.
 
 Guile-Cairo does allow online access to that documentation, via the
 `help' facility (through cairo-procedures.txt), but since this is not
