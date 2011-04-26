@@ -29,6 +29,10 @@
 #include <cairo-ps.h>
 #endif
 
+#if CAIRO_HAS_PDF_SURFACE
+#include <cairo-pdf.h>
+#endif
+
 
 
 SCM scm_from_cairo_status (cairo_status_t cval);
