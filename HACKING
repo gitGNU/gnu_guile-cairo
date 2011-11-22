@@ -1,13 +1,7 @@
 Hacking Guile-Cairo
 ===================
 
-I use git as my versioning control system, http://git-scm.com/. It's
-quite fun.
-
-I'm currently in the process of moving to a hosting provider that
-supports Git; for now the following instructions will work:
-
-git clone http://wingolog.org/git/guile-cairo.git
+git clone git://git.savannah.nongnu.org/guile-cairo.git
 cd guile-cairo
 ./autogen.sh --prefix=/opt/guile-cairo && make && sudo make install
 
