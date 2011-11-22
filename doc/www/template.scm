@@ -27,7 +27,7 @@
                     ))
              " ")
           " "
-          (a (@ (href "https://code.launchpad.net/guile-cairo/")) "code")
+          (a (@ (href "http://git.savannah.nongnu.org/cgit/guile-cairo.git/")) "code")
           " "
           (a (@ (href "http://bugs.freedesktop.org/buglist.cgi?product=guile-cairo")) "bug list")
           " "
