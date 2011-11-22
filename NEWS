@@ -4,6 +4,14 @@ Guile-Cairo NEWS
 Guile-Cairo wraps the Cairo graphics library for Guile Scheme.
 
 
+guile-cairo 1.9.91 -- 2011-11-22
+================================
+
+* Moved to a new home on Savannah: http://www.non-gnu.org/guile-cairo/.
+  The git repository is now properly hosted there, instead of on my http
+  server; see http://www.non-gnu.org/guile-cairo/dev/ for details.
+
+
 guile-cairo 1.9.90 -- 2011-04-23
 ================================
 
