@@ -25,9 +25,11 @@ www: clean-www guile-cairo.pdf guile-cairo-html
 	rm -rf www/docs/html
 	cp -a guile-cairo/ www/docs/html
 
+WEB_REPO=cvs.sv.gnu.org:/web/guile-cairo
+IMPORT_TAG=git_$(shell git show-ref --head --hash HEAD)
+
 www-commit: www
-	svn rm -m 'make www in guile-lib/docs' svn+ssh://wingo@svn.gna.org/svn/guile-cairo/website
-	svn import -m 'make www in guile-lib/docs' www svn+ssh://wingo@svn.gna.org/svn/guile-cairo/website
+	( cd www; cvs -d $(WEB_REPO) import -m 'make www in guile-cairo/docs' guile-cairo git $(IMPORT_TAG) )
 
 clean-www:
 	find www -name 'index.html' -print \
