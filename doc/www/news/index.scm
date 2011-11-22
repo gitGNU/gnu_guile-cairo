@@ -2,6 +2,16 @@
   '((h2 "news")
 
     (news
+     (@ (date "22 November 2011")
+        (title "Guile-Cairo moved to savannah; 1.9.91 available"))
+     "Guile-Cairo has changed hosting providers, moving to "
+     (a (@ (href "http://www.non-gnu.org/guile-cairo/")) "savannah")
+     ", where you are probably reading this message.  A new release has
+been made, in order to link to the new location of the git repository,
+and other such things.  Version 1.9.91 is still a prerelease.  Give it a
+try!")
+
+    (news
      (@ (date "23 April 2011")
         (title "Guile-Cairo 1.9.90 available"))
      "Guile-Cairo 1.9.90 has been released, adding support for Cairo API
