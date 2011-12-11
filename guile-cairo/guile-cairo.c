@@ -2786,7 +2786,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_make_rotate_matrix, "cairo-make-rotate-matrix", 1, 
   return scm_from_cairo_matrix (&matrix);
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_matrix_translate, "cairo-matrix-translate", 2, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_translate, "cairo-matrix-translate", 3, 0, 0,
                    (SCM smatrix, SCM tx, SCM ty),
                    "")
 {
@@ -2799,7 +2799,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_matrix_translate, "cairo-matrix-translate", 2, 0, 0
   return scm_from_cairo_matrix (&matrix);
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_matrix_scale, "cairo-make-scale-matrix", 3, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_scale, "cairo-matrix-scale", 3, 0, 0,
                    (SCM smatrix, SCM sx, SCM sy),
                    "")
 {
@@ -2812,7 +2812,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_matrix_scale, "cairo-make-scale-matrix", 3, 0, 0,
   return scm_from_cairo_matrix (&matrix);
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_matrix_rotate, "cairo-make-rotate-matrix", 2, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_matrix_rotate, "cairo-matrix-rotate", 2, 0, 0,
                    (SCM smatrix, SCM rads),
                    "")
 {
