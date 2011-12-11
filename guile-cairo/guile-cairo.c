@@ -353,8 +353,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_pop_group, "cairo-pop-group", 1, 0, 0,
                    (SCM ctx),
                    "")
 {
-  cairo_pop_group (scm_to_cairo (ctx));
-  CCHKRET (ctx, SCM_UNSPECIFIED);
+  CCHKRET (ctx, scm_from_cairo_pattern (cairo_pop_group (scm_to_cairo (ctx))));
 }
 
 SCM_DEFINE_PUBLIC (scm_cairo_pop_group_to_source, "cairo-pop-group-to-source", 1, 0, 0,
