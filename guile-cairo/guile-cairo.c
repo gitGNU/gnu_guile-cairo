@@ -2196,8 +2196,16 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device, "cairo-surface-get-device", 1, 
                    (SCM surf),
                    "")
 {
-  SCM dev = scm_from_cairo_device (cairo_surface_get_device (scm_to_cairo_surface (surf)));
-  DCHKRET (dev, dev);
+  SCM sdev;
+  cairo_device_t *dev;
+
+  dev = cairo_surface_get_device (scm_to_cairo_surface (surf));
+
+  if (!dev)
+    return SCM_BOOL_F;
+
+  sdev = scm_from_cairo_device (dev);
+  DCHKRET (sdev, sdev);
 }
 #endif  /* 1.10 */
 
