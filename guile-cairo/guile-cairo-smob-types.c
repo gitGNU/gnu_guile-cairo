@@ -319,6 +319,12 @@ scm_take_cairo_device (cairo_device_t *device)
   return sdevice;
 }
 
+SCM
+scm_from_cairo_device (cairo_device_t *device)
+{
+  return scm_take_cairo_device (cairo_device_reference (device));
+}
+
 cairo_device_t*
 scm_to_cairo_device (SCM scm)
 {

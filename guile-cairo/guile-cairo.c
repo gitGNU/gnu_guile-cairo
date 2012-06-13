@@ -1,5 +1,5 @@
 /* guile-cairo
- * Copyright (C) 2007, 2011 Andy Wingo <wingo at pobox dot com>
+ * Copyright (C) 2007, 2011, 2012 Andy Wingo <wingo at pobox dot com>
  *
  * guile-cairo.c: Cairo for Guile
  *
@@ -2192,7 +2192,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_create_for_rectangle, "cairo-surface-create
                                                 scm_to_double (h)));
 }
 
-SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device, "cairo-surface-get-device", 5, 0, 0,
+SCM_DEFINE_PUBLIC (scm_cairo_surface_get_device, "cairo-surface-get-device", 1, 0, 0,
                    (SCM surf),
                    "")
 {

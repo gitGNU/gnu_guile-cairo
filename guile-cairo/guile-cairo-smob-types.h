@@ -50,6 +50,7 @@ SCM scm_take_cairo_path (cairo_path_t *path);
 cairo_path_t* scm_to_cairo_path (SCM scm);
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,10,0)
+SCM scm_take_cairo_device (cairo_device_t *dev);
 SCM scm_from_cairo_device (cairo_device_t *dev);
 cairo_device_t* scm_to_cairo_device (SCM scm);
 
