@@ -1,5 +1,5 @@
 /* guile-cairo
- * Copyright (C) 2007, 2011 Andy Wingo <wingo at pobox dot com>
+ * Copyright (C) 2007, 2011, 2012 Andy Wingo <wingo at pobox dot com>
  *
  * guile-cairo-smob-types.h:
  *
@@ -26,10 +26,12 @@
 SCM scm_take_cairo (cairo_t *ctx);
 SCM scm_from_cairo (cairo_t *ctx);
 cairo_t* scm_to_cairo (SCM scm);
+cairo_t* scm_release_cairo (SCM scm);
 
 SCM scm_take_cairo_surface (cairo_surface_t *surf);
 SCM scm_from_cairo_surface (cairo_surface_t *surf);
 cairo_surface_t* scm_to_cairo_surface (SCM scm);
+cairo_surface_t* scm_release_cairo_surface (SCM scm);
 
 SCM scm_take_cairo_pattern (cairo_pattern_t *pat);
 SCM scm_from_cairo_pattern (cairo_pattern_t *pat);

@@ -1,5 +1,5 @@
 /* guile-cairo
- * Copyright (C) 2007, 2011 Andy Wingo <wingo at pobox dot com>
+ * Copyright (C) 2007, 2011, 2012 Andy Wingo <wingo at pobox dot com>
  *
  * guile-cairo-smob-types.c: Cairo for Guile
  *
@@ -39,6 +39,16 @@ scm_t_bits scm_tc16_cairo_region_t;
 #endif
 
 
+void
+already_destroyed (SCM x)
+{
+  scm_error (scm_from_utf8_symbol ("cairo-error"),
+             NULL,
+             "Object has been destroyed already: ~S",
+             scm_list_1 (x),
+             SCM_EOL);
+}
+
 /**********************************************************************
  * cairo_t
  **********************************************************************/
@@ -62,8 +72,12 @@ scm_from_cairo (cairo_t *ctx)
 cairo_t*
 scm_to_cairo (SCM scm)
 {
+  cairo_t *ret;
   scm_assert_smob_type (scm_tc16_cairo_t, scm);
-  return (cairo_t*)SCM_SMOB_DATA (scm);
+  ret = (cairo_t*)SCM_SMOB_DATA (scm);
+  if (!ret)
+    already_destroyed (scm);
+  return ret;
 }
 
 static size_t
@@ -72,9 +86,18 @@ scm_cairo_free (SCM smob)
   cairo_t *ctx = (cairo_t*)SCM_SMOB_DATA (smob);
 
   SCM_SET_SMOB_DATA (smob, NULL);
-  cairo_destroy (ctx);
+  if (ctx)
+    cairo_destroy (ctx);
 
   return 0;
+}
+
+cairo_t*
+scm_release_cairo (SCM scm)
+{
+  cairo_t *cr = scm_to_cairo (scm);
+  scm_cairo_free (scm);
+  return cr;
 }
 
 /**********************************************************************
@@ -100,8 +123,12 @@ scm_from_cairo_surface (cairo_surface_t *surf)
 cairo_surface_t*
 scm_to_cairo_surface (SCM scm)
 {
+  cairo_surface_t *ret;
   scm_assert_smob_type (scm_tc16_cairo_surface_t, scm);
-  return (cairo_surface_t*)SCM_SMOB_DATA (scm);
+  ret = (cairo_surface_t*)SCM_SMOB_DATA (scm);
+  if (!ret)
+    already_destroyed (scm);
+  return ret;
 }
 
 static size_t
@@ -110,9 +137,18 @@ scm_cairo_surface_free (SCM smob)
   cairo_surface_t *surf = (cairo_surface_t*)SCM_SMOB_DATA (smob);
 
   SCM_SET_SMOB_DATA (smob, NULL);
-  cairo_surface_destroy (surf);
+  if (surf)
+    cairo_surface_destroy (surf);
 
   return 0;
+}
+
+cairo_surface_t*
+scm_release_cairo_surface (SCM scm)
+{
+  cairo_surface_t *cr = scm_to_cairo_surface (scm);
+  scm_cairo_surface_free (scm);
+  return cr;
 }
 
 /**********************************************************************

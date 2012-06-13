@@ -302,6 +302,22 @@ SCM_DEFINE_PUBLIC (scm_cairo_create, "cairo-create", 1, 0, 0,
   CCONSRET (cairo_create (scm_to_cairo_surface (surf)));
 }
 
+SCM_DEFINE_PUBLIC (scm_cairo_destroy, "cairo-destroy", 1, 0, 0,
+                   (SCM ctx),
+                   "")
+{
+  scm_release_cairo (ctx);
+  return SCM_UNSPECIFIED;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_surface_destroy, "cairo-surface-destroy", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  scm_release_cairo_surface (surf);
+  return SCM_UNSPECIFIED;
+}
+
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,4,0)
 #ifdef DEBUG_GUILE_CAIRO
 SCM_DEFINE_PUBLIC (scm_cairo_get_reference_count, "cairo-get-reference-count", 1, 0, 0,
