@@ -1,5 +1,5 @@
 /* guile-cairo
- * Copyright (C) 2007, 2011, 2012 Andy Wingo <wingo at pobox dot com>
+ * Copyright (C) 2007, 2011, 2012, 2014 Andy Wingo <wingo at pobox dot com>
  *
  * guile-cairo.c: Cairo for Guile
  *
@@ -36,6 +36,15 @@
 
 #include "guile-cairo-compat.h"
 #include "guile-cairo.h"
+
+static cairo_user_data_key_t scm_cairo_key;
+
+#if SCM_MAJOR_VERSION >= 2
+#define UNPROTECT (cairo_destroy_func_t)scm_gc_unprotect_object
+#else
+/* We can't unprotect an object from within GC, so just leak memory.  */
+#define UNPROTECT NULL
+#endif
 
 /* cairo_device_t checking return */
 #define DCHKRET(sdv,ret)                                                \
@@ -1608,15 +1617,6 @@ enum user_font_func_idx
   USER_FONT_N_FUNCS
 };
 
-static cairo_user_data_key_t scm_cairo_key;
-
-#if GUILE_MAJOR_VERSION >= 2
-#define UNPROTECT (cairo_destroy_func_t)scm_gc_unprotect_object
-#else
-/* We can't unprotect an object from within GC, so just leak memory.  */
-#define UNPROTECT NULL
-#endif
-
 static void
 set_user_font_func (cairo_font_face_t *font_face,
                     enum user_font_func_idx idx, SCM func)
@@ -2410,21 +2410,153 @@ SCM_DEFINE_PUBLIC (scm_cairo_surface_show_page, "cairo-surface-show-page", 1, 0,
 #endif /* 1.6 */
 
 SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create, "cairo-image-surface-create", 3, 0, 0,
-                   (SCM format, SCM x, SCM y),
+                   (SCM format, SCM width, SCM height),
                    "")
 {
   SCONSRET (cairo_image_surface_create (scm_to_cairo_format (format),
-                                        scm_to_double (x),
-                                        scm_to_double (y)));
+                                        scm_to_int (width),
+                                        scm_to_int (height)));
 }
 
+#if SCM_MAJOR_VERSION >= 2 && CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1,6,0)
+/* Only Guile 2.0 and later have bytevectors; punt for 1.8.  Need Cairo 1.6 for
+   cairo_format_stride_for_width.  */
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_for_data, "cairo-image-surface-create-for-data", 4, 1, 0,
+                   (SCM data, SCM format, SCM width, SCM height, SCM stride),
+                   "")
+{
+  size_t data_len;
+  scm_t_uint8 *data_ptr;
+  cairo_format_t iformat;
+  int iwidth, iheight, istride;
+  cairo_surface_t *surf;
+
+  data_len = scm_c_bytevector_length (data);
+  data_ptr = (scm_t_uint8 *) SCM_BYTEVECTOR_CONTENTS (data);
+  iformat = scm_to_cairo_format (format);
+  iwidth = scm_to_int (width);
+  iheight = scm_to_int (height);
+
+  if (iwidth <= 0 || iheight <= 0)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Image surface dimensions should be positive: ~S, ~S",
+               scm_list_2 (width, height),
+               SCM_EOL);
+
+  if (SCM_UNBNDP (stride))
+    istride = data_len / iheight;
+  else
+    {
+      istride = scm_to_int (stride);
+      if (istride <= 0)
+        scm_error (scm_from_utf8_symbol ("cairo-error"),
+                   NULL,
+                   "Image stride should be positive: ~S",
+                   scm_list_1 (stride),
+                   SCM_EOL);
+    }
+
+  if (istride != cairo_format_stride_for_width (iformat, iwidth))
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Bad image stride: ~S (expected ~S)",
+               scm_list_2 (stride,
+                           scm_from_int
+                           (cairo_format_stride_for_width
+                            (iformat, iwidth))),
+               SCM_EOL);
+
+  if ((scm_t_uint64) data_len
+      != ((scm_t_uint64) iheight) * ((scm_t_uint64) istride))
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Data side and image dimensions do not match",
+               SCM_EOL, SCM_EOL);
+
+  surf = cairo_image_surface_create_for_data (data_ptr, iformat,
+                                              iheight, iwidth, istride);
+  scm_c_check_cairo_status (cairo_surface_status (surf),
+                            s_scm_cairo_image_surface_create_for_data);
+  cairo_surface_set_user_data (surf,
+                               &scm_cairo_key,
+                               SCM2PTR (scm_gc_protect_object (data)),
+                               UNPROTECT);
+
+  SCONSRET (surf);
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_get_data, "cairo-image-surface-get-data", 1, 0, 0,
+                   (SCM surf),
+                   "")
+{
+  cairo_surface_t *csurf;
+  int height, stride;
+  size_t len;
+  unsigned char *ptr;
+  SCM buf;
+
+  scm_cairo_surface_flush (surf);
+
+  csurf = scm_to_cairo_surface (surf);
+  height = cairo_image_surface_get_format (csurf);
+  stride = cairo_image_surface_get_stride (csurf);
+  ptr = cairo_image_surface_get_data (csurf);
+
+  /* If it's not an image surface, the height, stride, and ptr will be 0.  */
+  if (height <= 0 || stride <= 0 || ptr == NULL)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Surface type mismatch",
+               SCM_EOL, SCM_EOL);
+  
+  len = ((size_t) height) * ((size_t) stride);
+  buf = scm_c_make_bytevector (len);
+  memcpy (SCM_BYTEVECTOR_CONTENTS (buf), ptr, len);
+
+  return buf;
+}
+
+SCM_DEFINE_PUBLIC (scm_cairo_image_surface_set_data, "cairo-image-surface-set-data", 2, 0, 0,
+                   (SCM surf, SCM data),
+                   "")
+{
+  cairo_surface_t *csurf;
+  int height, stride;
+  size_t len;
+  unsigned char *ptr;
+  size_t data_len;
+  scm_t_uint8 *data_ptr;
+
+  csurf = scm_to_cairo_surface (surf);
+  height = cairo_image_surface_get_format (csurf);
+  stride = cairo_image_surface_get_stride (csurf);
+  ptr = cairo_image_surface_get_data (csurf);
+
+  /* If it's not an image surface, the height, stride, and ptr will be 0.  */
+  if (height <= 0 || stride <= 0 || ptr == NULL)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Surface type mismatch",
+               SCM_EOL, SCM_EOL);
+  
+  data_len = scm_c_bytevector_length (data);
+  data_ptr = (scm_t_uint8 *) SCM_BYTEVECTOR_CONTENTS (data);
+
+  len = ((size_t) height) * ((size_t) stride);
+  if (len != data_len)
+    scm_error (scm_from_utf8_symbol ("cairo-error"),
+               NULL,
+               "Unexpected bytevector length",
+               SCM_EOL, SCM_EOL);
+
+  memcpy (ptr, data_ptr, len);
+
+  return scm_cairo_surface_mark_dirty (surf);
+}
+#endif /* Guile 2.0 and Cairo 1.6 */
+
 #if 0
-cairo_public cairo_surface_t *
-cairo_image_surface_create_for_data (unsigned char	       *data,
-				     cairo_format_t		format,
-				     int			width,
-				     int			height,
-				     int			stride);
 cairo_public unsigned char *
 cairo_image_surface_get_data (cairo_surface_t *surface);
 
