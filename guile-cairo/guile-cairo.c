@@ -2475,7 +2475,7 @@ SCM_DEFINE_PUBLIC (scm_cairo_image_surface_create_for_data, "cairo-image-surface
                SCM_EOL, SCM_EOL);
 
   surf = cairo_image_surface_create_for_data (data_ptr, iformat,
-                                              iheight, iwidth, istride);
+                                              iwidth, iheight, istride);
   scm_c_check_cairo_status (cairo_surface_status (surf),
                             s_scm_cairo_image_surface_create_for_data);
   cairo_surface_set_user_data (surf,
